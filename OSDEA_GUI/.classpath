@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.commands_3.6.0.I20110111-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.equinox.common_3.6.0.v20110523.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.jface_3.7.0.I20110522-1430.jar" sourcepath="libraries/org.eclipse.jface.source_3.7.0.I20110522-1430.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar" sourcepath="libraries/org.eclipse.osgi.source_3.7.1.R37x_v20110808-1106.jar"/>
+	<classpathentry kind="lib" path="libraries/swt.jar" sourcepath="libraries/src.zip"/>
+	<classpathentry kind="lib" path="libraries/swing2swt.jar"/>
+	<classpathentry kind="lib" path="libraries/opencsv-2.3.jar" sourcepath="libraries/opencsv_src.zip"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.databinding_1.4.0.I20110111-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.databinding.beans_1.2.100.I20100824-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.databinding.observable_1.4.0.I20110222-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.databinding.property_1.4.0.I20110222-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.jface.databinding_1.5.0.I20100907-0800.jar"/>
+	<classpathentry kind="lib" path="libraries/com.ibm.icu_4.4.2.v20110208.jar"/>
+	<classpathentry kind="lib" path="libraries/org.eclipse.core.runtime_3.7.0.v20110110.jar"/>
+	<classpathentry kind="lib" path="libraries/OSDEASolver-v0.276-f-unofficial.jar" sourcepath="libraries/OSDEASolver-v0.276-sources-unofficial.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
