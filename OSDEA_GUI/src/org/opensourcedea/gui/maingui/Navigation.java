@@ -39,7 +39,7 @@ public class Navigation extends Composite {
 	private OSDEA_StatusLine stl;
 	
 	private final String rawDataItemText = "Raw Data", variablesItemText = "Variables", modelDetailsItemText = "Model details",
-	SolutionItemText = "Solution", objectivesItemText = "Objectives", projectionsItemText = "Projections", lambdasItemText = "Lambdas",
+	solutionItemText = "Solution", objectivesItemText = "Objectives", projectionsItemText = "Projections", lambdasItemText = "Lambdas",
 	peerGroupItemText = "Peer Group", slacksItemText = "Slacks", weightsItemText = "Weights";
 	
 	private HashMap<TreeItem, String> filePathHashMap = new HashMap<TreeItem, String>();
@@ -287,7 +287,7 @@ public class Navigation extends Composite {
 		
 		
 		solutionTreeItem = new TreeItem (deaProblemTreeItem, 0);
-		solutionTreeItem.setText (SolutionItemText);
+		solutionTreeItem.setText (solutionItemText);
 		solutionTreeItem.setImage(solutionImage);
 		solutionTreeItem.setData(solutionComp);
 		
@@ -474,6 +474,24 @@ public class Navigation extends Composite {
 		}
 		return null;
 	}
+	
+	private TreeItem getObjectivesTreeItem() {
+		TreeItem parent = getSelectedDEAProblemTreeItem();
+		
+		for(TreeItem it : parent.getItems()) {
+			if(it.getText().equals(solutionItemText)) {
+				for(TreeItem innerIt : it.getItems()) {
+					if(innerIt.getText().equals(objectivesItemText)) {
+						return innerIt;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	
 
 	
 //	private ModelDetailsComposite getActiveModeldetailsComposite() {
@@ -550,8 +568,28 @@ public class Navigation extends Composite {
 	}
 	
 	
+	
+	
 	public void displaySolution() {
 		LDEAProblem ldeap = getSelectedDEAProblem();
+		
+		//Objectives
+		ObjectivesComposite objComp = (ObjectivesComposite)getObjectivesTreeItem().getData();
+		
+		ArrayList<String> headers = new ArrayList<String>();
+		headers.add("DMU Names");
+		headers.add("Objective Value");
+		
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
+			ArrayList<String> tempArr = new ArrayList<String>();
+			tempArr.add(ldeap.getDMUNames().get(i));
+			tempArr.add(Double.toString(ldeap.getLdeapSolution().getObjective(i)));
+			data.add(tempArr);
+		}
+		
+		
+		objComp.pushObjectives(headers, data);
 		
 	}
 	

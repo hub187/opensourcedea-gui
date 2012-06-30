@@ -32,7 +32,6 @@ import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.gui.utils.Images;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
-import org.opensourcedea.exception.*;
 
 public class DEAPProblemComposite extends Composite {
 
@@ -155,6 +154,8 @@ public class DEAPProblemComposite extends Composite {
 								ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
 							}
 						}
+						
+						
 					}
 					else {
 						ldeap.setSolved(false);
@@ -176,7 +177,7 @@ public class DEAPProblemComposite extends Composite {
 		});
 		
 
-
+		
 
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
@@ -223,6 +224,7 @@ public class DEAPProblemComposite extends Composite {
 		
 
 	}
+	
 	
 	
 
