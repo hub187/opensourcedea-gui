@@ -12,8 +12,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 import org.opensourcedea.gui.maingui.OSDEAMainComposite;
 import org.opensourcedea.gui.menu.OSDEA_CoolBar;
 import org.opensourcedea.gui.menu.OSDEA_Menu;
@@ -63,10 +61,6 @@ public class Main_GUI {
     
     shell.setMenuBar(new OSDEA_Menu(shell, stl, mainComp.getNavigation()).getMenu());
     
-
-    TabFolder tf = new TabFolder(shell, SWT.NONE);
-	TabItem deaProblem = new TabItem(tf,SWT.NONE);
-	deaProblem.setText("DEA Problem");
     
 	formData = new FormData();
 	formData.left = new FormAttachment(0);

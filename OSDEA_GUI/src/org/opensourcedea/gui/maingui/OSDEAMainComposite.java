@@ -29,9 +29,19 @@ public class OSDEAMainComposite extends Composite {
 		dataPanel = new Composite(this, SWT.BORDER);
 		dataPanel.setLayout(stackLayout);
 		
+		InstructionsComposite instrComp = new InstructionsComposite(dataPanel);
+		setDataPanelTopControl(instrComp);
+
+		
+		
+		
+
+		
 		navigation = new Navigation(this, stl);
 		navigation.setLocation(0,0);
 		navigation.pack();
+		
+
 		
 		final Sash sash = new Sash (this, SWT.VERTICAL);
 
@@ -80,6 +90,8 @@ public class OSDEAMainComposite extends Composite {
 		dataPanelData.top = new FormAttachment(0, 0);
 		dataPanelData.bottom = new FormAttachment(100, 0);
 		dataPanel.setLayoutData(dataPanelData);
+		
+		
 		
 
 

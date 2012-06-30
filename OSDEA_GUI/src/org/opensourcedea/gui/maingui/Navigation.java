@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
@@ -139,7 +140,8 @@ public class Navigation extends Composite {
 			
 		});
 		
-		addDEAProblem("New DEA Problem");
+//		addDEAProblem("New DEA Problem");
+
 
 		
 		this.setLayout(new FillLayout());

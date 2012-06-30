@@ -73,7 +73,7 @@ public class Images {
 	public static ImageRegistry getMainGUIImageRegistry(Display display) {
 		ImageRegistry imgReg = new ImageRegistry(display);
 		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "../images/pot2422-48x48x32.png"));
-//		imgReg.put("exclamation", ImageDescriptor.createFromFile(Images.class, "../images/exclamation.png"));
+		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "../images/potSmall.png"));
 		return imgReg;
 	}
 	
@@ -84,7 +84,7 @@ public class Images {
 	}
 	
 	
-	private static void paintCanvas(final Canvas canvas, final String resource, final ImageRegistry imgReg) {
+	public static void paintCanvas(final Canvas canvas, final String resource, final ImageRegistry imgReg) {
 
 		canvas.addPaintListener (new PaintListener () {
 			public void paintControl (PaintEvent e) {
@@ -103,14 +103,14 @@ public class Images {
 	
 	
 	@SuppressWarnings("unused")
-	private static Image scaleImage(Display display, Image originalImage) {
+	private static Image scaleImage(Display display, Image originalImage, int factor) {
 
-		double factor = 1d/1;
+		double intFactor = 1d/factor;
 
 		final int width = originalImage.getBounds().width; 
 		final int height = originalImage.getBounds().height; 
 
-		Image scaledImage = new Image(display, originalImage.getImageData().scaledTo((int)(width * factor),(int)(height * factor)));
+		Image scaledImage = new Image(display, originalImage.getImageData().scaledTo((int)(width * intFactor),(int)(height * intFactor)));
 
 		return scaledImage;
 	}
