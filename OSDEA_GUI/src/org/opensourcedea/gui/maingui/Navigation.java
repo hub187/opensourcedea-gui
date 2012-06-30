@@ -576,20 +576,12 @@ public class Navigation extends Composite {
 		//Objectives
 		ObjectivesComposite objComp = (ObjectivesComposite)getObjectivesTreeItem().getData();
 		
-		ArrayList<String> headers = new ArrayList<String>();
-		headers.add("DMU Names");
-		headers.add("Objective Value");
-		
-		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
-			ArrayList<String> tempArr = new ArrayList<String>();
-			tempArr.add(ldeap.getDMUNames().get(i));
-			tempArr.add(Double.toString(ldeap.getLdeapSolution().getObjective(i)));
-			data.add(tempArr);
-		}
 		
 		
-		objComp.pushObjectives(headers, data);
+
+		
+		
+		objComp.displayObjectives(ldeap);
 		
 	}
 	

@@ -13,12 +13,15 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.gui.utils.MathUtils;
+import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class ObjectivesComposite extends Composite {
 	
 	private Label objectivesLabel;
 	private Composite tableComp;
 	private Composite comp;
+	private int precision = 6;
 	
 	public ObjectivesComposite(Composite parentComp) {
 		super(parentComp, 0);
@@ -78,11 +81,27 @@ public class ObjectivesComposite extends Composite {
 	}
 	
 	
-	public void pushObjectives(ArrayList<String> headers, ArrayList<ArrayList<String>> data) {
+	public void displayObjectives(LDEAProblem ldeap) {
 		
-
+		ArrayList<String> headers = new ArrayList<String>();
+		headers.add("DMU Names");
+		headers.add("Objective Value");
 		
-		SolutionTable solTable = new SolutionTable(tableComp, headers, data);
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
+			ArrayList<String> tempArr = new ArrayList<String>();
+			tempArr.add(ldeap.getDMUNames().get(i));
+			if(MathUtils.round(ldeap.getLdeapSolution().getObjective(i), precision) == 1) {
+				tempArr.add("1");
+			}
+			else{
+				tempArr.add(Double.toString(ldeap.getLdeapSolution().getObjective(i)));
+			}
+			data.add(tempArr);
+		}
+		
+		
+		GenericTable solTable = new GenericTable(tableComp, headers, data);
 		solTable.setTable();
 		
 		Color grey = new Color (Display.getCurrent (), 240, 240, 240);
@@ -95,5 +114,7 @@ public class ObjectivesComposite extends Composite {
 		
 	}
 	
+	
+
 	
 }
