@@ -14,7 +14,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -26,7 +25,8 @@ public class InstructionsComposite extends Composite {
 	
 	private Composite comp;
 	private ScrolledComposite sComp;
-	
+	private Composite titleComp;
+	private Composite mainComp;
 	
 	InstructionsComposite(Composite parentComp) {
 		super(parentComp, SWT.NONE);
@@ -44,7 +44,7 @@ public class InstructionsComposite extends Composite {
 		comp.setLayout(new FormLayout());
 		
 		createTitle();
-		
+		createMainContent();
 		
 		sComp.setContent(comp);
 		sComp.setExpandVertical(true);
@@ -54,10 +54,53 @@ public class InstructionsComposite extends Composite {
 		
 	}
 	
+	@SuppressWarnings("unused")
+	private void createMainContent() {
+		mainComp = new Composite(comp, SWT.BORDER);
+		FormData fdata = new FormData();
+		fdata.left = new FormAttachment(0, 20);
+		fdata.top = new FormAttachment(titleComp, 20);
+		fdata.bottom = new FormAttachment(100, -10);
+		fdata.right = new FormAttachment(100, -20);
+		mainComp.setLayoutData(fdata);
+		mainComp.setLayout(new FormLayout());		
+		
+		
+		Label label = new Label(mainComp, SWT.NONE);
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0);
+		fdata.top = new FormAttachment(0);
+		label.setLayoutData(fdata);
+		String instr = "OSDEA is an Open Source Data Envelopment Analysis solver which can solve" +
+				"many different types of DEA Problems.\n\nTo get started, you can either:";
+		label.setText(instr);
+		
+		
+		Composite instrComp = new Composite(mainComp, SWT.NONE);
+		fdata = new FormData();
+		fdata.top = new FormAttachment(label, 10);
+		fdata.bottom = new FormAttachment(100);
+		fdata.left = new FormAttachment(0);
+		fdata.right = new FormAttachment(100);
+		instrComp.setLayoutData(fdata);
+		
+//		Label label01 = new Label(mainComp, SWT.NONE);
+//		Label label02 = new Label(mainComp, SWT.NONE);
+//		
+//		//Second row
+//		Label label10 = new Label(mainComp, SWT.NONE);
+//		label10.setText("1.");
+//		
+//		Label label11 = new Label(mainComp, SWT.NONE);
+//		label11.setText("Create a new DEA Problem by clicking on the New icon:");
+		
+		
+	}
+	
 	
 	private void createTitle() {
 		
-		Composite titleComp = new Composite(comp, SWT.NONE);
+		titleComp = new Composite(comp, SWT.NONE);
 		FormData fdata = new FormData();
 		fdata.left = new FormAttachment(0, 20);
 		titleComp.setLayoutData(fdata);
@@ -78,6 +121,7 @@ public class InstructionsComposite extends Composite {
 		
 		String osdeaText = "Open Source DEA";
 		StyledText title = new StyledText(titleComp, SWT.NONE);
+		title.setEnabled(false);
 		title.setText(osdeaText);
 		StyleRange styleRange = new StyleRange();
 		styleRange.start = 0;

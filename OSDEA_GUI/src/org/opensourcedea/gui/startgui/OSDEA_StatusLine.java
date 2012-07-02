@@ -54,7 +54,8 @@ public class OSDEA_StatusLine {
 	    stlStatusLabel = new Label(compStatusLine, SWT.NONE);
 	    stlStatusLabel.setText("");
 	    formData = new FormData();
-	    formData.right = new FormAttachment(80);
+	    formData.right = new FormAttachment(60);
+//	    formData.left = new FormAttachment(stlPositionLabel, 20);
 	    stlStatusLabel.setLayoutData(formData);
 	    
 	    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
