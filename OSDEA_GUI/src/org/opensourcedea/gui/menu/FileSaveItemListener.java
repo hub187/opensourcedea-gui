@@ -24,13 +24,14 @@ public class FileSaveItemListener implements SelectionListener {
     	LDEAProblem ldeap = nav.getSelectedDEAProblem();
     	LDEAPSaver saver = new LDEAPSaver(nav, stl);
     	
+    	saver.saveFile(ldeap);
 
-    	if(nav.getFilePath() != null) {
-    		saver.saveFile(nav.getFilePath(), ldeap);
-    	}
-    	else {
-    		saver.saveFileAs(ldeap);
-    	}
+//    	if(nav.getFilePath() != null) {
+//    		saver.saveFile(nav.getFilePath(), ldeap);
+//    	}
+//    	else {
+//    		saver.saveFileAs(ldeap);
+//    	}
         
     	
     }

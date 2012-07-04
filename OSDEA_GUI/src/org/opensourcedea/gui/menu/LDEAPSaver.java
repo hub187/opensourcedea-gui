@@ -30,10 +30,36 @@ public class LDEAPSaver {
 		this.stl = stl;
 	}
 	
+	public void saveFile(LDEAProblem ldeap) {
+    	if(nav.getFilePath() != null) {
+    		saveFile(nav.getFilePath(), ldeap);
+    	}
+    	else {
+    		saveFileAs(ldeap);
+    	}
+	}
+	
+	
+	public void saveAll(){
+		TreeItem[] tia = nav.getAllTreeItems();
+
+    	for(TreeItem ti : tia) {
+
+    		LDEAProblem ldeap = nav.getSelectedDEAProblem(ti);
+
+    		//WIP
+    		if(nav.getFilePath(ti) != null) {
+    			saveFile(nav.getFilePath(ti), ldeap);
+    		}
+    		else {
+    			saveFileAs(ldeap, ti);
+    		}
+    	}
+
+	}
 	
     public void saveFile(String fileName, LDEAProblem ldeap) {
     	try {
-//    		ldeap.setModified(false);
     		FileOutputStream fOut = new FileOutputStream(fileName);
     		ObjectOutputStream out = new ObjectOutputStream(fOut);
     		out.writeObject(ldeap);

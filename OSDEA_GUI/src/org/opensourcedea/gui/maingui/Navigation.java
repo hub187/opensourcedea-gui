@@ -45,7 +45,8 @@ public class Navigation extends Composite {
 	
 	private HashMap<TreeItem, String> filePathHashMap = new HashMap<TreeItem, String>();
 	
-
+	private final OSDEAMainComposite osdeaMainComp;
+	
 	final Composite parent;
 	
 	
@@ -68,6 +69,8 @@ public class Navigation extends Composite {
 		weightsImage = imgReg.get("weights");
 		
 		stl = parentStl;
+		
+		osdeaMainComp = (OSDEAMainComposite)parent;
 		
 		tree = new Tree(this, SWT.NONE);
 		
@@ -119,7 +122,6 @@ public class Navigation extends Composite {
 				
 				//Set top composite in stack layout
 				Object[] objArr = (Object[])parentIt.getData();
-				OSDEAMainComposite osdeaMainComp = (OSDEAMainComposite)parent;
 
 				if(it == parentIt) {
 					osdeaMainComp.setDataPanelTopControl((DEAPProblemComposite)objArr[1]);
@@ -140,10 +142,7 @@ public class Navigation extends Composite {
 			
 		});
 		
-//		addDEAProblem("New DEA Problem");
-
-
-		
+	
 		this.setLayout(new FillLayout());
 					
 	}
@@ -241,8 +240,6 @@ public class Navigation extends Composite {
 	}
 	
 	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap) {
-		
-		OSDEAMainComposite osdeaMainComp = (OSDEAMainComposite)parent;
 				
 		DEAPProblemComposite problemComp = new DEAPProblemComposite(osdeaMainComp.getDataPanel(), ldeap, this, stl);
 		RawDataComposite dataComp = null;
@@ -347,29 +344,25 @@ public class Navigation extends Composite {
 		
 	}
 	
-	@SuppressWarnings("unused")
-	private boolean hasDEAPData() {
-		if(deaProblemTreeItem.getData() != null) {
-			return true;
+	public void closeDEAProblem() {
+
+		TreeItem ti = getSelectedDEAProblemTreeItem();
+		
+		ti.dispose();
+		
+		if(getAllTreeItems().length == 0){
+			osdeaMainComp.setDataPanelTopControlAsInstr();
 		}
-		return false;
+
 	}
+
 	
 	
 	/*
 	 * Used by DEA Problem Composite when setting problem name
 	 */
 	public void setDEAProblemText(String str) {
-//		if(getSelectedDEAProblemTreeItem() != null) {
-//			TreeItem deapIt = getSelectedDEAProblemTreeItem();
-//			deapIt.setText(str);
-//			stl.setBarLabel1(str);
-//			if(getFilePath() != null) {
-//				String newFilePath = IOManagement.getNewFileName(getFilePath(), str);
-//				updateFilePath(newFilePath);
-//			}
-//		}
-		
+
 		setDEAProblemText(str, getSelectedDEAProblemTreeItem());
 		
 	}

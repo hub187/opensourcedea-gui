@@ -19,6 +19,7 @@ public class OSDEAMainComposite extends Composite {
 	private OSDEA_StatusLine stl;
 	private Composite dataPanel;
 	private final StackLayout stackLayout = new StackLayout();
+	private final InstructionsComposite instrComp;
 
 	public OSDEAMainComposite(Composite parent, OSDEA_StatusLine parentStl, int style) {
 		super(parent, style);
@@ -29,7 +30,7 @@ public class OSDEAMainComposite extends Composite {
 		dataPanel = new Composite(this, SWT.BORDER);
 		dataPanel.setLayout(stackLayout);
 		
-		InstructionsComposite instrComp = new InstructionsComposite(dataPanel);
+		instrComp = new InstructionsComposite(dataPanel);
 		setDataPanelTopControl(instrComp);
 
 		
@@ -101,9 +102,13 @@ public class OSDEAMainComposite extends Composite {
 		return navigation;
 	}
 	
-	public void setDataPanelTopControl(Control compName) {
-		
+	public void setDataPanelTopControl(Control compName) {		
 		stackLayout.topControl = compName;
+		dataPanel.layout();
+	}
+	
+	public void setDataPanelTopControlAsInstr() {
+		stackLayout.topControl = instrComp;
 		dataPanel.layout();
 	}
 	

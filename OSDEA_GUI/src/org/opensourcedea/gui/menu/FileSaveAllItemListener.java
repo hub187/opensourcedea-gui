@@ -2,10 +2,8 @@ package org.opensourcedea.gui.menu;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.TreeItem;
 import org.opensourcedea.gui.maingui.Navigation;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
-import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class FileSaveAllItemListener implements SelectionListener {
 	
@@ -24,25 +22,8 @@ public class FileSaveAllItemListener implements SelectionListener {
     	
     	
     	LDEAPSaver saver = new LDEAPSaver(nav, stl);
-
-    	//    	saver.saveFileAs(ldeap);
-
-    	TreeItem[] tia = nav.getAllTreeItems();
-
-    	for(TreeItem ti : tia) {
-
-    		LDEAProblem ldeap = nav.getSelectedDEAProblem(ti);
-
-    		//WIP
-    		if(nav.getFilePath(ti) != null) {
-    			saver.saveFile(nav.getFilePath(ti), ldeap);
-    		}
-    		else {
-    			saver.saveFileAs(ldeap, ti);
-    		}
-
-
-    	}
+    	saver.saveAll();
+    	
     	
     }
     

@@ -15,8 +15,9 @@ public class OSDEA_Menu {
 	
 	  private Menu menuBar, fileMenu, toolMenu, helpMenu;
 	  private MenuItem fileMenuHeader, toolMenuHeader, helpMenuHeader;
-	  private MenuItem fileNewItem, fileOpenItem, fileSaveItem, fileSaveAsItem, fileSaveAllItem, fileExitItem, toolImportItem, toolExportItem, helpGetHelpItem, helpAboutItem;
-	  private Image newImage, openImage, saveImage, saveAllImage, exitImage, importImage, exportImage, helpImage;
+	  private MenuItem fileNewItem, fileOpenItem, fileSaveItem, fileSaveAsItem, fileSaveAllItem, fileCloseItem, fileExitItem, toolImportItem,
+	  toolExportItem, helpGetHelpItem, helpAboutItem;
+	  private Image newImage, openImage, saveImage, saveAllImage, exitImage, importImage, exportImage, helpImage, closeImage;
 	  private Shell shell;
 	  private Navigation nav;
 	  private OSDEA_StatusLine stl;
@@ -43,6 +44,7 @@ public class OSDEA_Menu {
 		exportImage = imgReg.get("export");
 		helpImage = imgReg.get("help");
 		saveAllImage = imgReg.get("saveAll");
+		closeImage = imgReg.get("close");
 		
 		menuBar = new Menu(shell, SWT.BAR);
 		
@@ -78,6 +80,10 @@ public class OSDEA_Menu {
 	    fileSaveItem.setAccelerator(SWT.CTRL + SWT.SHIFT + 'S');
 	    fileSaveAllItem.setImage(saveAllImage);
 	    
+	    fileCloseItem = new MenuItem(fileMenu, SWT.PUSH);
+	    fileCloseItem.setText("&Close\tCtrl+C");
+	    fileCloseItem.setAccelerator(SWT.CTRL + 'C');
+	    fileCloseItem.setImage(closeImage);
 	    
 	    fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 	    fileExitItem.setText("&Exit\tAlt+F4");
@@ -121,6 +127,7 @@ public class OSDEA_Menu {
 	    fileSaveItem.addSelectionListener(new FileSaveItemListener(nav, stl));
 	    fileSaveAsItem.addSelectionListener(new FileSaveAsItemListener(nav, stl));
 	    fileSaveAllItem.addSelectionListener(new FileSaveAllItemListener(nav, stl));
+	    fileCloseItem.addSelectionListener(new FileCloseItemListener(nav, stl));
 	    fileExitItem.addSelectionListener(new FileExitItemListener(shell));
 	    toolImportItem.addSelectionListener(new ToolImportItemListener(shell, nav, stl));
 	    toolExportItem.addSelectionListener(new ToolExportItemListener());

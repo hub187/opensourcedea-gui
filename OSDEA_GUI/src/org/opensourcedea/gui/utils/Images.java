@@ -65,6 +65,7 @@ public class Images {
 		imgReg.put("exit", ImageDescriptor.createFromFile(Images.class, "../images/cross.png"));
 		imgReg.put("import", ImageDescriptor.createFromFile(Images.class, "../images/page_white_put.png"));
 		imgReg.put("export", ImageDescriptor.createFromFile(Images.class, "../images/page_white_get.png"));
+		imgReg.put("close", ImageDescriptor.createFromFile(Images.class, "../images/box_closed.png"));
 
 		
 		return imgReg;

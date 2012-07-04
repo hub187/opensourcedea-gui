@@ -14,6 +14,8 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -75,48 +77,53 @@ public class InstructionsComposite extends Composite {
 		fdata.top = new FormAttachment(0);
 		label.setLayoutData(fdata);
 		String instr = "OSDEA is an Open Source Data Envelopment Analysis solver which can solve" +
-				"many different types of DEA Problems.\n\n\nTo get started, you can either:";
+				"many different types of DEA Problems.\n\nTo get started, you can either:";
 		label.setText(instr);
 		
 		
-		Composite instrContentComp = new Composite(mainComp, SWT.NONE);
+		
+		Composite createNewComp = new Composite(mainComp, SWT.NONE);
 		fdata = new FormData();
 		fdata.top = new FormAttachment(label, 10);
-//		fdata.bottom = new FormAttachment(100);
 		fdata.left = new FormAttachment(0);
 		fdata.right = new FormAttachment(100);
-		instrContentComp.setLayoutData(fdata);
+		createNewComp.setLayoutData(fdata);
+		createNewComp.setLayout(new RowLayout());
 		
-		GridLayout gLayout = new GridLayout();
-		gLayout.numColumns = 2;
-		gLayout.horizontalSpacing = 10;
-		gLayout.verticalSpacing = 10;
-		instrContentComp.setLayout(gLayout);
-		
-		Label label0 = new Label(instrContentComp, SWT.NONE);
+		Label label0 = new Label(createNewComp, SWT.NONE);
 		label0.setText(" -  Create a new DEA Problem by clicking on the New Icon: ");
 		
-		Canvas dataCanvas = new Canvas(instrContentComp, SWT.NONE);
-		GridData gdata = new GridData();
-		gdata.widthHint = 16;
-		gdata.heightHint = 16;
-		dataCanvas.setLayoutData(gdata);
-		Images.paintCanvas(dataCanvas, "new");
+		Canvas canvas = new Canvas(createNewComp, SWT.NONE);
+		RowData rdata = new RowData();
+		rdata.height = 16;
+		rdata.width = 16;
+		canvas.setLayoutData(rdata);
+		Images.paintCanvas(canvas, "new");
 
 		
-		Label label1 = new Label(instrContentComp, SWT.NONE);
+		Composite openExistingComp = new Composite(mainComp, SWT.NONE);
+		fdata = new FormData();
+		fdata.top = new FormAttachment(createNewComp, 5);
+		fdata.left = new FormAttachment(0);
+		fdata.right = new FormAttachment(100);
+		openExistingComp.setLayoutData(fdata);
+		openExistingComp.setLayout(new RowLayout());
+		
+		Label label1 = new Label(openExistingComp, SWT.NONE);
 		label1.setText(" -  Or open an existing DEA Problem file by clicking on the Open Icon: ");
 		
-		dataCanvas = new Canvas(instrContentComp, SWT.NONE);
-		gdata = new GridData();
-		gdata.widthHint = 16;
-		gdata.heightHint = 16;
-		dataCanvas.setLayoutData(gdata);
-		Images.paintCanvas(dataCanvas, "open");
+		canvas = new Canvas(openExistingComp, SWT.NONE);
+		rdata = new RowData();
+		rdata.height = 16;
+		rdata.width = 16;
+		canvas.setLayoutData(rdata);
+		Images.paintCanvas(canvas, "open");
+		
+		
 		
 		Label easyLabel = new Label(mainComp, SWT.NONE);
 		fdata = new FormData();
-		fdata.top = new FormAttachment(instrContentComp, 30);
+		fdata.top = new FormAttachment(openExistingComp, 20);
 		fdata.left = new FormAttachment(0);
 		easyLabel.setLayoutData(fdata);
 		easyLabel.setText("If you are familiar with Data envelopment Analysis, using OSDEA should be straight forward." +
