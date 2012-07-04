@@ -39,7 +39,7 @@ public class FileExitItemListener implements SelectionListener {
     		MessageDialog dg = new MessageDialog(nav.getShell(),
 					"Save",
 					null,
-					"Do you want to save unsaved problem before closing OSDEA?",
+					"Do you want to save unsaved problems before closing OSDEA?",
 					MessageDialog.QUESTION_WITH_CANCEL, 
 					new String[]{
 				IDialogConstants.YES_LABEL, 
