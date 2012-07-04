@@ -405,6 +405,8 @@ public class Navigation extends Composite {
 		return tree.getItems();	
 	}
 	
+	
+	
 	private boolean isSolved() {
 		if( ((LDEAProblem)getSelectedDEAProblem()).isSolved()) {
 			return true;
@@ -415,21 +417,25 @@ public class Navigation extends Composite {
 	public LDEAProblem getSelectedDEAProblem() {
 		
 		try {
-			return getSelectedDEAProblem(getSelectedDEAProblemTreeItem());
+			return getDEAProblem(getSelectedDEAProblemTreeItem());
 		}
 		catch (Exception e) {
 			return null;
 		}
-		
-		
-		
+	
 	}
+	
+	
+	public LDEAProblem getLDEAProblem(TreeItem ti) {
+		return (LDEAProblem)((Object[])ti.getData())[0];
+	}
+	
 	
 	public TreeItem getSelectedTreeItem() {
 		return getSelectedDEAProblemTreeItem();
 	}
 	
-	public LDEAProblem getSelectedDEAProblem(TreeItem ti) {
+	public LDEAProblem getDEAProblem(TreeItem ti) {
 		return (LDEAProblem)((Object[])ti.getData())[0];
 	}
 	

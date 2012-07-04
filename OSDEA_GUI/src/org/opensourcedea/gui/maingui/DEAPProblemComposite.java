@@ -155,6 +155,12 @@ public class DEAPProblemComposite extends Composite {
 							}
 						}
 						
+						stl.setStatusLabel("Problem solved successfully");
+						
+						solveButton.setText("Problem Solved");
+						solveButton.setEnabled(false);
+						ldeap.setModified(true);
+						
 						
 					}
 					else {

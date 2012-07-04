@@ -45,7 +45,7 @@ public class LDEAPSaver {
 
     	for(TreeItem ti : tia) {
 
-    		LDEAProblem ldeap = nav.getSelectedDEAProblem(ti);
+    		LDEAProblem ldeap = nav.getDEAProblem(ti);
 
     		//WIP
     		if(nav.getFilePath(ti) != null) {

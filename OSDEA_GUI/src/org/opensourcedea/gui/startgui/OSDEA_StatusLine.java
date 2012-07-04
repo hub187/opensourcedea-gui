@@ -157,9 +157,10 @@ public class OSDEA_StatusLine {
 		stlStatusLabel.pack();
 		stlNotificationLabel.pack();
 		
-		if(stlPositionLabel.getBounds().width > 285) {
+		int i = stlStatusLabel.getBounds().x - stlPositionLabel.getBounds().x - stlPositionLabel.getBounds().width - 10;
+		
+		if(i < 0) {
 			formData = new FormData();
-//		    formData.right = new FormAttachment(100);
 		    formData.left = new FormAttachment(stlPositionLabel, 20);
 		    stlStatusLabel.setLayoutData(formData);
 		    compStatusLine.layout();

@@ -128,7 +128,7 @@ public class OSDEA_Menu {
 	    fileSaveAsItem.addSelectionListener(new FileSaveAsItemListener(nav, stl));
 	    fileSaveAllItem.addSelectionListener(new FileSaveAllItemListener(nav, stl));
 	    fileCloseItem.addSelectionListener(new FileCloseItemListener(nav, stl));
-	    fileExitItem.addSelectionListener(new FileExitItemListener(shell));
+	    fileExitItem.addSelectionListener(new FileExitItemListener(nav, stl));
 	    toolImportItem.addSelectionListener(new ToolImportItemListener(shell, nav, stl));
 	    toolExportItem.addSelectionListener(new ToolExportItemListener());
 	    helpGetHelpItem.addSelectionListener(new HelpGetHelpItemListener(stl));
