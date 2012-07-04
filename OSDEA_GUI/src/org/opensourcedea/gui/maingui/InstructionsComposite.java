@@ -112,7 +112,7 @@ public class InstructionsComposite extends Composite {
 		
 		Composite openExistingComp = new Composite(mainComp, SWT.NONE);
 		fdata = new FormData();
-		fdata.top = new FormAttachment(createNewComp, 5);
+		fdata.top = new FormAttachment(createNewComp);
 		fdata.left = new FormAttachment(0);
 		fdata.right = new FormAttachment(100);
 		openExistingComp.setLayoutData(fdata);

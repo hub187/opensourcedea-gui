@@ -27,8 +27,15 @@ public class FileNewItemListener implements SelectionListener {
 
 	}
 	
-	private void addNew(Navigation nav) {
-		nav.addDEAProblem("New DEA Problem");
+	private void addNew(final Navigation nav) {
+		
+		nav.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				nav.addDEAProblem("New DEA Problem");
+			}
+		});
+		
 		stl.setNotificalLabelDelayStandard("Created new DEA Problem.");
 		
 	}
