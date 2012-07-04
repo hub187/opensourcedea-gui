@@ -71,27 +71,36 @@ public class InstructionsComposite extends Composite {
 		mainComp.setLayout(new FormLayout());		
 		
 		
-		Label label = new Label(mainComp, SWT.NONE);
+		Label label0 = new Label(mainComp, SWT.NONE);
 		fdata = new FormData();
 		fdata.left = new FormAttachment(0);
 		fdata.top = new FormAttachment(0);
-		label.setLayoutData(fdata);
+		label0.setLayoutData(fdata);
 		String instr = "OSDEA is an Open Source Data Envelopment Analysis solver which can solve" +
-				"many different types of DEA Problems.\n\nTo get started, you can either:";
-		label.setText(instr);
+				"many different types of DEA Problems.";
+		label0.setText(instr);
+		
+		Label label1 = new Label(mainComp, SWT.NONE);
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0);
+		fdata.top = new FormAttachment(label0, 5);
+		label1.setLayoutData(fdata);
+		instr = "To get started, you can either:";
+		label1.setText(instr);
+		
 		
 		
 		
 		Composite createNewComp = new Composite(mainComp, SWT.NONE);
 		fdata = new FormData();
-		fdata.top = new FormAttachment(label, 10);
+		fdata.top = new FormAttachment(label1, 5);
 		fdata.left = new FormAttachment(0);
 		fdata.right = new FormAttachment(100);
 		createNewComp.setLayoutData(fdata);
 		createNewComp.setLayout(new RowLayout());
 		
-		Label label0 = new Label(createNewComp, SWT.NONE);
-		label0.setText(" -  Create a new DEA Problem by clicking on the New Icon: ");
+		Label label2 = new Label(createNewComp, SWT.NONE);
+		label2.setText(" -  Create a new DEA Problem by clicking on the New Icon: ");
 		
 		Canvas canvas = new Canvas(createNewComp, SWT.NONE);
 		RowData rdata = new RowData();
@@ -109,8 +118,8 @@ public class InstructionsComposite extends Composite {
 		openExistingComp.setLayoutData(fdata);
 		openExistingComp.setLayout(new RowLayout());
 		
-		Label label1 = new Label(openExistingComp, SWT.NONE);
-		label1.setText(" -  Or open an existing DEA Problem file by clicking on the Open Icon: ");
+		Label label3 = new Label(openExistingComp, SWT.NONE);
+		label3.setText(" -  Or open an existing DEA Problem file by clicking on the Open Icon: ");
 		
 		canvas = new Canvas(openExistingComp, SWT.NONE);
 		rdata = new RowData();
@@ -121,15 +130,20 @@ public class InstructionsComposite extends Composite {
 		
 		
 		
-		Label easyLabel = new Label(mainComp, SWT.NONE);
+		Label easyLabel0 = new Label(mainComp, SWT.NONE);
 		fdata = new FormData();
-		fdata.top = new FormAttachment(openExistingComp, 20);
+		fdata.top = new FormAttachment(openExistingComp, 15);
 		fdata.left = new FormAttachment(0);
-		easyLabel.setLayoutData(fdata);
-		easyLabel.setText("If you are familiar with Data envelopment Analysis, using OSDEA should be straight forward." +
-				"\n\nLook out for the helps icons on the top right hand corner of each screen. Hover your mouse on those" +
-				" if you're stuck!");
+		easyLabel0.setLayoutData(fdata);
+		easyLabel0.setText("If you are familiar with Data envelopment Analysis, using OSDEA should be straight forward");
 		
+		Label easyLabel1 = new Label(mainComp, SWT.NONE);
+		fdata = new FormData();
+		fdata.top = new FormAttachment(easyLabel0, 5);
+		fdata.left = new FormAttachment(0);
+		easyLabel1.setLayoutData(fdata);
+		easyLabel1.setText("Look out for the helps icons on the top right hand corner of each screen. Hover your mouse on those" +
+				" if you're stuck!");
 		
 	}
 	

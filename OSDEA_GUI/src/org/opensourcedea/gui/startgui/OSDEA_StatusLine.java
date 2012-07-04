@@ -30,7 +30,7 @@ public class OSDEA_StatusLine {
 	    compStatusLine.setLayout(new FormLayout());
 	    
 	    stlNotificationLabel = new Label(compStatusLine, SWT.NONE);
-	    stlNotificationLabel.setText("LabelBar0");
+	    stlNotificationLabel.setText("");
 	    formData = new FormData();
 	    formData.left = new FormAttachment(0);
 	    formData.top = new FormAttachment(0);
@@ -39,7 +39,7 @@ public class OSDEA_StatusLine {
 	    
 	    
 	    stlPositionLabel = new Label(compStatusLine, SWT.NONE);
-	    stlPositionLabel.setText("LabelBar1");
+	    stlPositionLabel.setText("");
 	    formData = new FormData();
 	    formData.left = new FormAttachment(30);
 	    stlPositionLabel.setLayoutData(formData);
@@ -54,8 +54,8 @@ public class OSDEA_StatusLine {
 	    stlStatusLabel = new Label(compStatusLine, SWT.NONE);
 	    stlStatusLabel.setText("");
 	    formData = new FormData();
-	    formData.right = new FormAttachment(60);
-//	    formData.left = new FormAttachment(stlPositionLabel, 20);
+//	    formData.right = new FormAttachment(100);
+	    formData.left = new FormAttachment(30, 285);
 	    stlStatusLabel.setLayoutData(formData);
 	    
 	    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
@@ -76,10 +76,21 @@ public class OSDEA_StatusLine {
 		
 	}
 	
+	public void resetAllLabels() {
+		stlNotificationLabel.setText("");
+		stlNotificationLabel.pack();
+		
+		stlPositionLabel.setText("");
+		stlPositionLabel.pack();
+		
+		stlStatusLabel.setText("");
+		stlStatusLabel.pack();
+	}
+	
 	
 	public void setNotificationLabel(final String str) {
 		stlNotificationLabel.setText(str);
-		stlNotificationLabel.pack();
+		refreshLabels();
 	}
 	
 	public void setNotificalLabelDelayStandard(final String str) {
@@ -102,7 +113,7 @@ public class OSDEA_StatusLine {
 	
 	public void setPositionLabel(final String str) {
 		stlPositionLabel.setText(str);
-		stlPositionLabel.pack();
+		refreshLabels();
 	}
 
 	public void setPositionLabelDelay(final String str, final int durationBeforeDeleteMs) {
@@ -121,7 +132,7 @@ public class OSDEA_StatusLine {
 	
 	public void setStatusLabel(final String str) {
 		stlStatusLabel.setText(str);
-		stlStatusLabel.pack();
+		refreshLabels();
 	}
 
 	public void setStatusLabelDelay(final String str, final int durationBeforeDeleteMs) {
@@ -140,6 +151,20 @@ public class OSDEA_StatusLine {
 
 	
 	
+	
+	private void refreshLabels() {
+		stlPositionLabel.pack();
+		stlStatusLabel.pack();
+		stlNotificationLabel.pack();
+		
+		if(stlPositionLabel.getBounds().width > 285) {
+			formData = new FormData();
+//		    formData.right = new FormAttachment(100);
+		    formData.left = new FormAttachment(stlPositionLabel, 20);
+		    stlStatusLabel.setLayoutData(formData);
+		    compStatusLine.layout();
+		}
+	}
 	
 	
 	
@@ -216,7 +241,7 @@ public class OSDEA_StatusLine {
 	 * @param nbTimes
 	 * @param totalDurationMs
 	 */
-	public void setLabelToBlinkThenClear(final Label label, final String str, final int nbTimes, final int totalDurationMs) {
+	private void setLabelToBlinkThenClear(final Label label, final String str, final int nbTimes, final int totalDurationMs) {
 		
 		label.setText(str);
 		label.pack();

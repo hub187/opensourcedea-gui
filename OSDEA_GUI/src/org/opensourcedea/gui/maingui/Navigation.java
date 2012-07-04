@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
@@ -353,7 +352,9 @@ public class Navigation extends Composite {
 		if(getAllTreeItems().length == 0){
 			osdeaMainComp.setDataPanelTopControlAsInstr();
 		}
-
+		
+		stl.resetAllLabels();
+		
 	}
 
 	
@@ -412,10 +413,15 @@ public class Navigation extends Composite {
 	}
 	
 	public LDEAProblem getSelectedDEAProblem() {
-//		TreeItem ti = getSelectedDEAProblemTreeItem();
-//		return (LDEAProblem)((Object[])ti.getData())[0];
 		
-		return getSelectedDEAProblem(getSelectedDEAProblemTreeItem());
+		try {
+			return getSelectedDEAProblem(getSelectedDEAProblemTreeItem());
+		}
+		catch (Exception e) {
+			return null;
+		}
+		
+		
 		
 	}
 	

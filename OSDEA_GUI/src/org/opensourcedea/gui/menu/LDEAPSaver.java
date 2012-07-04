@@ -60,6 +60,7 @@ public class LDEAPSaver {
 	
     public void saveFile(String fileName, LDEAProblem ldeap) {
     	try {
+    		ldeap.setModified(false);
     		FileOutputStream fOut = new FileOutputStream(fileName);
     		ObjectOutputStream out = new ObjectOutputStream(fOut);
     		out.writeObject(ldeap);
