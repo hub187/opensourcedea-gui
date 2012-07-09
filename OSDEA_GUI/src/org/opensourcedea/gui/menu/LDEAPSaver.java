@@ -80,7 +80,13 @@ public class LDEAPSaver {
 	
 	
 	public void saveFile(LDEAProblem ldeap) {
-    	if(nav.getFilePath() != null) {
+    	
+		if(ldeap == null){
+			stl.setNotificalLabelDelayStandard("You need to select a problem to save first!");
+			return;
+		}
+		
+		if(nav.getFilePath() != null) {
     		saveFile(nav.getFilePath(), ldeap);
     	}
     	else {
@@ -108,6 +114,12 @@ public class LDEAPSaver {
 	}
 	
     public void saveFile(String fileName, LDEAProblem ldeap) {
+    	
+		if(ldeap == null){
+			stl.setNotificalLabelDelayStandard("You need to select a problem to save first!");
+			return;
+		}
+    	
     	try {
     		ldeap.setModified(false);
     		FileOutputStream fOut = new FileOutputStream(fileName);
@@ -122,11 +134,22 @@ public class LDEAPSaver {
     }
     
     public void saveFileAs(LDEAProblem ldeap) {
+		if(ldeap == null){
+			stl.setNotificalLabelDelayStandard("You need to select a problem to save first!");
+			return;
+		}
+		
     	saveFileAs(ldeap, nav.getSelectedTreeItem());
     }
 
     
     public void saveFileAs(LDEAProblem ldeap, TreeItem ti) {
+    	
+		if(ldeap == null || ti == null){
+			stl.setNotificalLabelDelayStandard("You need to select a problem to save first!");
+			return;
+		}
+    	
     	FileDialog dialog = new FileDialog(nav.getShell(), SWT.SAVE);
 		dialog.setFilterNames(filterNames);
 		dialog.setFilterExtensions(filterExts);

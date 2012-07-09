@@ -41,4 +41,27 @@ public class Dimensions {
 		
 	}
 	
+	public static int getTotalStringLength(Composite comp, ArrayList<String> varl) {
+		
+		int extraPerItem = 30;
+		int length = extraPerItem;
+		Label tempL = null;
+		
+		for(String str : varl){
+			tempL = new Label(comp, SWT.NONE);
+			tempL.setText(str);
+			
+			GC gc = new GC(tempL);
+			Point size = gc.textExtent(str);
+			length = length + size.x + extraPerItem;
+			gc.dispose ();
+
+		}
+		
+		tempL.dispose();
+		
+		
+		return length;
+	}
+	
 }

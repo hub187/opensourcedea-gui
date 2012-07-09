@@ -161,7 +161,6 @@ public class DEAPProblemComposite extends Composite {
 						solveButton.setEnabled(false);
 						ldeap.setModified(true);
 						
-						
 					}
 					else {
 						ldeap.setSolved(false);
@@ -174,6 +173,8 @@ public class DEAPProblemComposite extends Composite {
 					MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
 							"could not be solved properly!");
 				}
+				
+				
 				
 				if(ldeap.isSolved()) {
 					nav.displaySolution();
