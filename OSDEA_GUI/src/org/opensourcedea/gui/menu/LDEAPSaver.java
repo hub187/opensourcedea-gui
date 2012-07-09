@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
@@ -29,6 +30,54 @@ public class LDEAPSaver {
 		this.nav = nav;
 		this.stl = stl;
 	}
+	
+	
+	
+	
+	/**
+	 * Checks if some problems were modified.
+	 * Return false if user pressed 'Cancel'.
+	 * Return true if user pressed either no or saved the file.
+	 * @return
+	 */
+	public boolean checkBeforeClosing() {
+		boolean hasUnsaved = false;
+
+		for(TreeItem ti : nav.getAllTreeItems()) {
+			if(nav.getDEAProblem(ti).isModified()) {
+				hasUnsaved = true;
+			}
+		}
+
+		if(hasUnsaved) {
+			MessageDialog dg = new MessageDialog(nav.getShell(),
+					"Save",
+					null,
+					"Do you want to save unsaved problems before closing OSDEA?",
+					MessageDialog.QUESTION_WITH_CANCEL, 
+					new String[]{
+				IDialogConstants.YES_LABEL, 
+				IDialogConstants.NO_LABEL, 
+				IDialogConstants.CANCEL_LABEL},
+				0
+					);
+			switch(dg.open()) {
+			case 0: 
+				LDEAPSaver saver = new LDEAPSaver(nav, stl);
+				saver.saveAll();
+				break;
+			case 1:
+				break;
+			case 2:
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	
 	
 	public void saveFile(LDEAProblem ldeap) {
     	if(nav.getFilePath() != null) {

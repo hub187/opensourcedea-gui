@@ -5,6 +5,8 @@ package org.opensourcedea.gui.startgui;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.opensourcedea.gui.maingui.OSDEAMainComposite;
+import org.opensourcedea.gui.menu.LDEAPSaver;
 import org.opensourcedea.gui.menu.OSDEA_CoolBar;
 import org.opensourcedea.gui.menu.OSDEA_Menu;
 import org.opensourcedea.gui.utils.Images;
@@ -40,6 +43,8 @@ public class Main_GUI {
 
     display = new Display();
     
+    
+    
     shell = new Shell(display);
     shell.setText("OSDEA");
     shell.setLayout(new FillLayout());
@@ -53,7 +58,7 @@ public class Main_GUI {
     stl = new OSDEA_StatusLine(shell);
     statusLine = stl.getCompStatusLine();
     
-    OSDEAMainComposite mainComp = new OSDEAMainComposite(shell, stl, SWT.BORDER);
+    final OSDEAMainComposite mainComp = new OSDEAMainComposite(shell, stl, SWT.BORDER);
     
     coolBar = new OSDEA_CoolBar(shell, mainComp.getNavigation(), stl).getCoolBar();
     
@@ -72,10 +77,26 @@ public class Main_GUI {
 	
 	stl.setNotificalLabelDelayStandard("OSDEA is ready!");
 	
+	
+	
+	
+	shell.addShellListener(new ShellAdapter()
+	{
+		public void shellClosed(ShellEvent e)
+		{
+			LDEAPSaver saver = new LDEAPSaver(mainComp.getNavigation(), stl);
+			if(!saver.checkBeforeClosing()) {
+				e.doit = false;
+			}
+		}
+	});
+	
 
 	try {
 		shell.open();
+		
 
+		
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
