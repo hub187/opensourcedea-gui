@@ -114,23 +114,21 @@ public class Navigation extends Composite {
 					else if(it.getText().equals(modelDetailsItemText)) {
 						((ModelDetailsComposite)getModelDetailsTreeItem().getData()).updateStatusStl();
 					}
-
-
-				}
-				
-				
-				//Set top composite in stack layout
-				Object[] objArr = (Object[])parentIt.getData();
-
-				if(it == parentIt) {
-					osdeaMainComp.setDataPanelTopControl((DEAPProblemComposite)objArr[1]);
 					
-				}
-				else{
-					osdeaMainComp.setDataPanelTopControl((Control)it.getData());
-				}
-				
+					
+					
+					//Set top composite in stack layout
+					Object[] objArr = (Object[])parentIt.getData();
 
+					if(it == parentIt) {
+						osdeaMainComp.setDataPanelTopControl((DEAPProblemComposite)objArr[1]);
+						
+					}
+					else{
+						osdeaMainComp.setDataPanelTopControl((Control)it.getData());
+					}					
+
+				}
 
 			}
 
@@ -408,7 +406,7 @@ public class Navigation extends Composite {
 	
 	
 	private boolean isSolved() {
-		if( ((LDEAProblem)getSelectedDEAProblem()).isSolved()) {
+		if(getSelectedDEAProblem().isSolved()) {
 			return true;
 		}
 		return false;
@@ -542,6 +540,7 @@ public class Navigation extends Composite {
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
 	 * wizard doesn't know about the inner structure of the program).
 	 */
+	@SuppressWarnings("null")
 	public void importData(ArrayList<double[]> dataMatrix, ArrayList<String> dmuNames, ArrayList<String> variableNames,
 			ArrayList<ArrayList<String>> fullDataMatrixString) {
 		
@@ -567,11 +566,16 @@ public class Navigation extends Composite {
 		
 		if(!backupProblem) {
 			try {
+				
+				ArrayList<String> headers = new ArrayList<String>();
+				headers.add("DMU Names");
+				headers.addAll(variableNames);
+				
 				ldeap.setDataMatrix(dataMatrix);
 				ldeap.setDMUNames(dmuNames);
 				ldeap.setVariableNames(variableNames);
 				refreshVarList();
-				setRawDataTable(variableNames, fullDataMatrixString);
+				setRawDataTable(headers, fullDataMatrixString);
 				setDataOK();
 				ldeap.setModified(true);
 				stl.setNotificalLabelDelayStandard("Successful Imported " + ldeap.getDMUNames().size() + " DMUs, " + ldeap.getVariableNames().size() + " Variables.");

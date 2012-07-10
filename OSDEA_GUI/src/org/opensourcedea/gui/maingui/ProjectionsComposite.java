@@ -19,6 +19,7 @@ import org.opensourcedea.ldeaproblem.LDEAProblem;
 public class ProjectionsComposite extends Composite {
 	
 	private Label projectionsLabel;
+	private ScrolledComposite sComp;
 	private Composite tableComp;
 	private Composite comp;
 	
@@ -26,7 +27,7 @@ public class ProjectionsComposite extends Composite {
 		super(parentComp, 0);
 		
 		this.setLayout(new FormLayout());
-		ScrolledComposite sComp = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
+		sComp = new ScrolledComposite(this, SWT.H_SCROLL | SWT.V_SCROLL);
 		FormData fdata = new FormData();
 		fdata.bottom = new FormAttachment(100);
 		fdata.top = new FormAttachment(0);
@@ -70,11 +71,11 @@ public class ProjectionsComposite extends Composite {
 		sComp.setContent(comp);
 		sComp.setExpandVertical(true);
 		sComp.setExpandHorizontal(true);
-//		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		Point prefSize = comp.computeSize(350, 300);
+		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+//		Point prefSize = comp.computeSize(350, 300);
 //		prefSize.x = prefSize.x + 20;
 //		prefSize.y = prefSize.y + 50;
-		sComp.setMinSize(prefSize);
+//		sComp.setMinSize(prefSize);
 
 		
 	}
@@ -92,6 +93,10 @@ public class ProjectionsComposite extends Composite {
 		fdata.width = Math.max(300, width);
 		tableComp.setLayoutData(fdata);
 		tableComp.layout();
+		Point prefSize = comp.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		prefSize.x = prefSize.x + 20;
+		prefSize.y = prefSize.y + 50;
+		sComp.setMinSize(prefSize);
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
