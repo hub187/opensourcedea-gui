@@ -237,7 +237,8 @@ public class Navigation extends Composite {
 	}
 	
 	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap) {
-				
+		
+		//Takes time to create (apparently even more on first time) => to investigate
 		DEAPProblemComposite problemComp = new DEAPProblemComposite(osdeaMainComp.getDataPanel(), ldeap, this, stl);
 		RawDataComposite dataComp = null;
 		if(ldeap.getVariableNames() != null && ldeap.getDataMatrix() != null && ldeap.getDMUNames() != null) {
@@ -248,6 +249,7 @@ public class Navigation extends Composite {
 			dataComp = new RawDataComposite(osdeaMainComp.getDataPanel());
 		}
 		VariablesComposite variablesComp = new VariablesComposite(osdeaMainComp.getDataPanel(), this, ldeap, stl);
+		//Takes time to create (apparently even more on first time) => to investigate
 		ModelDetailsComposite modelComp = new ModelDetailsComposite(osdeaMainComp.getDataPanel(), ldeap, stl);
 		SolutionComposite solutionComp = new SolutionComposite(osdeaMainComp.getDataPanel());
 		ObjectivesComposite objectivesComp = new ObjectivesComposite(osdeaMainComp.getDataPanel());
@@ -606,8 +608,9 @@ public class Navigation extends Composite {
 		ProjectionsComposite projComp = (ProjectionsComposite)getProjectionsTreeItem().getData();
 		projComp.displayProjections(ldeap);
 		
+
+		
 	}
-	
 	
 	
 	

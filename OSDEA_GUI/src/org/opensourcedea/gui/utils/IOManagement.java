@@ -85,7 +85,15 @@ public class IOManagement {
 	 * @return the name of the file.
 	 */
 	public static String getFileName(String fullFilePath, boolean withExtension) {
-		int i = fullFilePath.lastIndexOf("\\");
+		
+		int i = 0;
+		if(System.getProperty("os.name").startsWith("Windows")) {
+			i = fullFilePath.lastIndexOf("\\");
+		}
+		else /*suppose linux system*/ {
+			i = fullFilePath.lastIndexOf("/");
+		}
+			
 		int j = fullFilePath.lastIndexOf(".");
 
 		if(withExtension) {

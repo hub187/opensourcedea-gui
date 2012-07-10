@@ -44,7 +44,7 @@ public class FileOpenItemListener implements SelectionListener {
 				
 			}
 			catch (Exception ex) {
-				ex.printStackTrace();
+				stl.setNotificalLabelDelayStandard("File could not be opened!");
 			}
 		}
 		else {
