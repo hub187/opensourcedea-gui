@@ -43,7 +43,7 @@ public class Dimensions {
 	
 	public static int getTotalStringLength(Composite comp, ArrayList<String> varl) {
 		
-		int extraPerItem = 30;
+		int extraPerItem = 50;
 		int length = extraPerItem;
 		Label tempL = null;
 		

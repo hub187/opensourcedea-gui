@@ -1,6 +1,8 @@
 package org.opensourcedea.gui.maingui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -85,21 +87,27 @@ public class LambdasComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
-		ArrayList<Integer> efficentDMUs = new ArrayList<Integer>();
+		ArrayList<Integer> efficientDMUs = new ArrayList<Integer>();
 		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
 			Iterator<NonZeroLambda> it = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
 			while(it.hasNext()) {
-				
+				NonZeroLambda tempNzl = it.next();
+				if(!efficientDMUs.contains(tempNzl.getDMUIndex())){
+					efficientDMUs.add(tempNzl.getDMUIndex());
+				}
 			}
 		}
+		Collections.sort(efficientDMUs);
 		
+		//[5, 6, 11, 18, 16]
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
+		Iterator<Integer> it = efficientDMUs.iterator();
+		while(it.hasNext()) {
+			headers.add(ldeap.getDMUNames().get(it.next()));
+		}
 		
-		
-		headers.addAll(ldeap.getVariableNames());
-		
-		int nbVar = ldeap.getVariableNames().size();
+		int nbNzl = efficientDMUs.size();
 		
 		int width = Dimensions.getTotalStringLength(tableComp, headers);
 		FormData fdata = (FormData) tableComp.getLayoutData();
@@ -112,16 +120,30 @@ public class LambdasComposite extends Composite {
 		sComp.setMinSize(prefSize);
 		
 		
-		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
+		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
+			Iterator<NonZeroLambda> itNzl = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
+			HashMap<Integer, Double> nzlHashMap = new HashMap<Integer, Double>();
+			while(itNzl.hasNext()) {
+				NonZeroLambda tempNzl = itNzl.next();
+				nzlHashMap.put(tempNzl.getDMUIndex(), tempNzl.getLambdaValue());
+			}
+			
 			ArrayList<String> tempArr = new ArrayList<String>();
 			tempArr.add(ldeap.getDMUNames().get(i));
-			for(int j = 0; j < nbVar; j++) {
-				tempArr.add(Double.toString(ldeap.getLdeapSolution().getProjections()[i][j]));
+			for(int j = 0; j < nbNzl; j++) {
+				if(nzlHashMap.containsKey(efficientDMUs.get(j))) {
+					tempArr.add(Double.toString(nzlHashMap.get(efficientDMUs.get(j))));
+				}
+				else {
+					tempArr.add("0");
+				}
 			}
+			
 			data.add(tempArr);
 		}
+		
+
 		
 		
 		
