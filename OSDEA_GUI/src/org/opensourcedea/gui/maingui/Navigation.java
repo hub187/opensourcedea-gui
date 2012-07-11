@@ -513,6 +513,22 @@ public class Navigation extends Composite {
 		
 		return null;
 	}
+	
+	private TreeItem getLambdasTreeItem() {
+		TreeItem parent = getSelectedDEAProblemTreeItem();
+		
+		for(TreeItem it : parent.getItems()) {
+			if(it.getText().equals(solutionItemText)) {
+				for(TreeItem innerIt : it.getItems()) {
+					if(innerIt.getText().equals(lambdasItemText)) {
+						return innerIt;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
 
 	
 //	private ModelDetailsComposite getActiveModeldetailsComposite() {
@@ -602,13 +618,15 @@ public class Navigation extends Composite {
 		
 		//Objectives
 		ObjectivesComposite objComp = (ObjectivesComposite)getObjectivesTreeItem().getData();
-		objComp.displayObjectives(ldeap);
+		objComp.displaySolution(ldeap);
 		
 		//Projections
 		ProjectionsComposite projComp = (ProjectionsComposite)getProjectionsTreeItem().getData();
-		projComp.displayProjections(ldeap);
+		projComp.displaySolution(ldeap);
 		
-
+		//Lambdas
+		LambdasComposite lambdaComp = (LambdasComposite)getLambdasTreeItem().getData();
+		lambdaComp.displaySolution(ldeap);
 		
 	}
 	

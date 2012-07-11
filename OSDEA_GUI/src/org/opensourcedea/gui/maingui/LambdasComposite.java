@@ -1,6 +1,7 @@
 package org.opensourcedea.gui.maingui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -13,6 +14,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.dea.NonZeroLambda;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
@@ -81,11 +83,22 @@ public class LambdasComposite extends Composite {
 	}
 	
 	
-	public void displayLambas(LDEAProblem ldeap) {
+	public void displaySolution(LDEAProblem ldeap) {
+		
+		ArrayList<Integer> efficentDMUs = new ArrayList<Integer>();
+		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
+			Iterator<NonZeroLambda> it = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
+			while(it.hasNext()) {
+				
+			}
+		}
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
+		
+		
 		headers.addAll(ldeap.getVariableNames());
+		
 		int nbVar = ldeap.getVariableNames().size();
 		
 		int width = Dimensions.getTotalStringLength(tableComp, headers);
@@ -97,6 +110,8 @@ public class LambdasComposite extends Composite {
 		prefSize.x = prefSize.x + 20;
 		prefSize.y = prefSize.y + 50;
 		sComp.setMinSize(prefSize);
+		
+		
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {

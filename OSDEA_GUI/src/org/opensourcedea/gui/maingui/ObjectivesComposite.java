@@ -81,7 +81,7 @@ public class ObjectivesComposite extends Composite {
 	}
 	
 	
-	public void displayObjectives(LDEAProblem ldeap) {
+	public void displaySolution(LDEAProblem ldeap) {
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");

@@ -81,7 +81,7 @@ public class ProjectionsComposite extends Composite {
 	}
 	
 	
-	public void displayProjections(LDEAProblem ldeap) {
+	public void displaySolution(LDEAProblem ldeap) {
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
