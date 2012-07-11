@@ -16,6 +16,13 @@ public class FileOpenItemListener implements SelectionListener {
 	
 	private Navigation nav;
 	private OSDEA_StatusLine stl;
+	private static final String[] filterNames = {
+		"DEA Problem file (*.deap)", "All Files (*.*)"
+	};
+	private static final String[] filterExts = {
+		"*.deap", "*.*"
+	};
+	
 	
 	public FileOpenItemListener(Navigation nav, OSDEA_StatusLine stl) {
 		this.nav = nav;
@@ -27,6 +34,8 @@ public class FileOpenItemListener implements SelectionListener {
 		
 		
 		FileDialog openDialog = new FileDialog(nav.getShell(), SWT.OPEN);
+		openDialog.setFilterNames(filterNames);
+		openDialog.setFilterExtensions(filterExts);
 		
 		String fileName = openDialog.open();
 		

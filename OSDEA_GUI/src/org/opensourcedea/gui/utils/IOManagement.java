@@ -69,8 +69,7 @@ public class IOManagement {
 	 */
 	public static String getNewFileName(String fullFilePath, String newFileName) {
 
-		//MIGHT ONLY WORK ON WINDOWS!!!!
-		int i = fullFilePath.lastIndexOf("\\");
+		int i = getIndexBeforeFileName(fullFilePath);
 		String simplePath = fullFilePath.substring(0, i + 1);
 		String newFullFilePath = simplePath + newFileName + "." + getExtension(fullFilePath);
 		return newFullFilePath;
@@ -86,13 +85,7 @@ public class IOManagement {
 	 */
 	public static String getFileName(String fullFilePath, boolean withExtension) {
 		
-		int i = 0;
-		if(System.getProperty("os.name").startsWith("Windows")) {
-			i = fullFilePath.lastIndexOf("\\");
-		}
-		else /*suppose linux system*/ {
-			i = fullFilePath.lastIndexOf("/");
-		}
+		int i = getIndexBeforeFileName(fullFilePath);
 			
 		int j = fullFilePath.lastIndexOf(".");
 
@@ -103,6 +96,18 @@ public class IOManagement {
 			return fullFilePath.substring(i + 1, j);
 		}
 		return fullFilePath.substring(i + 1);
+	}
+	
+	
+	private static int getIndexBeforeFileName(String str) {
+		int i = 0;
+		if(System.getProperty("os.name").startsWith("Windows")) {
+			i = str.lastIndexOf("\\");
+		}
+		else /*suppose linux system*/ {
+			i = str.lastIndexOf("/");
+		}
+		return i;
 	}
 	
 	
