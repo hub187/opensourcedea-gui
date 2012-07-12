@@ -99,7 +99,7 @@ public class LambdasComposite extends Composite {
 		}
 		Collections.sort(efficientDMUs);
 		
-		//[5, 6, 11, 18, 16]
+		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
 		Iterator<Integer> it = efficientDMUs.iterator();
