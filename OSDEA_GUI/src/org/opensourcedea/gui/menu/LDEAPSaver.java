@@ -44,7 +44,7 @@ public class LDEAPSaver {
 		boolean hasUnsaved = false;
 
 		for(TreeItem ti : nav.getAllTreeItems()) {
-			if(nav.getDEAProblem(ti).isModified()) {
+			if(nav.getLDEAProblem(ti).isModified()) {
 				hasUnsaved = true;
 			}
 		}
@@ -100,7 +100,7 @@ public class LDEAPSaver {
 
     	for(TreeItem ti : tia) {
 
-    		LDEAProblem ldeap = nav.getDEAProblem(ti);
+    		LDEAProblem ldeap = nav.getLDEAProblem(ti);
 
     		//WIP
     		if(nav.getFilePath(ti) != null) {

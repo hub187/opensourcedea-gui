@@ -417,7 +417,7 @@ public class Navigation extends Composite {
 	public LDEAProblem getSelectedDEAProblem() {
 		
 		try {
-			return getDEAProblem(getSelectedDEAProblemTreeItem());
+			return getLDEAProblem(getSelectedDEAProblemTreeItem());
 		}
 		catch (Exception e) {
 			return null;
@@ -434,10 +434,7 @@ public class Navigation extends Composite {
 	public TreeItem getSelectedTreeItem() {
 		return getSelectedDEAProblemTreeItem();
 	}
-	
-	public LDEAProblem getDEAProblem(TreeItem ti) {
-		return (LDEAProblem)((Object[])ti.getData())[0];
-	}
+
 	
 	
 	/*
@@ -529,6 +526,38 @@ public class Navigation extends Composite {
 		
 		return null;
 	}
+	
+	private TreeItem getSlacksTreeItem() {
+		TreeItem parent = getSelectedDEAProblemTreeItem();
+		
+		for(TreeItem it : parent.getItems()) {
+			if(it.getText().equals(solutionItemText)) {
+				for(TreeItem innerIt : it.getItems()) {
+					if(innerIt.getText().equals(slacksItemText)) {
+						return innerIt;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private TreeItem getWeightsTreeItem() {
+		TreeItem parent = getSelectedDEAProblemTreeItem();
+		
+		for(TreeItem it : parent.getItems()) {
+			if(it.getText().equals(solutionItemText)) {
+				for(TreeItem innerIt : it.getItems()) {
+					if(innerIt.getText().equals(weightsItemText)) {
+						return innerIt;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
 
 	
 //	private ModelDetailsComposite getActiveModeldetailsComposite() {
@@ -558,7 +587,6 @@ public class Navigation extends Composite {
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
 	 * wizard doesn't know about the inner structure of the program).
 	 */
-	@SuppressWarnings("null")
 	public void importData(ArrayList<double[]> dataMatrix, ArrayList<String> dmuNames, ArrayList<String> variableNames,
 			ArrayList<ArrayList<String>> fullDataMatrixString) {
 		
@@ -627,6 +655,15 @@ public class Navigation extends Composite {
 		//Lambdas
 		LambdasComposite lambdaComp = (LambdasComposite)getLambdasTreeItem().getData();
 		lambdaComp.displaySolution(ldeap);
+		
+		
+		//Lambdas
+		SlacksComposite slackComp = (SlacksComposite)getSlacksTreeItem().getData();
+		slackComp.displaySolution(ldeap);
+		
+		//Weight
+		WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
+		weightsComp.displaySolution(ldeap);
 		
 	}
 	
