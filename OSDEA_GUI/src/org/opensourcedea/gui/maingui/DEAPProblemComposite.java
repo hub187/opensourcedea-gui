@@ -28,11 +28,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
-import org.opensourcedea.exception.DEASolverException;
-import org.opensourcedea.exception.InconsistentNoOfDMUsException;
-import org.opensourcedea.exception.InconsistentNoOfVariablesException;
-import org.opensourcedea.exception.MissingDataException;
-import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
@@ -130,58 +125,70 @@ public class DEAPProblemComposite extends Composite {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				DEAPConverter converter = new DEAPConverter();
-				DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
-				try {
-					solve(deap);
+				final DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
 
-					if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
-						ldeap.setSolved(true);
-						ldeap.initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
-						ldeap.getLdeapSolution().setObjectives(deap.getObjectives());
-						ldeap.getLdeapSolution().setProjections(deap.getProjections());
-						ldeap.getLdeapSolution().setReferenceSets(deap.getReferenceSet());
-						ldeap.getLdeapSolution().setSlacks(deap.getSlacks());
-						ldeap.getLdeapSolution().setWeights(deap.getWeight());
-						ldeap.getLdeapSolution().setStatus(deap.getOptimisationStatus());
+				new Thread() {
+					public void run() {
 
-						if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
-								ldeap.getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
-								ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
+						//						comp.getDisplay().asyncExec(new Runnable() {
+						//							public void run() {
 
-							for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
-								ldeap.getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
+						try {
+
+							solve(deap);
+
+							if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
+								ldeap.setSolved(true);
+								ldeap.initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
+								ldeap.getLdeapSolution().setObjectives(deap.getObjectives());
+								ldeap.getLdeapSolution().setProjections(deap.getProjections());
+								ldeap.getLdeapSolution().setReferenceSets(deap.getReferenceSet());
+								ldeap.getLdeapSolution().setSlacks(deap.getSlacks());
+								ldeap.getLdeapSolution().setWeights(deap.getWeight());
+								ldeap.getLdeapSolution().setStatus(deap.getOptimisationStatus());
+
+								if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
+										ldeap.getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
+										ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
+
+									for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
+										ldeap.getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
+									}
+									for(int i = 0; i < deap.getuBConvexityConstraintWeights().length; i++){
+										ldeap.getLdeapSolution().setuBConvexityConstraintWeight(i, deap.getuBConvexityConstraintWeight(i));
+									}
+
+								}
+
+								if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
+									for(int i = 0; i < deap.getU0Weights().length; i++){
+										ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
+									}
+								}
+
+								stl.setStatusLabel("Problem solved successfully");
+
+								solveButton.setText("Problem Solved");
+								solveButton.setEnabled(false);
+								ldeap.setModified(true);
+
 							}
-							for(int i = 0; i < deap.getuBConvexityConstraintWeights().length; i++){
-								ldeap.getLdeapSolution().setuBConvexityConstraintWeight(i, deap.getuBConvexityConstraintWeight(i));
+							else {
+								ldeap.setSolved(false);
+								MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+										"could not be solved optimally! Check the data.");
 							}
-
+						}
+						catch (Exception ex) {
+							ldeap.setSolved(false);
+							MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+									"could not be solved properly!");
 						}
 
-						if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
-							for(int i = 0; i < deap.getU0Weights().length; i++){
-								ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
-							}
-						}
-
-						stl.setStatusLabel("Problem solved successfully");
-
-						solveButton.setText("Problem Solved");
-						solveButton.setEnabled(false);
-						ldeap.setModified(true);
+						//							}});
 
 					}
-					else {
-						ldeap.setSolved(false);
-						MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-								"could not be solved optimally! Check the data.");
-					}
-				}
-				catch (Exception ex) {
-					ldeap.setSolved(false);
-					MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-							"could not be solved properly!");
-				}
-
+				}.start();
 
 
 				if(ldeap.isSolved()) {
@@ -356,102 +363,100 @@ public class DEAPProblemComposite extends Composite {
 
 
 	private void solve(final DEAProblem deap) {
-
-		final int max = progress.getBarMaximum();		
+	
 		final int nbDMUs = deap.getNumberOfDMUs();
 
-
-		comp.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-
-				for(int i = 0; i < deap.getNumberOfDMUs(); i++) {
+				for(int i = 0; i < nbDMUs; i++) {
+					
 					final int pos = i;
+					
+					comp.getDisplay().syncExec(new Runnable() {
+						public void run() {
+					Integer dmu = pos + 1;
+					
 					try {
-						deap.solveOne(i);
+						deap.solveOne(pos);
+						progress.updateProgressLabelText("Solved DMU " + dmu.toString() + " of " + nbDMUs);
 						System.out.println("Solved dmu " + ((Integer)pos).toString());
-					} catch (InconsistentNoOfVariablesException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InconsistentNoOfDMUsException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (MissingDataException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ProblemNotSolvedProperlyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (DEASolverException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					} catch (Exception e) {
+						//
 					}
 
 					if (progress.getProgressBar().isDisposed ()) return;
 					double prog = 100*(((double)pos+1)/(double)nbDMUs);
 					progress.getProgressBar().setSelection((int)prog);
+
 					System.out.println("Updated progress bar" + prog); 
-				
-					}
-			}});
-
-
-
-		}
-
-
-
-		private class Progress {
-
-			final ProgressBar progressBar;
-			final Label progressStatusLabel;
-			final Group progressGroup;
-
-			public Progress(Composite comp) {
-				progressGroup = new Group(comp, SWT.NONE);
-				progressGroup.setText("Solving Problem");
-				FormData formData = new FormData();
-				formData.left = new FormAttachment(0, 20);
-				formData.right = new FormAttachment(100, -20);
-				formData.top = new FormAttachment(solveButton, 20);
-				progressGroup.setVisible(true);
-				progressGroup.setLayoutData(formData);
-				progressGroup.setLayout(new FormLayout());
-
-
-				progressStatusLabel = new Label(progressGroup, SWT.NONE);
-				progressStatusLabel.setText("Solving DMU x of y");
-				formData = new FormData();
-				formData.left = new FormAttachment(0, 5);
-				formData.top = new FormAttachment(0, 10);
-				formData.height = 20;
-				progressStatusLabel.setVisible(true);
-				progressStatusLabel.setLayoutData(formData);
-
-				progressBar = new ProgressBar(progressGroup, SWT.BORDER);
-				formData = new FormData();
-				formData.left = new FormAttachment(0, 5);
-				formData.top = new FormAttachment(progressStatusLabel, 5);
-				formData.bottom = new FormAttachment(100, -15);
-				formData.height = 20;
-				formData.width = 400;
-				progressBar.setVisible(true);
-				progressBar.setLayoutData(formData);
-
-
-			}
-
-			public ProgressBar getProgressBar() {
-				return progressBar;
-			}
-
-			public int getBarMaximum() {
-				return progressBar.getMaximum();
-			}
-
-		}
-
-
+					
+						}});
+					
+				}
+			
 
 
 
 	}
+
+
+
+	private class Progress {
+
+		final ProgressBar progressBar;
+		final Label progressStatusLabel;
+		final Group progressGroup;
+
+		public Progress(Composite comp) {
+			progressGroup = new Group(comp, SWT.NONE);
+			progressGroup.setText("Solving Problem");
+			FormData formData = new FormData();
+			formData.left = new FormAttachment(0, 20);
+			formData.right = new FormAttachment(100, -20);
+			formData.top = new FormAttachment(solveButton, 20);
+			progressGroup.setVisible(true);
+			progressGroup.setLayoutData(formData);
+			progressGroup.setLayout(new FormLayout());
+
+
+			progressStatusLabel = new Label(progressGroup, SWT.NONE);
+			progressStatusLabel.setText("");
+			formData = new FormData();
+			formData.left = new FormAttachment(0, 5);
+			formData.top = new FormAttachment(0, 10);
+			formData.height = 20;
+			progressStatusLabel.setVisible(true);
+			progressStatusLabel.setLayoutData(formData);
+
+			progressBar = new ProgressBar(progressGroup, SWT.BORDER);
+			formData = new FormData();
+			formData.left = new FormAttachment(0, 5);
+			formData.top = new FormAttachment(progressStatusLabel, 5);
+			formData.bottom = new FormAttachment(100, -15);
+			formData.height = 20;
+			formData.width = 400;
+			progressBar.setVisible(true);
+			progressBar.setLayoutData(formData);
+
+
+		}
+
+		public ProgressBar getProgressBar() {
+			return progressBar;
+		}
+
+//		public int getBarMaximum() {
+//			return progressBar.getMaximum();
+//		}
+
+		public void updateProgressLabelText(String str) {
+			progressStatusLabel.setText(str);
+			progressStatusLabel.pack();
+		}
+
+
+	}
+
+
+
+
+
+}
