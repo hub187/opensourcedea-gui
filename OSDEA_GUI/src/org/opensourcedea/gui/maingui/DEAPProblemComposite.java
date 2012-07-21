@@ -28,6 +28,11 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
+import org.opensourcedea.exception.DEASolverException;
+import org.opensourcedea.exception.InconsistentNoOfDMUsException;
+import org.opensourcedea.exception.InconsistentNoOfVariablesException;
+import org.opensourcedea.exception.MissingDataException;
+import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
@@ -40,6 +45,7 @@ public class DEAPProblemComposite extends Composite {
 	private final Navigation nav;
 	private final LDEAProblem ldeap;
 	private Group remActionsGroup;
+	private Progress progress;
 	private FormData fdata;
 	private Canvas dataCanvas;
 	private Label dataLabel;
@@ -51,7 +57,7 @@ public class DEAPProblemComposite extends Composite {
 	private Composite comp;
 	private Button solveButton;
 	private final OSDEA_StatusLine stl;
-	
+
 	private final String dataHelp = "In order to import some data, you need to click Tools/import or click on the import icon in the ToolBar.\n" +
 			"This will open a wizard which will allow you to import data from a csv file.";
 	private final String varHelp = "In order to configure the variables, you need to have imported some data.\n" +
@@ -60,7 +66,7 @@ public class DEAPProblemComposite extends Composite {
 	private final String modelHelp = "In order to select a model type, select the Model Details tree item on the right.\n" +
 			"You can then select a model type from the main Combo Box .\n" +
 			"If you want, you can use the filters to help you in selecting a model type.";
-	
+
 	public DEAPProblemComposite(Composite parentComp, LDEAProblem parentLdeap, Navigation parentNav, final OSDEA_StatusLine stl) {
 		super(parentComp, 0);
 
@@ -69,13 +75,13 @@ public class DEAPProblemComposite extends Composite {
 		this.stl = stl;
 
 		this.setLayout(new GridLayout());
-		
-		
-		
+
+
+
 		sComp = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
 		sComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sComp.setLayout(new FormLayout());
-		
+
 		comp = new Composite(sComp, SWT.NONE);
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0);
@@ -92,15 +98,15 @@ public class DEAPProblemComposite extends Composite {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.width = 200;
 		deaPNameText.setLayoutData(fdata);
-		
-		
+
+
 		String helpText = "If you need help, hover your mouse over the yellow warning icons.";
 		Images.setHelpIcon(comp, helpText, 10, 20);
-		
+
 		//Create the Actions / Status Group
 		setActionsGroup();
 
-		
+
 		solveButton = new Button(comp, SWT.PUSH);
 		solveButton.setText("Solve the DEA Problem...");
 		fdata = new FormData();
@@ -108,7 +114,7 @@ public class DEAPProblemComposite extends Composite {
 		fdata.top = new FormAttachment(remActionsGroup, 20);
 		solveButton.setEnabled(false);
 		solveButton.setLayoutData(fdata);
-		
+
 		solveButton.addMouseListener(new MouseListener() {
 
 			@Override
@@ -137,10 +143,10 @@ public class DEAPProblemComposite extends Composite {
 						ldeap.getLdeapSolution().setSlacks(deap.getSlacks());
 						ldeap.getLdeapSolution().setWeights(deap.getWeight());
 						ldeap.getLdeapSolution().setStatus(deap.getOptimisationStatus());
-						
+
 						if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
 								ldeap.getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
-										ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
+								ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
 
 							for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
 								ldeap.getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
@@ -150,19 +156,19 @@ public class DEAPProblemComposite extends Composite {
 							}
 
 						}
-						
+
 						if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
 							for(int i = 0; i < deap.getU0Weights().length; i++){
 								ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
 							}
 						}
-						
+
 						stl.setStatusLabel("Problem solved successfully");
-						
+
 						solveButton.setText("Problem Solved");
 						solveButton.setEnabled(false);
 						ldeap.setModified(true);
-						
+
 					}
 					else {
 						ldeap.setSolved(false);
@@ -175,21 +181,21 @@ public class DEAPProblemComposite extends Composite {
 					MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
 							"could not be solved properly!");
 				}
-				
-				
-				
+
+
+
 				if(ldeap.isSolved()) {
 					nav.displaySolution();
 				}
 			}
 
 		});
-		
 
 
-		
-		Progress progress = new Progress(comp);
-		
+
+
+		progress = new Progress(comp);
+
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
 			public void run() {
@@ -232,12 +238,12 @@ public class DEAPProblemComposite extends Composite {
 		sComp.setExpandVertical(true);
 		sComp.setExpandHorizontal(true);
 		sComp.setMinSize(400, 300);
-		
+
 
 	}
-	
-	
-	
+
+
+
 
 	public void setDataOK() {
 		Images.paintCanvas(dataCanvas, "accept");
@@ -251,7 +257,7 @@ public class DEAPProblemComposite extends Composite {
 		variablesLabel.setText("Variables are configured correctly.");
 		variablesLabel.pack();
 	}
-	
+
 	public void setVariablesNOK() {
 		Images.paintCanvas(variablesCanvas, "error");
 		variablesLabel.setText("Configure the problem variables!");
@@ -264,7 +270,7 @@ public class DEAPProblemComposite extends Composite {
 		modelDetailsLabel.setText("A DEA Problem was selected.");
 		modelDetailsLabel.pack();
 	}
-	
+
 	public void setModelDetailsNOK() {
 		Images.paintCanvas(modelDetailsCanvas, "error");
 		modelDetailsLabel.setText("Configure the DEA model type!");
@@ -276,19 +282,19 @@ public class DEAPProblemComposite extends Composite {
 		remActionsGroup.setText("You're all set!");
 		solveButton.setEnabled(true);
 		stl.setNotificalLabelDelayStandard("You are ready to solve!");
-		
+
 	}
-	
+
 	public void setAllNOK() {
 		remActionsGroup.setText("You still need to:");
 		solveButton.setEnabled(false);
 	} 
 
-	
-	
+
+
 
 	private void setActionsGroup() {
-		
+
 		remActionsGroup = new Group(comp, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
@@ -302,8 +308,8 @@ public class DEAPProblemComposite extends Composite {
 		remActionsGroup.setLayoutData(fdata);
 
 
-		
-		
+
+
 		dataCanvas = new Canvas(remActionsGroup, SWT.NONE);
 		GridData gdata = new GridData();
 		gdata.widthHint = 16;
@@ -315,9 +321,9 @@ public class DEAPProblemComposite extends Composite {
 
 		dataLabel = new Label(remActionsGroup, SWT.NONE);
 		dataLabel.setText("Import some data!");
-	
-		
-		
+
+
+
 		variablesCanvas = new Canvas(remActionsGroup, SWT.NONE);
 		gdata = new GridData();
 		gdata.widthHint = 16;
@@ -326,12 +332,12 @@ public class DEAPProblemComposite extends Composite {
 		variablesCanvas.setLayoutData(gdata);
 		Images.paintCanvas(variablesCanvas, "error");
 		variablesCanvas.setToolTipText(varHelp);
-		
+
 		variablesLabel = new Label(remActionsGroup, SWT.NONE);
 		variablesLabel.setText("Configure the problem variables!");
 
 
-		
+
 		modelDetailsCanvas = new Canvas(remActionsGroup, SWT.NONE);
 		gdata = new GridData();
 		gdata.widthHint = 16;
@@ -340,65 +346,112 @@ public class DEAPProblemComposite extends Composite {
 		modelDetailsCanvas.setLayoutData(gdata);
 		Images.paintCanvas(modelDetailsCanvas, "error");
 		modelDetailsCanvas.setToolTipText(modelHelp);
-		
+
 		modelDetailsLabel = new Label(remActionsGroup, SWT.NONE);
 		modelDetailsLabel.setText("Configure the DEA model type!");
 
-		
-		
-	}
-	
-	
-	private void solve(DEAProblem deap) {
-		for(int i = 0; i < deap.getNumberOfDMUs(); i++) {
-			
-		}
+
+
 	}
 
 
+	private void solve(final DEAProblem deap) {
 
-	private class Progress {
-		
-		public Progress(Composite comp) {
-			Group progressGroup = new Group(comp, SWT.NONE);
-			progressGroup.setText("Solving Problem");
-			FormData formData = new FormData();
-			formData.left = new FormAttachment(0, 20);
-			formData.right = new FormAttachment(100, -20);
-			formData.top = new FormAttachment(solveButton, 20);
-			progressGroup.setVisible(true);
-			progressGroup.setLayoutData(formData);
-			progressGroup.setLayout(new FormLayout());
+		final int max = progress.getBarMaximum();		
+		final int nbDMUs = deap.getNumberOfDMUs();
 
-			
-			final ProgressBar progressBar = new ProgressBar(progressGroup, SWT.BORDER);
-			formData = new FormData();
-			formData.left = new FormAttachment(0, 5);
-			formData.top = new FormAttachment(0, 10);
-			formData.height = 20;
-			formData.width = 400;
-			progressBar.setVisible(true);
-			progressBar.setLayoutData(formData);
-			
-			final Label progressStatusLabel = new Label(progressGroup, SWT.NONE);
-			progressStatusLabel.setText("Solving DMU x of y");
-			formData = new FormData();
-			formData.left = new FormAttachment(0, 5);
-			formData.top = new FormAttachment(progressBar, 10);
-			formData.bottom = new FormAttachment(100, -5);
-			formData.height = 20;
-			progressStatusLabel.setVisible(true);
-			progressStatusLabel.setLayoutData(formData);
+
+		comp.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+
+				for(int i = 0; i < deap.getNumberOfDMUs(); i++) {
+					final int pos = i;
+					try {
+						deap.solveOne(i);
+						System.out.println("Solved dmu " + ((Integer)pos).toString());
+					} catch (InconsistentNoOfVariablesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InconsistentNoOfDMUsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (MissingDataException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ProblemNotSolvedProperlyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (DEASolverException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					if (progress.getProgressBar().isDisposed ()) return;
+					double prog = 100*(((double)pos+1)/(double)nbDMUs);
+					progress.getProgressBar().setSelection((int)prog);
+					System.out.println("Updated progress bar" + prog); 
+				
+					}
+			}});
+
+
+
 		}
-		
-		public void updateProgressBar() {
-			
+
+
+
+		private class Progress {
+
+			final ProgressBar progressBar;
+			final Label progressStatusLabel;
+			final Group progressGroup;
+
+			public Progress(Composite comp) {
+				progressGroup = new Group(comp, SWT.NONE);
+				progressGroup.setText("Solving Problem");
+				FormData formData = new FormData();
+				formData.left = new FormAttachment(0, 20);
+				formData.right = new FormAttachment(100, -20);
+				formData.top = new FormAttachment(solveButton, 20);
+				progressGroup.setVisible(true);
+				progressGroup.setLayoutData(formData);
+				progressGroup.setLayout(new FormLayout());
+
+
+				progressStatusLabel = new Label(progressGroup, SWT.NONE);
+				progressStatusLabel.setText("Solving DMU x of y");
+				formData = new FormData();
+				formData.left = new FormAttachment(0, 5);
+				formData.top = new FormAttachment(0, 10);
+				formData.height = 20;
+				progressStatusLabel.setVisible(true);
+				progressStatusLabel.setLayoutData(formData);
+
+				progressBar = new ProgressBar(progressGroup, SWT.BORDER);
+				formData = new FormData();
+				formData.left = new FormAttachment(0, 5);
+				formData.top = new FormAttachment(progressStatusLabel, 5);
+				formData.bottom = new FormAttachment(100, -15);
+				formData.height = 20;
+				formData.width = 400;
+				progressBar.setVisible(true);
+				progressBar.setLayoutData(formData);
+
+
+			}
+
+			public ProgressBar getProgressBar() {
+				return progressBar;
+			}
+
+			public int getBarMaximum() {
+				return progressBar.getMaximum();
+			}
+
 		}
-		
+
+
+
+
+
 	}
-
-
-
-
-
-}
