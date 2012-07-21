@@ -124,14 +124,17 @@ public class DEAPProblemComposite extends Composite {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
+				
 				DEAPConverter converter = new DEAPConverter();
 				final DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
-
+				
+				comp.getDisplay().syncExec(new Runnable() {
+					public void run() {
+						updateLayout();
+					}});
+				
 				new Thread() {
 					public void run() {
-
-						//						comp.getDisplay().asyncExec(new Runnable() {
-						//							public void run() {
 
 						try {
 
@@ -165,27 +168,35 @@ public class DEAPProblemComposite extends Composite {
 										ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
 									}
 								}
-
-								stl.setStatusLabel("Problem solved successfully");
-
-								solveButton.setText("Problem Solved");
-								solveButton.setEnabled(false);
+								
+								comp.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										stl.setStatusLabel("Problem solved successfully");
+										solveButton.setText("Problem Solved");
+										solveButton.setEnabled(false);
+									}});
+								
 								ldeap.setModified(true);
 
 							}
 							else {
 								ldeap.setSolved(false);
-								MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-										"could not be solved optimally! Check the data.");
+								comp.getDisplay().syncExec(new Runnable() {
+									public void run() {
+										MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+												"could not be solved optimally! Check the data.");
+									}});
 							}
 						}
 						catch (Exception ex) {
+							ex.printStackTrace();
 							ldeap.setSolved(false);
-							MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-									"could not be solved properly!");
+							comp.getDisplay().syncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+											"could not be solved properly!");
+								}});
 						}
-
-						//							}});
 
 					}
 				}.start();
@@ -201,7 +212,7 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-		progress = new Progress(comp);
+		progress = new Progress(comp, remActionsGroup);
 
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
@@ -363,17 +374,14 @@ public class DEAPProblemComposite extends Composite {
 
 
 	private void solve(final DEAProblem deap) {
-	
+
 		final int nbDMUs = deap.getNumberOfDMUs();
 
-				for(int i = 0; i < nbDMUs; i++) {
-					
-					final int pos = i;
-					
-					comp.getDisplay().syncExec(new Runnable() {
-						public void run() {
+		for(int i = 0; i < nbDMUs; i++) {
+			final int pos = i;
+			comp.getDisplay().syncExec(new Runnable() {
+				public void run() {
 					Integer dmu = pos + 1;
-					
 					try {
 						deap.solveOne(pos);
 						progress.updateProgressLabelText("Solved DMU " + dmu.toString() + " of " + nbDMUs);
@@ -383,36 +391,50 @@ public class DEAPProblemComposite extends Composite {
 					}
 
 					if (progress.getProgressBar().isDisposed ()) return;
-					double prog = 100*(((double)pos+1)/(double)nbDMUs);
+					double prog = 1000*(((double)pos+1)/(double)nbDMUs);
 					progress.getProgressBar().setSelection((int)prog);
 
 					System.out.println("Updated progress bar" + prog); 
-					
-						}});
-					
-				}
-			
 
-
-
+				}});
+		}
 	}
 
+	
+	private void updateLayout() {
+		FormData formData = new FormData();
+		formData.left = new FormAttachment(0, 20);
+		formData.right = new FormAttachment(100, -20);
+		formData.top = new FormAttachment(remActionsGroup, 20);
+		progress.getProgressGroup().setVisible(true);
+		progress.getProgressGroup().setLayoutData(formData);
+		
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0, 20);
+		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
+		solveButton.setLayoutData(fdata);
+		
+		comp.layout();
+	}
+	
 
 
 	private class Progress {
 
-		final ProgressBar progressBar;
-		final Label progressStatusLabel;
-		final Group progressGroup;
-
-		public Progress(Composite comp) {
+		private final ProgressBar progressBar;
+		private final Label progressStatusLabel;
+		private final Group progressGroup;
+		
+		public Progress(Composite comp, Group remActionsGroup) {
+			
+			
 			progressGroup = new Group(comp, SWT.NONE);
 			progressGroup.setText("Solving Problem");
 			FormData formData = new FormData();
 			formData.left = new FormAttachment(0, 20);
 			formData.right = new FormAttachment(100, -20);
 			formData.top = new FormAttachment(solveButton, 20);
-			progressGroup.setVisible(true);
+			progressGroup.setVisible(false);
 			progressGroup.setLayoutData(formData);
 			progressGroup.setLayout(new FormLayout());
 
@@ -427,18 +449,25 @@ public class DEAPProblemComposite extends Composite {
 			progressStatusLabel.setLayoutData(formData);
 
 			progressBar = new ProgressBar(progressGroup, SWT.BORDER);
+			progressBar.setMaximum(1000);
 			formData = new FormData();
 			formData.left = new FormAttachment(0, 5);
+			formData.right = new FormAttachment(100, -5);
 			formData.top = new FormAttachment(progressStatusLabel, 5);
 			formData.bottom = new FormAttachment(100, -15);
 			formData.height = 20;
-			formData.width = 400;
 			progressBar.setVisible(true);
 			progressBar.setLayoutData(formData);
 
 
 		}
-
+		
+		
+		public Group getProgressGroup() {
+			return progressGroup;
+		}
+		
+		
 		public ProgressBar getProgressBar() {
 			return progressBar;
 		}
