@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
@@ -96,6 +97,7 @@ public class DEAPProblemComposite extends Composite {
 		String helpText = "If you need help, hover your mouse over the yellow warning icons.";
 		Images.setHelpIcon(comp, helpText, 10, 20);
 		
+		//Create the Actions / Status Group
 		setActionsGroup();
 
 		
@@ -103,7 +105,7 @@ public class DEAPProblemComposite extends Composite {
 		solveButton.setText("Solve the DEA Problem...");
 		fdata = new FormData();
 		fdata.left = new FormAttachment(0, 20);
-		fdata.top = new FormAttachment(remActionsGroup, 10);
+		fdata.top = new FormAttachment(remActionsGroup, 20);
 		solveButton.setEnabled(false);
 		solveButton.setLayoutData(fdata);
 		
@@ -124,7 +126,7 @@ public class DEAPProblemComposite extends Composite {
 				DEAPConverter converter = new DEAPConverter();
 				DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
 				try {
-					deap.solve();
+					solve(deap);
 
 					if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
 						ldeap.setSolved(true);
@@ -184,8 +186,10 @@ public class DEAPProblemComposite extends Composite {
 		});
 		
 
-		
 
+		
+		Progress progress = new Progress(comp);
+		
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
 			public void run() {
@@ -343,10 +347,55 @@ public class DEAPProblemComposite extends Composite {
 		
 		
 	}
+	
+	
+	private void solve(DEAProblem deap) {
+		for(int i = 0; i < deap.getNumberOfDMUs(); i++) {
+			
+		}
+	}
 
 
 
+	private class Progress {
+		
+		public Progress(Composite comp) {
+			Group progressGroup = new Group(comp, SWT.NONE);
+			progressGroup.setText("Solving Problem");
+			FormData formData = new FormData();
+			formData.left = new FormAttachment(0, 20);
+			formData.right = new FormAttachment(100, -20);
+			formData.top = new FormAttachment(solveButton, 20);
+			progressGroup.setVisible(true);
+			progressGroup.setLayoutData(formData);
+			progressGroup.setLayout(new FormLayout());
 
+			
+			final ProgressBar progressBar = new ProgressBar(progressGroup, SWT.BORDER);
+			formData = new FormData();
+			formData.left = new FormAttachment(0, 5);
+			formData.top = new FormAttachment(0, 10);
+			formData.height = 20;
+			formData.width = 400;
+			progressBar.setVisible(true);
+			progressBar.setLayoutData(formData);
+			
+			final Label progressStatusLabel = new Label(progressGroup, SWT.NONE);
+			progressStatusLabel.setText("Solving DMU x of y");
+			formData = new FormData();
+			formData.left = new FormAttachment(0, 5);
+			formData.top = new FormAttachment(progressBar, 10);
+			formData.bottom = new FormAttachment(100, -5);
+			formData.height = 20;
+			progressStatusLabel.setVisible(true);
+			progressStatusLabel.setLayoutData(formData);
+		}
+		
+		public void updateProgressBar() {
+			
+		}
+		
+	}
 
 
 
