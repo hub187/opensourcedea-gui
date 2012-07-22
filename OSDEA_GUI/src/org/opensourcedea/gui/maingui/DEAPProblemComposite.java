@@ -316,7 +316,6 @@ public class DEAPProblemComposite extends Composite {
 		solveButton.setEnabled(false);
 	} 
 
-	//a silly modification for 1st commit
 	
 
 	private void setActionsGroup() {
