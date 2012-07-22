@@ -20,10 +20,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
@@ -39,28 +36,17 @@ public class DEAPProblemComposite extends Composite {
 	private final StyledText deaPNameText;
 	private final Navigation nav;
 	private final LDEAProblem ldeap;
-	private Group remActionsGroup;
+	private ProblemStatus probStatus;
 	private SolvingProgress progress;
 	private FormData fdata;
-	private Canvas dataCanvas;
-	private Label dataLabel;
-	private Label variablesLabel;
-	private Canvas variablesCanvas;
-	private Label modelDetailsLabel;
-	private Canvas modelDetailsCanvas;
+	
 	private ScrolledComposite sComp;
 	private Composite comp;
 	private Button solveButton;
 	private final OSDEA_StatusLine stl;
+	
+	private Thread solvingThread;
 
-	private final String dataHelp = "In order to import some data, you need to click Tools/import or click on the import icon in the ToolBar.\n" +
-			"This will open a wizard which will allow you to import data from a csv file.";
-	private final String varHelp = "In order to configure the variables, you need to have imported some data.\n" +
-			"Once data has been imported, select the Variables tree item on the right hand side and assign each variable to a box.\n" +
-			"All variables need to be assigned and there must be at least 1 input. and 1 output.";
-	private final String modelHelp = "In order to select a model type, select the Model Details tree item on the right.\n" +
-			"You can then select a model type from the main Combo Box .\n" +
-			"If you want, you can use the filters to help you in selecting a model type.";
 
 	public DEAPProblemComposite(Composite parentComp, LDEAProblem parentLdeap, Navigation parentNav, final OSDEA_StatusLine stl) {
 		super(parentComp, 0);
@@ -99,14 +85,15 @@ public class DEAPProblemComposite extends Composite {
 		Images.setHelpIcon(comp, helpText, 10, 20);
 
 		//Create the Actions / Status Group
-		setActionsGroup();
-
+		probStatus = new ProblemStatus(comp, deaPNameText);
+		probStatus.setActionsGroup();
+		
 
 		solveButton = new Button(comp, SWT.PUSH);
 		solveButton.setText("Solve the DEA Problem...");
 		fdata = new FormData();
 		fdata.left = new FormAttachment(0, 20);
-		fdata.top = new FormAttachment(remActionsGroup, 20);
+		fdata.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
 		solveButton.setEnabled(false);
 		solveButton.setLayoutData(fdata);
 
@@ -133,7 +120,13 @@ public class DEAPProblemComposite extends Composite {
 						updateLayout();
 					}});
 				
-				new Thread() {
+				if(solvingThread != null){
+					if(solvingThread.isAlive()){
+						return;
+					}
+				}
+				
+				solvingThread = new Thread() {
 					public void run() {
 
 						try {
@@ -208,7 +201,9 @@ public class DEAPProblemComposite extends Composite {
 						
 						
 					}
-				}.start();
+				};
+				
+				solvingThread.start();
 			
 				
 
@@ -220,7 +215,7 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-		progress = new SolvingProgress(comp, remActionsGroup, solveButton);
+		progress = new SolvingProgress(comp, probStatus.getRemActionsGroup(), solveButton);
 
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
@@ -272,112 +267,54 @@ public class DEAPProblemComposite extends Composite {
 
 
 	public void setDataOK() {
-		Images.paintCanvas(dataCanvas, "accept");
-		dataLabel.setText("Data were imported successfully.");
-		dataLabel.pack();
+		Images.paintCanvas(probStatus.getDataCanvas(), "accept");
+		probStatus.getDataLabel().setText("Data were imported successfully.");
+		probStatus.getDataLabel().pack();
 	}
 
 
 	public void setVariablesOK() {
-		Images.paintCanvas(variablesCanvas, "accept");
-		variablesLabel.setText("Variables are configured correctly.");
-		variablesLabel.pack();
+		Images.paintCanvas(probStatus.getVariablesCanvas(), "accept");
+		probStatus.getVariablesLabel().setText("Variables are configured correctly.");
+		probStatus.getVariablesLabel().pack();
 	}
 
 	public void setVariablesNOK() {
-		Images.paintCanvas(variablesCanvas, "error");
-		variablesLabel.setText("Configure the problem variables!");
-		variablesLabel.pack();
+		Images.paintCanvas(probStatus.getVariablesCanvas(), "error");
+		probStatus.getVariablesLabel().setText("Configure the problem variables!");
+		probStatus.getVariablesLabel().pack();
 		setAllNOK();
 	}
 
 	public void setModelDetailsOK() {
-		Images.paintCanvas(modelDetailsCanvas, "accept");
-		modelDetailsLabel.setText("A DEA Problem was selected.");
-		modelDetailsLabel.pack();
+		Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "accept");
+		probStatus.getmodelDetailsLabel().setText("A DEA Problem was selected.");
+		probStatus.getmodelDetailsLabel().pack();
 	}
 
 	public void setModelDetailsNOK() {
-		Images.paintCanvas(modelDetailsCanvas, "error");
-		modelDetailsLabel.setText("Configure the DEA model type!");
-		modelDetailsLabel.pack();
+		Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "error");
+		probStatus.getmodelDetailsLabel().setText("Configure the DEA model type!");
+		probStatus.getmodelDetailsLabel().pack();
 		setAllNOK();
 	}
 
 	public void setAllOK() {
-		remActionsGroup.setText("You're all set!");
+		probStatus.getRemActionsGroup().setText("You're all set!");
 		solveButton.setEnabled(true);
 		stl.setNotificalLabelDelayStandard("You are ready to solve!");
 
 	}
 
 	public void setAllNOK() {
-		remActionsGroup.setText("You still need to:");
+		probStatus.getRemActionsGroup().setText("You still need to:");
 		solveButton.setEnabled(false);
 	} 
 
 	
-
-	private void setActionsGroup() {
-
-		remActionsGroup = new Group(comp, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		remActionsGroup.setLayout(gridLayout);
-		remActionsGroup.setText("You still need to:");
-		fdata = new FormData();
-		fdata.top = new FormAttachment(deaPNameText, 20);
-		fdata.left = new FormAttachment(0, 20);
-		fdata.height = 100;
-		fdata.right = new FormAttachment(100, -20);
-		remActionsGroup.setLayoutData(fdata);
-
-
-
-
-		dataCanvas = new Canvas(remActionsGroup, SWT.NONE);
-		GridData gdata = new GridData();
-		gdata.widthHint = 16;
-		gdata.heightHint = 16;
-		gdata.grabExcessVerticalSpace = true;
-		dataCanvas.setLayoutData(gdata);
-		Images.paintCanvas(dataCanvas, "error");
-		dataCanvas.setToolTipText(dataHelp);
-
-		dataLabel = new Label(remActionsGroup, SWT.NONE);
-		dataLabel.setText("Import some data!");
-
-
-
-		variablesCanvas = new Canvas(remActionsGroup, SWT.NONE);
-		gdata = new GridData();
-		gdata.widthHint = 16;
-		gdata.heightHint = 16;
-		gdata.grabExcessVerticalSpace = true;
-		variablesCanvas.setLayoutData(gdata);
-		Images.paintCanvas(variablesCanvas, "error");
-		variablesCanvas.setToolTipText(varHelp);
-
-		variablesLabel = new Label(remActionsGroup, SWT.NONE);
-		variablesLabel.setText("Configure the problem variables!");
-
-
-
-		modelDetailsCanvas = new Canvas(remActionsGroup, SWT.NONE);
-		gdata = new GridData();
-		gdata.widthHint = 16;
-		gdata.heightHint = 16;
-		gdata.grabExcessVerticalSpace = true;
-		modelDetailsCanvas.setLayoutData(gdata);
-		Images.paintCanvas(modelDetailsCanvas, "error");
-		modelDetailsCanvas.setToolTipText(modelHelp);
-
-		modelDetailsLabel = new Label(remActionsGroup, SWT.NONE);
-		modelDetailsLabel.setText("Configure the DEA model type!");
-
-
-
-	}
+	
+	
+	
 
 
 	private void solve(final DEAProblem deap) {
@@ -413,7 +350,7 @@ public class DEAPProblemComposite extends Composite {
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0, 20);
 		formData.right = new FormAttachment(100, -20);
-		formData.top = new FormAttachment(remActionsGroup, 20);
+		formData.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
 		progress.getProgressGroup().setVisible(true);
 		progress.getProgressGroup().setLayoutData(formData);
 		
@@ -427,7 +364,11 @@ public class DEAPProblemComposite extends Composite {
 	
 
 
-
+	
+	public class SolvingThread extends Thread {
+		
+	}
+	
 
 
 
