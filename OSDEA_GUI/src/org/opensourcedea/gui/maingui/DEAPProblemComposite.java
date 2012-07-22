@@ -24,10 +24,10 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
@@ -40,7 +40,7 @@ public class DEAPProblemComposite extends Composite {
 	private final Navigation nav;
 	private final LDEAProblem ldeap;
 	private Group remActionsGroup;
-	private Progress progress;
+	private SolvingProgress progress;
 	private FormData fdata;
 	private Canvas dataCanvas;
 	private Label dataLabel;
@@ -197,14 +197,22 @@ public class DEAPProblemComposite extends Composite {
 											"could not be solved properly!");
 								}});
 						}
-
+						
+						
+						comp.getDisplay().syncExec(new Runnable() {
+							public void run() {
+								if(ldeap.isSolved()) {
+									nav.displaySolution();
+								}
+							}});
+						
+						
 					}
 				}.start();
+			
+				
 
-
-				if(ldeap.isSolved()) {
-					nav.displaySolution();
-				}
+			
 			}
 
 		});
@@ -212,7 +220,7 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-		progress = new Progress(comp, remActionsGroup);
+		progress = new SolvingProgress(comp, remActionsGroup, solveButton);
 
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
@@ -309,7 +317,7 @@ public class DEAPProblemComposite extends Composite {
 	} 
 
 
-
+	
 
 	private void setActionsGroup() {
 
@@ -384,14 +392,15 @@ public class DEAPProblemComposite extends Composite {
 					Integer dmu = pos + 1;
 					try {
 						deap.solveOne(pos);
-						progress.updateProgressLabelText("Solved DMU " + dmu.toString() + " of " + nbDMUs);
+						Integer perc = 100 * dmu / nbDMUs;
+						progress.updateProgressLabelText("Solved DMU " + dmu.toString() + " of " + nbDMUs + " (" + perc.toString() + "%).");
 						System.out.println("Solved dmu " + ((Integer)pos).toString());
 					} catch (Exception e) {
 						//
 					}
 
 					if (progress.getProgressBar().isDisposed ()) return;
-					double prog = 1000*(((double)pos+1)/(double)nbDMUs);
+					double prog = OSDEAParameters.getProgressBarMaximum()*(((double)pos+1)/(double)nbDMUs);
 					progress.getProgressBar().setSelection((int)prog);
 
 					System.out.println("Updated progress bar" + prog); 
@@ -419,70 +428,6 @@ public class DEAPProblemComposite extends Composite {
 	
 
 
-	private class Progress {
-
-		private final ProgressBar progressBar;
-		private final Label progressStatusLabel;
-		private final Group progressGroup;
-		
-		public Progress(Composite comp, Group remActionsGroup) {
-			
-			
-			progressGroup = new Group(comp, SWT.NONE);
-			progressGroup.setText("Solving Problem");
-			FormData formData = new FormData();
-			formData.left = new FormAttachment(0, 20);
-			formData.right = new FormAttachment(100, -20);
-			formData.top = new FormAttachment(solveButton, 20);
-			progressGroup.setVisible(false);
-			progressGroup.setLayoutData(formData);
-			progressGroup.setLayout(new FormLayout());
-
-
-			progressStatusLabel = new Label(progressGroup, SWT.NONE);
-			progressStatusLabel.setText("");
-			formData = new FormData();
-			formData.left = new FormAttachment(0, 5);
-			formData.top = new FormAttachment(0, 10);
-			formData.height = 20;
-			progressStatusLabel.setVisible(true);
-			progressStatusLabel.setLayoutData(formData);
-
-			progressBar = new ProgressBar(progressGroup, SWT.BORDER);
-			progressBar.setMaximum(1000);
-			formData = new FormData();
-			formData.left = new FormAttachment(0, 5);
-			formData.right = new FormAttachment(100, -5);
-			formData.top = new FormAttachment(progressStatusLabel, 5);
-			formData.bottom = new FormAttachment(100, -15);
-			formData.height = 20;
-			progressBar.setVisible(true);
-			progressBar.setLayoutData(formData);
-
-
-		}
-		
-		
-		public Group getProgressGroup() {
-			return progressGroup;
-		}
-		
-		
-		public ProgressBar getProgressBar() {
-			return progressBar;
-		}
-
-//		public int getBarMaximum() {
-//			return progressBar.getMaximum();
-//		}
-
-		public void updateProgressLabelText(String str) {
-			progressStatusLabel.setText(str);
-			progressStatusLabel.pack();
-		}
-
-
-	}
 
 
 

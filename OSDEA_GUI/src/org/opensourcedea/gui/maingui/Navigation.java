@@ -203,11 +203,11 @@ public class Navigation extends Composite {
 		}
 		
 		if(areVarOK && areDataOK && isModelOK) {
-			comp.setAllOK();
 			if(isSolved()) {
 				stl.setStatusLabel("Problem Solved");
 			}
 			else {
+				comp.setAllOK();
 				stl.setStatusLabel("You are ready to solve");
 			}
 		}
