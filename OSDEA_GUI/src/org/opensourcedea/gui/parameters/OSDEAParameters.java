@@ -4,7 +4,7 @@ public class OSDEAParameters {
 	
 	private static int progressBarMaximum = 1000;
 	
-
+	
 	
 	public static int getProgressBarMaximum() {
 		return progressBarMaximum;

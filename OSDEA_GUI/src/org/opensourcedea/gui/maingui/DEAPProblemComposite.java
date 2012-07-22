@@ -21,9 +21,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
+import org.opensourcedea.exception.IncompatibleModelTypeException;
+import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
+import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
@@ -39,13 +43,14 @@ public class DEAPProblemComposite extends Composite {
 	private ProblemStatus probStatus;
 	private SolvingProgress progress;
 	private FormData fdata;
-	
+
 	private ScrolledComposite sComp;
 	private Composite comp;
 	private Button solveButton;
 	private final OSDEA_StatusLine stl;
-	
-	private Thread solvingThread;
+
+
+	private SolvingThread solvingThread;
 
 
 	public DEAPProblemComposite(Composite parentComp, LDEAProblem parentLdeap, Navigation parentNav, final OSDEA_StatusLine stl) {
@@ -88,134 +93,56 @@ public class DEAPProblemComposite extends Composite {
 		probStatus = new ProblemStatus(comp, deaPNameText);
 		probStatus.setActionsGroup();
 		
-
+		
+		//Create the progress group
+		progress = new SolvingProgress(comp, probStatus.getRemActionsGroup(), solveButton);
+		
+		
 		solveButton = new Button(comp, SWT.PUSH);
-		solveButton.setText("Solve the DEA Problem...");
-		fdata = new FormData();
-		fdata.left = new FormAttachment(0, 20);
-		fdata.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
-		solveButton.setEnabled(false);
-		solveButton.setLayoutData(fdata);
+		
+		//Sets correct layout for solveButton and progressGroup when progress group needs to be hidden
+		hideProgressGroup();
+		
+		
 
 		solveButton.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				
+
 				DEAPConverter converter = new DEAPConverter();
 				final DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
-				
+
 				comp.getDisplay().syncExec(new Runnable() {
 					public void run() {
-						updateLayout();
+						solveButton.setText("Cancel");
+						showProgressGroup();
 					}});
-				
+
 				if(solvingThread != null){
 					if(solvingThread.isAlive()){
+						solvingThread.sendStopRequest();
 						return;
 					}
 				}
-				
-				solvingThread = new Thread() {
-					public void run() {
 
-						try {
-
-							solve(deap);
-
-							if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
-								ldeap.setSolved(true);
-								ldeap.initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
-								ldeap.getLdeapSolution().setObjectives(deap.getObjectives());
-								ldeap.getLdeapSolution().setProjections(deap.getProjections());
-								ldeap.getLdeapSolution().setReferenceSets(deap.getReferenceSet());
-								ldeap.getLdeapSolution().setSlacks(deap.getSlacks());
-								ldeap.getLdeapSolution().setWeights(deap.getWeight());
-								ldeap.getLdeapSolution().setStatus(deap.getOptimisationStatus());
-
-								if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
-										ldeap.getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
-										ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
-
-									for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
-										ldeap.getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
-									}
-									for(int i = 0; i < deap.getuBConvexityConstraintWeights().length; i++){
-										ldeap.getLdeapSolution().setuBConvexityConstraintWeight(i, deap.getuBConvexityConstraintWeight(i));
-									}
-
-								}
-
-								if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
-									for(int i = 0; i < deap.getU0Weights().length; i++){
-										ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
-									}
-								}
-								
-								comp.getDisplay().syncExec(new Runnable() {
-									public void run() {
-										stl.setStatusLabel("Problem solved successfully");
-										solveButton.setText("Problem Solved");
-										solveButton.setEnabled(false);
-									}});
-								
-								ldeap.setModified(true);
-
-							}
-							else {
-								ldeap.setSolved(false);
-								comp.getDisplay().syncExec(new Runnable() {
-									public void run() {
-										MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-												"could not be solved optimally! Check the data.");
-									}});
-							}
-						}
-						catch (Exception ex) {
-							ex.printStackTrace();
-							ldeap.setSolved(false);
-							comp.getDisplay().syncExec(new Runnable() {
-								public void run() {
-									MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
-											"could not be solved properly!");
-								}});
-						}
-						
-						
-						comp.getDisplay().syncExec(new Runnable() {
-							public void run() {
-								if(ldeap.isSolved()) {
-									nav.displaySolution();
-								}
-							}});
-						
-						
-					}
-				};
-				
+				solvingThread = new SolvingThread(deap, comp.getDisplay(), nav, stl, solveButton);			
 				solvingThread.start();
-			
-				
 
-			
 			}
 
 		});
 
 
-
-
-		progress = new SolvingProgress(comp, probStatus.getRemActionsGroup(), solveButton);
+		
 
 
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() {
@@ -311,17 +238,171 @@ public class DEAPProblemComposite extends Composite {
 		solveButton.setEnabled(false);
 	} 
 
-	
-	
-	
-	
 
 
-	private void solve(final DEAProblem deap) {
+	private void showProgressGroup() {
+		FormData formData = new FormData();
+		formData.left = new FormAttachment(0, 20);
+		formData.right = new FormAttachment(100, -20);
+		formData.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
+		progress.getProgressGroup().setVisible(true);
+		progress.getProgressGroup().setLayoutData(formData);
 
-		final int nbDMUs = deap.getNumberOfDMUs();
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0, 20);
+		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
+		solveButton.setLayoutData(fdata);
 
-		for(int i = 0; i < nbDMUs; i++) {
+		comp.layout();
+	}
+	
+	private void hideProgressGroup() {
+		
+		progress.getProgressGroup().setVisible(false);
+		solveButton.setText(OSDEAConstants.solveButtonText);
+		solveButton.pack();
+		
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0, 20);
+		fdata.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
+		solveButton.setEnabled(true);
+		solveButton.setLayoutData(fdata);
+		
+		comp.layout();
+	}
+
+
+
+
+
+
+
+
+	public class SolvingThread extends Thread {
+
+		DEAProblem deap;
+		Display display;
+		Navigation nav;
+		OSDEA_StatusLine stl;
+		Button solveButton;
+		volatile boolean stopRequested = false;
+		boolean cancelled = true;
+
+		public SolvingThread(DEAProblem deap, Display display, Navigation nav, OSDEA_StatusLine stl, Button solveButton) {
+			this.deap = deap;
+			this.display = display;
+			this.nav = nav;
+			this.stl = stl;
+			this.solveButton = solveButton;
+		}
+
+		public void run() {
+
+			try {
+
+				final int nbDMUs = deap.getNumberOfDMUs();
+
+				for(int i = 0; i < nbDMUs; i++) {
+					if(stopRequested) {
+						Thread.currentThread().interrupt();
+						display.syncExec(new Runnable() {
+								public void run() {
+									hideProgressGroup();
+								}});
+						return;
+					}
+					solve(deap, nbDMUs, i);
+				}
+
+				copyAndDisplaySolution(deap);
+				
+			}
+
+			catch (Exception ex) {
+				ex.printStackTrace();
+				ldeap.setSolved(false);
+				display.syncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+								"could not be solved properly!");
+					}});
+			}
+
+
+			display.syncExec(new Runnable() {
+				public void run() {
+					if(ldeap.isSolved()) {
+						nav.displaySolution();
+					}
+				}});
+
+
+		}
+
+
+		public void sendStopRequest() {
+			stopRequested = true;
+
+			if (this != null) {
+				Thread.currentThread().interrupt();
+			}
+		}
+
+		
+		private void copyAndDisplaySolution(DEAProblem deap) throws ProblemNotSolvedProperlyException, IncompatibleModelTypeException {
+			if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
+				ldeap.setSolved(true);
+				ldeap.initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
+				ldeap.getLdeapSolution().setObjectives(deap.getObjectives());
+				ldeap.getLdeapSolution().setProjections(deap.getProjections());
+				ldeap.getLdeapSolution().setReferenceSets(deap.getReferenceSet());
+				ldeap.getLdeapSolution().setSlacks(deap.getSlacks());
+				ldeap.getLdeapSolution().setWeights(deap.getWeight());
+				ldeap.getLdeapSolution().setStatus(deap.getOptimisationStatus());
+
+				if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
+						ldeap.getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
+						ldeap.getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
+
+					for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
+						ldeap.getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
+					}
+					for(int i = 0; i < deap.getuBConvexityConstraintWeights().length; i++){
+						ldeap.getLdeapSolution().setuBConvexityConstraintWeight(i, deap.getuBConvexityConstraintWeight(i));
+					}
+
+				}
+
+				if(ldeap.getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
+					for(int i = 0; i < deap.getU0Weights().length; i++){
+						ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
+					}
+				}
+
+				display.syncExec(new Runnable() {
+					public void run() {
+						stl.setStatusLabel("Problem solved successfully");
+						solveButton.setText("Problem Solved");
+						solveButton.pack();
+						solveButton.setEnabled(false);
+					}});
+
+				ldeap.setModified(true);
+
+			}
+			else {
+				ldeap.setSolved(false);
+				display.syncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
+								"could not be solved optimally! Check the data.");
+					}});
+			}
+		}
+		
+
+		private void solve(final DEAProblem deap, final int nbDMUs, int i) {
+
 			final int pos = i;
 			comp.getDisplay().syncExec(new Runnable() {
 				public void run() {
@@ -342,34 +423,19 @@ public class DEAPProblemComposite extends Composite {
 					System.out.println("Updated progress bar" + prog); 
 
 				}});
+
 		}
+
+
 	}
 
-	
-	private void updateLayout() {
-		FormData formData = new FormData();
-		formData.left = new FormAttachment(0, 20);
-		formData.right = new FormAttachment(100, -20);
-		formData.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
-		progress.getProgressGroup().setVisible(true);
-		progress.getProgressGroup().setLayoutData(formData);
-		
-		fdata = new FormData();
-		fdata.left = new FormAttachment(0, 20);
-		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
-		solveButton.setLayoutData(fdata);
-		
-		comp.layout();
+
+
+
+
+	public class AnotherClass {
+
 	}
-	
-
-
-	
-	public class SolvingThread extends Thread {
-		
-	}
-	
-
 
 
 
