@@ -48,17 +48,16 @@ public class SolvingThread extends Thread {
 					Thread.currentThread().interrupt();
 					display.syncExec(new Runnable() {
 							public void run() {
+								stl.setNotificalLabelDelayStandard("Solving cancelled.");
 								comp.hideProgressGroup();
 							}});
 					return;
 				}
 				solve(deap, nbDMUs, i);
 			}
-
-			copyAndDisplaySolution(deap);
 			
+			copyAndDisplaySolution(deap);
 		}
-
 		catch (Exception ex) {
 			ex.printStackTrace();
 			ldeap.setSolved(false);
@@ -66,16 +65,10 @@ public class SolvingThread extends Thread {
 				public void run() {
 					MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
 							"could not be solved properly!");
+					stl.setNotificalLabelDelayStandard("Solving error.");
+					comp.hideProgressGroup();
 				}});
 		}
-
-
-		display.syncExec(new Runnable() {
-			public void run() {
-				if(ldeap.isSolved()) {
-					nav.displaySolution();
-				}
-			}});
 
 
 	}
@@ -139,6 +132,15 @@ public class SolvingThread extends Thread {
 							"could not be solved optimally! Check the data.");
 				}});
 		}
+		
+		
+		display.syncExec(new Runnable() {
+			public void run() {
+				if(ldeap.isSolved()) {
+					nav.displaySolution();
+				}
+			}});
+		
 	}
 	
 

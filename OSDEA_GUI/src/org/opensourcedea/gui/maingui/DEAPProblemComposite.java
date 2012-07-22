@@ -103,11 +103,9 @@ public class DEAPProblemComposite extends Composite {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 			}
-
 			@Override
 			public void mouseDown(MouseEvent e) {
 			}
-
 			@Override
 			public void mouseUp(MouseEvent e) {
 
