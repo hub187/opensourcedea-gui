@@ -6,6 +6,7 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
@@ -36,15 +37,15 @@ public class DEAPProblemComposite extends Composite {
 	private ProblemStatus probStatus;
 	private SolvingProgress progress;
 	private FormData fdata;
-
 	private ScrolledComposite sComp;
 	private Composite comp;
 	private Button solveButton;
 	private final OSDEA_StatusLine stl;
 	private DEAPProblemComposite thisComp;
-
 	private SolvingThread solvingThread;
-
+	
+	
+	
 
 	public DEAPProblemComposite(Composite parentComp, LDEAProblem parentLdeap, Navigation parentNav, final OSDEA_StatusLine stl) {
 		super(parentComp, 0);
@@ -108,10 +109,27 @@ public class DEAPProblemComposite extends Composite {
 			}
 			@Override
 			public void mouseUp(MouseEvent e) {
-
+				
+				//First check whether this is a problem reset (if it is then return)
+				if(ldeap.isSolved()){
+					if(MessageDialog.openConfirm(nav.getShell(), "Confirm Reset", "The DEA Problem was already solved. " +
+							"Resetting the DEA problem will delete the exiting solution and problem parameters." +
+							"\n\nDo you want to reset the problem and discard the solution and problem parameters?")) {
+						System.out.println("Yes");
+						
+						return;
+					}
+					else {
+						System.out.println("No");
+						return;
+					}
+				}
+				
+				
 				DEAPConverter converter = new DEAPConverter();
 				final DEAProblem deap = converter.convertLDEAP(nav.getSelectedDEAProblem());
-
+				
+				
 				comp.getDisplay().syncExec(new Runnable() {
 					public void run() {
 						solveButton.setText("Cancel");
@@ -250,7 +268,12 @@ public class DEAPProblemComposite extends Composite {
 	public void hideProgressGroup() {
 		
 		progress.getProgressGroup().setVisible(false);
-		solveButton.setText(OSDEAConstants.solveButtonText);
+		if(!ldeap.isSolved()){
+			solveButton.setText(OSDEAConstants.solveButtonText);
+		}
+		else {
+			solveButton.setText("Reset DEA Problem");
+		}
 		solveButton.pack();
 		
 		fdata = new FormData();

@@ -39,25 +39,25 @@ import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class ModelDetailsComposite extends Composite {
 
-	
+
 	final String allOr = "ALL ORIENTATIONS";
 	final String inputOr = "INPUT ORIENTED";
 	final String outputOr = "OUTPUT ORIENTED";
 	final String nonOr = "NON ORIENTED";
-	
+
 	final String allRts = "ALL RTS";
 	final String constRts = "CONSTANT RTS";
 	final String varRts = "VARIABLE RTS";
 	final String genRts = "GENERAL RTS";
 	final String incRts = "INCREASING RTS";
 	final String decRts = "DECREASING RTS";
-	
+
 	final String allEff = "ALL EFFICIENCIES";
 	final String techEff = "TECHNICAL EFFICIENCY";
 	final String mixEff = "MIX EFFICIENCY";
-	
+
 	final OSDEA_StatusLine stl;
-	
+
 	private ComboViewer orientationCombo;
 	private ComboViewer efficiencyCombo;
 	private ComboViewer rtsCombo;
@@ -65,13 +65,17 @@ public class ModelDetailsComposite extends Composite {
 	private Spinner rtsUBSpinner;
 	private Label rtsUBLabelText;
 	private LDEAProblem ldeap;
-	
+
+	private ComboViewer modTypesCombo;
+
+
+
 	public ModelDetailsComposite(Composite parentComp, final LDEAProblem parentLdeap, OSDEA_StatusLine stl) {
 		super(parentComp, 0);
-		
+
 		this.stl = stl;
 		this.ldeap = parentLdeap;
-		
+
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() { 
 			public void run() { 
 				createControls();
@@ -79,18 +83,18 @@ public class ModelDetailsComposite extends Composite {
 		});
 
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings({"unchecked","rawtypes"})
 	void createControls() {
-		
+
 		this.setLayout(new GridLayout());
-		
+
 		ScrolledComposite sComp = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
 		sComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sComp.setLayout(new FormLayout());
-		
+
 		Composite comp = new Composite(sComp, SWT.NONE);
 		FormData fdata = new FormData();
 		fdata.left = new FormAttachment(0);
@@ -99,35 +103,35 @@ public class ModelDetailsComposite extends Composite {
 		fdata.bottom = new FormAttachment(100);
 		comp.setLayoutData(fdata);
 		comp.setLayout(new FormLayout());
-		
+
 		String helpText = "You can select the DEA model you need from the main ComboBox.\n" +
-		"You can use the filters to narrow down the models.";
+				"You can use the filters to narrow down the models.";
 		Images.setHelpIcon(comp, helpText, 10, 20);
-		
+
 		ArrayList<String> orList = new ArrayList<String>();
 		Collections.addAll(orList, new String[]{allOr, inputOr, outputOr, nonOr}); 
-		
+
 		ArrayList rtsList = new ArrayList<String>();
 		Collections.addAll(rtsList, new String[]{allRts, constRts, varRts, genRts, incRts, decRts});
-		
+
 		ArrayList effList = new ArrayList<String>();
 		Collections.addAll(effList, new String[]{allEff, techEff, mixEff});
-		
-		
+
+
 		//BINDINGS
 		DataBindingContext bindingContext = new DataBindingContext();
 
-		
-		
+
+
 		Label rawDataLabel = new Label(comp, SWT.NONE);
 		rawDataLabel.setText("Please chose a Model Type:");
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 10);
 		fdata.left = new FormAttachment(0, 20);
 		rawDataLabel.setLayoutData(fdata);
-		
-		
-		
+
+
+
 		//DESCRIPTION GROUP
 		final Group descGroup = new Group(comp, SWT.NONE);
 		descGroup.setText("Model Description");
@@ -138,7 +142,7 @@ public class ModelDetailsComposite extends Composite {
 		fdata.right = new FormAttachment(100, -20);
 		descGroup.setLayoutData(fdata);
 		descGroup.setLayout(new FormLayout());
-		
+
 		final Text description = new Text(descGroup, SWT.WRAP | SWT.MULTI);// | SWT.BORDER);
 		Color tr = new Color(comp.getDisplay(), 240, 240, 240);
 		description.setBackground(tr);
@@ -149,16 +153,16 @@ public class ModelDetailsComposite extends Composite {
 		fdata.right = new FormAttachment(100, -10);
 		description.setLayoutData(fdata);
 
-		
-		
+
+
 		//MAIN MODEL TYPE COMBO
-		final ComboViewer modTypesCombo = new ComboViewer(comp, SWT.READ_ONLY);
+		modTypesCombo = new ComboViewer(comp, SWT.READ_ONLY);
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 35);
 		fdata.left = new FormAttachment(0, 20);
 		modTypesCombo.getCombo().setLayoutData(fdata);
-		
-		
+
+
 		final IObservableValue widgetObservable = ViewersObservables.observeSingleSelection(modTypesCombo);
 		bindingContext.bindValue(widgetObservable, PojoObservables.observeValue(ldeap.getModelDetails(), "modelType"));
 		widgetObservable.addChangeListener(new IChangeListener() {
@@ -172,73 +176,73 @@ public class ModelDetailsComposite extends Composite {
 				else {
 					stl.setNotificalLabelDelayStandard("Model Type Reseted");
 				}
-				
-			}
-			
-		});
-		
 
-		
+			}
+
+		});
+
+
+
 		final ModelDetailsParamGroup paramGroup = new ModelDetailsParamGroup(comp, bindingContext, ldeap, modTypesCombo, descGroup,
 				orList,  rtsList, effList);
-		
-		
-	
+
+
+
 		modTypesCombo.setContentProvider(new ObservableListContentProvider());//ArrayContentProvider.getInstance());
 
 		modTypesCombo.setInput(paramGroup.getFilteredList());//ModelType.values());
-		
-		
+
+
 		orientationCombo = paramGroup.getOrientationCombo();
 		efficiencyCombo = paramGroup.getEfficiencyCombo();
 		rtsCombo = paramGroup.getRtsCombo();
 		rtsLBSpinner = paramGroup.getRtsLBSpinner();
 		rtsUBSpinner = paramGroup.getRtsUBSpinner();
 		rtsUBLabelText = paramGroup.getRtsUBLabelText();
-		
+
+
 
 		
-		
 
-		
-		
+
+
 		//LISTENERS
 		modTypesCombo.addSelectionChangedListener(new ISelectionChangedListener()
 		{
 			public void selectionChanged(SelectionChangedEvent event)
-			{
+			{	
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if(!selection.isEmpty()) {
-					
+
 					ModelType selectedType = (ModelType)selection.getFirstElement();
 					modTypeComboSelectionChanged(selectedType, description, paramGroup, descGroup);
 				}
 				else {
 					description.setText("");
 				}
-					
-				
-					
+
+
+
 			}
 		});
-		
-		
 
-		
-		
+
+
+
+
 		sComp.setContent(comp);
 		sComp.setExpandVertical(true);
 		sComp.setExpandHorizontal(true);
-//		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		
+		//		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
 		Point prefSize = comp.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		prefSize.x = prefSize.x + 10;
 		prefSize.y = prefSize.y + 50;
 		sComp.setMinSize(prefSize);
-		
-		
-		
-		
+
+
+
+
 		if(ldeap.getModelType() != null) {
 			String modType = ldeap.getModelType().toString();
 			int i = 0;
@@ -251,10 +255,10 @@ public class ModelDetailsComposite extends Composite {
 				i++;
 			}
 		}
-		
+
 	}
-	
-	
+
+
 
 	public void updateStatusStl() {
 		if(ldeap.getModelType() != null) {
@@ -264,13 +268,13 @@ public class ModelDetailsComposite extends Composite {
 			stl.setStatusLabel("You need to select a Model Type.");
 		}
 	}
-	
+
 
 	private void modTypeComboSelectionChanged(ModelType selectedType, Text description, ModelDetailsParamGroup paramGroup, Group descGroup) {
-		
+
 		description.setText(selectedType.getDescription());
-		
-		
+
+
 		if(selectedType.getOrientation() == ModelOrientation.INPUT_ORIENTED){
 			orientationCombo.getCombo().select(1);
 		}
@@ -280,16 +284,16 @@ public class ModelDetailsComposite extends Composite {
 		else if(selectedType.getOrientation() == ModelOrientation.NON_ORIENTED){
 			orientationCombo.getCombo().select(3);
 		}
-		
-		
+
+
 		if(selectedType.getEfficiencyType() == EfficiencyType.TECH){
 			efficiencyCombo.getCombo().select(1);
 		}
 		else if(selectedType.getEfficiencyType() == EfficiencyType.MIX){
 			efficiencyCombo.getCombo().select(2);
 		}
-		
-		
+
+
 		if(selectedType.getReturnToScale() == ReturnsToScale.CONSTANT) {
 			rtsCombo.getCombo().select(1);
 			ldeap.setRtsLowerBound(0);
@@ -338,11 +342,11 @@ public class ModelDetailsComposite extends Composite {
 			paramGroup.disableSpinners();
 			paramGroup.setBigParamGroupSize(paramGroup.getParamGroup(), descGroup);
 		}
-		
-		
+
+
 		updateStatusStl();
-		
+
 	}
-	
-	
+
+
 }

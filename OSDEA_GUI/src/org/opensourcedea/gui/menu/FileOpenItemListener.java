@@ -3,6 +3,7 @@ package org.opensourcedea.gui.menu;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -53,6 +54,9 @@ public class FileOpenItemListener implements SelectionListener {
 				
 			}
 			catch (Exception ex) {
+				MessageDialog.open(SWT.ERROR, nav.getShell(), "Error", "An error occured and the file could not be opened properly." +
+						"\n\nThis is likely because the file you are trying to open was saved with an older and non-compatible " +
+						"version of OSDEA. The only way you can open that file would be to use the version of OSDEA you used to save the file.", SWT.NONE);
 				stl.setNotificalLabelDelayStandard("File could not be opened!");
 			}
 		}

@@ -129,6 +129,8 @@ public class LDEAPSaver {
     		fOut.close();
     		stl.setNotificalLabelDelayStandard("Problem saved.");
 		} catch (IOException e) {
+			e.printStackTrace();
+			MessageDialog.open(SWT.ERROR, nav.getShell(), "Error", "An error occured and the file could not be saved properly.", SWT.NONE);
 			stl.setNotificalLabelDelayStandard("Error! The DEA Problem could not be saved!");
 		}
     }
