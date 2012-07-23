@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.gui.parameters.OSDEAConstants;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
@@ -95,7 +96,13 @@ public class DEAPProblemComposite extends Composite {
 		solveButton = new Button(comp, SWT.PUSH);
 		
 		//Sets correct layout for solveButton and progressGroup when progress group needs to be hidden
-		hideProgressGroup();
+		if(!ldeap.isSolved()) {
+			hideProgressGroup();
+		}
+		else {
+			showProgressGroupSolved();
+		}
+		
 		
 		
 
@@ -133,7 +140,7 @@ public class DEAPProblemComposite extends Composite {
 				comp.getDisplay().syncExec(new Runnable() {
 					public void run() {
 						solveButton.setText("Cancel");
-						showProgressGroup();
+						showProgressGroupNotSolved();
 					}});
 
 				if(solvingThread != null){
@@ -249,7 +256,7 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-	private void showProgressGroup() {
+	private void showProgressGroupNotSolved() {
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0, 20);
 		formData.right = new FormAttachment(100, -20);
@@ -262,6 +269,32 @@ public class DEAPProblemComposite extends Composite {
 		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
 		solveButton.setLayoutData(fdata);
 
+		comp.layout();
+	}
+	
+	public void showProgressGroupSolved() {
+		FormData formData = new FormData();
+		formData.left = new FormAttachment(0, 20);
+		formData.right = new FormAttachment(100, -20);
+		formData.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
+		progress.getProgressGroup().setVisible(true);
+		progress.getProgressGroup().setLayoutData(formData);
+		Integer nbDMUs = ldeap.getDMUNames().size();
+		progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(nbDMUs, 100, nbDMUs));
+		if (progress.getProgressBar().isDisposed ()){
+			return;
+		}
+		else {
+			progress.getProgressBar().setSelection(OSDEAParameters.getProgressBarMaximum());
+		}
+
+		
+		fdata = new FormData();
+		fdata.left = new FormAttachment(0, 20);
+		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
+		solveButton.setLayoutData(fdata);
+		solveButton.setText("Reset DEA Problem");
+		
 		comp.layout();
 	}
 	

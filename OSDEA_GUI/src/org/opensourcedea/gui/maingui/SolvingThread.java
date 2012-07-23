@@ -8,6 +8,7 @@ import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
 import org.opensourcedea.exception.IncompatibleModelTypeException;
 import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
+import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -55,6 +56,12 @@ public class SolvingThread extends Thread {
 				}
 				solve(deap, nbDMUs, i);
 			}
+			
+			display.syncExec(new Runnable() {
+				public void run() {
+					comp.showProgressGroupSolved();
+				}
+			});
 			
 			copyAndDisplaySolution(deap);
 		}
@@ -113,14 +120,6 @@ public class SolvingThread extends Thread {
 				}
 			}
 
-			display.syncExec(new Runnable() {
-				public void run() {
-					stl.setStatusLabel("Problem solved successfully");
-					solveButton.setText("Problem Solved");
-					solveButton.pack();
-					solveButton.setEnabled(false);
-				}});
-
 			ldeap.setModified(true);
 
 		}
@@ -153,8 +152,8 @@ public class SolvingThread extends Thread {
 				try {
 					deap.solveOne(pos);
 					Integer perc = 100 * dmu / nbDMUs;
-					progress.updateProgressLabelText("Solved DMU " + dmu.toString() + " of " + nbDMUs + " (" + perc.toString() + "%).");
-					System.out.println("Solved dmu " + ((Integer)pos).toString());
+					progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(dmu, perc, (Integer)nbDMUs));
+					//System.out.println("Solved dmu " + ((Integer)pos).toString());
 				} catch (Exception e) {
 					//
 				}
