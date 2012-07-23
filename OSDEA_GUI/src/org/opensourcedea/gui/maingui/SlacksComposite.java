@@ -36,7 +36,6 @@ public class SlacksComposite extends Composite {
 		sComp.setLayoutData(fdata);
 		sComp.setLayout(new FormLayout());
 		
-		
 		comp = new Composite(sComp, SWT.NONE);
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0);
@@ -46,38 +45,38 @@ public class SlacksComposite extends Composite {
 		comp.setLayoutData(formData);
 		comp.setLayout(new FormLayout());
 		
-		
 		slacksLabel = new Label(comp, SWT.NONE);
+		
+		resetComposite();
+		
+		sComp.setContent(comp);
+		sComp.setExpandVertical(true);
+		sComp.setExpandHorizontal(true);
+		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
+	}
+	
+	
+	public void resetComposite() {
 		slacksLabel.setText("You need to solve the problem first.");
-		fdata = new FormData();
+		FormData fdata = new FormData();
 		fdata.top = new FormAttachment(0, 10);
 		fdata.left = new FormAttachment(0, 20);
-		slacksLabel.setLayoutData(fdata);
-				
+		slacksLabel.setLayoutData(fdata);	
 
 		fdata = new FormData();
 		fdata.top = new FormAttachment(slacksLabel, 20);
 		fdata.left = new FormAttachment(0, 20);
 		fdata.bottom = new FormAttachment(100, -10);
 		fdata.width = 300;
-//		fdata.right = new FormAttachment(100, -25);
-
+		
+		if(tableComp != null) {
+			tableComp.dispose();
+		}
+		
 		tableComp = new Composite(comp, SWT.BORDER);
 		tableComp.setLayoutData(fdata);
 		tableComp.setLayout(new FillLayout());
-
-		
-		
-		sComp.setContent(comp);
-		sComp.setExpandVertical(true);
-		sComp.setExpandHorizontal(true);
-		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-//		Point prefSize = comp.computeSize(350, 300);
-//		prefSize.x = prefSize.x + 20;
-//		prefSize.y = prefSize.y + 50;
-//		sComp.setMinSize(prefSize);
-
-		
 	}
 	
 	

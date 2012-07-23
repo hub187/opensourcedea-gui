@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
+import org.opensourcedea.dea.DEAPSolution;
 import org.opensourcedea.gui.exceptions.NoVariableException;
 import org.opensourcedea.gui.exceptions.UnselectedVariablesException;
 import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
@@ -661,7 +662,7 @@ public class Navigation extends Composite {
 		lambdaComp.displaySolution(ldeap);
 		
 		
-		//Lambdas
+		//Slacks
 		SlacksComposite slackComp = (SlacksComposite)getSlacksTreeItem().getData();
 		slackComp.displaySolution(ldeap);
 		
@@ -672,7 +673,61 @@ public class Navigation extends Composite {
 	}
 	
 	public void deleteSolution() {
+		
+		
+		
 		LDEAProblem ldeap = getSelectedDEAProblem();
+		
+		DEAPSolution backup = ldeap.getLdeapSolution();
+		
+		boolean modified = ldeap.isModified();
+		
+		
+		try {
+			ldeap.deleteSolution();
+
+			//Objectives
+			ObjectivesComposite objComp = (ObjectivesComposite)getObjectivesTreeItem().getData();
+			objComp.resetComposite();
+
+			//Projections
+			ProjectionsComposite projComp = (ProjectionsComposite)getProjectionsTreeItem().getData();
+			projComp.resetComposite();
+
+			//Lambdas
+			LambdasComposite lambdaComp = (LambdasComposite)getLambdasTreeItem().getData();
+			lambdaComp.resetComposite();		
+
+			//Slacks
+			SlacksComposite slackComp = (SlacksComposite)getSlacksTreeItem().getData();
+			slackComp.resetComposite();
+
+			//Weight
+			WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
+			weightsComp.resetComposite();
+
+			ldeap.setSolved(false);
+			ldeap.setModified(true);
+
+			stl.setNotificalLabelDelayStandard("Problem reset successfully.");
+		}
+		catch (Exception e) {
+			
+			ldeap.setLdeapSolution(backup);
+			displaySolution();
+			ldeap.setSolved(true);
+			ldeap.setModified(modified);
+			
+			getDisplay().syncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openWarning(getShell(), "Reset error", "The problem" +
+							"could not be reset! Previous solution was restored.");
+				}
+			});
+			stl.setNotificalLabelDelayStandard("There was a problem resetting the solution.");
+			stl.setStatusLabel("Problem Solved");
+		}
+		
 	}
 	
 	

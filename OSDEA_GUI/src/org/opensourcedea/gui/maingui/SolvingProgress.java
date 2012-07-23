@@ -65,9 +65,16 @@ public class SolvingProgress {
 	}
 	
 	
-	public ProgressBar getProgressBar() {
-		return progressBar;
+	public void setProgressBar(double percentage) {
+		if (progressBar.isDisposed ()) {
+			return;
+		}
+		else {
+			progressBar.setSelection((int)(OSDEAParameters.getProgressBarMaximum() * percentage));
+		}
 	}
+	
+
 
 
 	public void updateProgressLabelText(String str) {

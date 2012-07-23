@@ -46,10 +46,23 @@ public class ProjectionsComposite extends Composite {
 		comp.setLayoutData(formData);
 		comp.setLayout(new FormLayout());
 		
-		
 		projectionsLabel = new Label(comp, SWT.NONE);
+		
+		resetComposite();
+		
+		
+		sComp.setContent(comp);
+		sComp.setExpandVertical(true);
+		sComp.setExpandHorizontal(true);
+		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		
+	}
+	
+	public void resetComposite() {
+		
 		projectionsLabel.setText("You need to solve the problem first.");
-		fdata = new FormData();
+		FormData fdata = new FormData();
 		fdata.top = new FormAttachment(0, 10);
 		fdata.left = new FormAttachment(0, 20);
 		projectionsLabel.setLayoutData(fdata);
@@ -60,24 +73,14 @@ public class ProjectionsComposite extends Composite {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.bottom = new FormAttachment(100, -10);
 		fdata.width = 300;
-//		fdata.right = new FormAttachment(100, -25);
+		
+		if(tableComp !=null) {
+			tableComp.dispose();
+		}
 
 		tableComp = new Composite(comp, SWT.BORDER);
 		tableComp.setLayoutData(fdata);
 		tableComp.setLayout(new FillLayout());
-
-		
-		
-		sComp.setContent(comp);
-		sComp.setExpandVertical(true);
-		sComp.setExpandHorizontal(true);
-		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-//		Point prefSize = comp.computeSize(350, 300);
-//		prefSize.x = prefSize.x + 20;
-//		prefSize.y = prefSize.y + 50;
-//		sComp.setMinSize(prefSize);
-
-		
 	}
 	
 	

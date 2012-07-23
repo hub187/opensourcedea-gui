@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.gui.parameters.OSDEAConstants;
-import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.solver.DEAPConverter;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
@@ -122,12 +121,12 @@ public class DEAPProblemComposite extends Composite {
 					if(MessageDialog.openConfirm(nav.getShell(), "Confirm Reset", "The DEA Problem was already solved. " +
 							"Resetting the DEA problem will delete the exiting solution and problem parameters." +
 							"\n\nDo you want to reset the problem and discard the solution and problem parameters?")) {
-						System.out.println("Yes");
-						
+						nav.deleteSolution();
+						showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
 						return;
 					}
 					else {
-						System.out.println("No");
+						stl.setNotificalLabelDelayStandard("Reset cancelled");
 						return;
 					}
 				}
@@ -139,8 +138,7 @@ public class DEAPProblemComposite extends Composite {
 				
 				comp.getDisplay().syncExec(new Runnable() {
 					public void run() {
-						solveButton.setText("Cancel");
-						showProgressGroupNotSolved();
+						showProgressGroupNotSolved("Cancel");
 					}});
 
 				if(solvingThread != null){
@@ -256,14 +254,19 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-	private void showProgressGroupNotSolved() {
+	private void showProgressGroupNotSolved(String solveButtonText) {
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0, 20);
 		formData.right = new FormAttachment(100, -20);
 		formData.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
 		progress.getProgressGroup().setVisible(true);
 		progress.getProgressGroup().setLayoutData(formData);
-
+		
+		progress.setProgressBar(0);
+		progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(0, 100, ldeap.getDataMatrix().size()));
+		
+		solveButton.setText(solveButtonText);
+		
 		fdata = new FormData();
 		fdata.left = new FormAttachment(0, 20);
 		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
@@ -280,13 +283,8 @@ public class DEAPProblemComposite extends Composite {
 		progress.getProgressGroup().setVisible(true);
 		progress.getProgressGroup().setLayoutData(formData);
 		Integer nbDMUs = ldeap.getDMUNames().size();
-		progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(nbDMUs, 100, nbDMUs));
-		if (progress.getProgressBar().isDisposed ()){
-			return;
-		}
-		else {
-			progress.getProgressBar().setSelection(OSDEAParameters.getProgressBarMaximum());
-		}
+		progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(nbDMUs, nbDMUs, 100));
+		progress.setProgressBar(100);
 
 		
 		fdata = new FormData();

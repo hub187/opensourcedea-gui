@@ -4,9 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.opensourcedea.dea.DEAPSolution;
+import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ModelType;
+import org.opensourcedea.dea.ReturnsToScale;
+import org.opensourcedea.dea.SolverReturnStatus;
 import org.opensourcedea.dea.VariableOrientation;
 import org.opensourcedea.dea.VariableType;
+import org.opensourcedea.exception.IncompatibleModelTypeException;
+import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
 
 
 
@@ -40,23 +45,72 @@ public class LDEAProblem implements Serializable {
 		ldeapSolution = new DEAPSolution(nbDMUs, nbVariables);
 	}
 	
-	public void deleteSolution() {
-		
+	
+	public void copyLDEAPSolution(DEAProblem deap) throws ProblemNotSolvedProperlyException, IncompatibleModelTypeException {
+		if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
+			setSolved(true);
+			initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
+			getLdeapSolution().setObjectives(deap.getObjectives());
+			getLdeapSolution().setProjections(deap.getProjections());
+			getLdeapSolution().setReferenceSets(deap.getReferenceSet());
+			getLdeapSolution().setSlacks(deap.getSlacks());
+			getLdeapSolution().setWeights(deap.getWeight());
+			getLdeapSolution().setStatus(deap.getOptimisationStatus());
+
+			if(getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
+					getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||
+					getModelType().getReturnToScale() == ReturnsToScale.GENERAL) {
+
+				for(int i = 0; i < deap.getlBConvexityConstraintWeights().length; i++){
+					getLdeapSolution().setlBConvexityConstraintWeights(i, deap.getlBConvexityConstraintWeight(i));
+				}
+				for(int i = 0; i < deap.getuBConvexityConstraintWeights().length; i++){
+					getLdeapSolution().setuBConvexityConstraintWeight(i, deap.getuBConvexityConstraintWeight(i));
+				}
+
+			}
+
+			if(getModelType().getReturnToScale() == ReturnsToScale.VARIABLE) {
+				for(int i = 0; i < deap.getU0Weights().length; i++){
+					getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
+				}
+			}
+			
+
+			setModified(true);
+
+		}
+		else {
+			setSolved(false);
+		}
 	}
 	
-	
-	
-
-	public DEAPSolution getLdeapSolution() {
-		return ldeapSolution;
-	}
-
-
-
 
 	public void setLdeapSolution(DEAPSolution ldeapSolution) {
 		this.ldeapSolution = ldeapSolution;
 	}
+	
+	
+	public DEAPSolution getLdeapSolution() {
+		return ldeapSolution;
+	}
+	
+	
+	public void deleteSolution() {
+		int nbDMUs = ldeapSolution.getObjectives().length;
+		int nbVariables = ldeapSolution.getWeights()[0].length;
+		initDEAPSolution(nbDMUs, nbVariables);
+	}
+	
+	
+	
+
+
+
+
+
+
+
 
 
 
