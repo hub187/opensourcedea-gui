@@ -19,7 +19,6 @@ public class SolvingThread extends Thread {
 	private Display display;
 	private Navigation nav;
 	private OSDEA_StatusLine stl;
-	private Button solveButton;
 	private volatile boolean stopRequested = false;
 	boolean cancelled = true;
 	private LDEAProblem ldeap;
@@ -32,7 +31,6 @@ public class SolvingThread extends Thread {
 		this.display = display;
 		this.nav = nav;
 		this.stl = stl;
-		this.solveButton = solveButton;
 		this.ldeap = ldeap;
 		this.comp = comp;
 		this.progress = progress;
@@ -119,6 +117,7 @@ public class SolvingThread extends Thread {
 					ldeap.getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
 				}
 			}
+			
 
 			ldeap.setModified(true);
 
@@ -136,6 +135,7 @@ public class SolvingThread extends Thread {
 		display.syncExec(new Runnable() {
 			public void run() {
 				if(ldeap.isSolved()) {
+					stl.setStatusLabel("Problem Solved");
 					nav.displaySolution();
 				}
 			}});
@@ -161,8 +161,6 @@ public class SolvingThread extends Thread {
 				if (progress.getProgressBar().isDisposed ()) return;
 				double prog = OSDEAParameters.getProgressBarMaximum()*(((double)pos+1)/(double)nbDMUs);
 				progress.getProgressBar().setSelection((int)prog);
-
-				System.out.println("Updated progress bar" + prog); 
 
 			}});
 

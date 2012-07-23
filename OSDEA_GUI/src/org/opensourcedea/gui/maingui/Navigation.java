@@ -327,6 +327,10 @@ public class Navigation extends Composite {
 		
 		fireSelectionChange(deaProblemTreeItem);
 		
+		if(ldeap.isSolved()){
+			displaySolution();
+		}
+		
 		return deaProblemTreeItem;
 		
 	}
