@@ -55,6 +55,11 @@ public class LDEAPSolution implements Serializable {
 	
 	
 	
+	public void deleteSolution() {
+		
+	}
+	
+	
 	public ArrayList<Double> getObjectives() {
 		return objectives;
 	}

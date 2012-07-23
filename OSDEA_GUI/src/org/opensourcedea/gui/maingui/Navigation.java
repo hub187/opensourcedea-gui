@@ -671,6 +671,10 @@ public class Navigation extends Composite {
 		
 	}
 	
+	public void deleteSolution() {
+		LDEAProblem ldeap = getSelectedDEAProblem();
+	}
+	
 	
 	
 	public void addFilePath(String fullFilePath) {

@@ -40,6 +40,10 @@ public class LDEAProblem implements Serializable {
 		ldeapSolution = new DEAPSolution(nbDMUs, nbVariables);
 	}
 	
+	public void deleteSolution() {
+		
+	}
+	
 	
 	
 

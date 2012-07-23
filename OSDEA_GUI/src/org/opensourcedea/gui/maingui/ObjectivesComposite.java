@@ -48,23 +48,8 @@ public class ObjectivesComposite extends Composite {
 		
 		
 		objectivesLabel = new Label(comp, SWT.NONE);
-		objectivesLabel.setText("You need to solve the problem first.");
-		fdata = new FormData();
-		fdata.top = new FormAttachment(0, 10);
-		fdata.left = new FormAttachment(0, 20);
-		objectivesLabel.setLayoutData(fdata);
-				
-
-		fdata = new FormData();
-		fdata.top = new FormAttachment(objectivesLabel, 20);
-		fdata.left = new FormAttachment(0, 20);
-		fdata.bottom = new FormAttachment(100, -10);
-		fdata.width = 300;
-//		fdata.right = new FormAttachment(100, -25);
-
-		tableComp = new Composite(comp, SWT.BORDER);
-		tableComp.setLayoutData(fdata);
-		tableComp.setLayout(new FillLayout());
+		
+		resetComposite(objectivesLabel);
 
 		
 		
@@ -78,6 +63,24 @@ public class ObjectivesComposite extends Composite {
 		sComp.setMinSize(prefSize);
 		
 		
+	}
+	
+	public void resetComposite(Label mainLabel) {
+		mainLabel.setText("You need to solve the problem first.");
+		FormData fdata = new FormData();
+		fdata.top = new FormAttachment(0, 10);
+		fdata.left = new FormAttachment(0, 20);
+		mainLabel.setLayoutData(fdata);
+				
+
+		fdata = new FormData();
+		fdata.top = new FormAttachment(mainLabel, 20);
+		fdata.left = new FormAttachment(0, 20);
+		fdata.bottom = new FormAttachment(100, -10);
+		fdata.width = 300;
+		tableComp = new Composite(comp, SWT.BORDER);
+		tableComp.setLayoutData(fdata);
+		tableComp.setLayout(new FillLayout());
 	}
 	
 	
