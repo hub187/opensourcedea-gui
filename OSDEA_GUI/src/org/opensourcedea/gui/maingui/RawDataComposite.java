@@ -67,18 +67,24 @@ public class RawDataComposite extends Composite {
 	public void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
 		
 		
-		ArrayList<String> headers = ldeap.getVariableNames();
+		ArrayList<String> headers = new ArrayList<String>();
+		headers.add("DMU Names");
+		headers.addAll(ldeap.getVariableNames());
+		
 		ArrayList<double[]> data = ldeap.getDataMatrix();
 		
 		//Iterates through data
 		ArrayList<ArrayList<String>> strData = new ArrayList<ArrayList<String>>();
 		Iterator<double[]> dmus = data.iterator();
+		int i = 0;
 		while(dmus.hasNext()) {
 			double[] arr = dmus.next();
 			ArrayList<String> tempArrl = new ArrayList<String>();
+			tempArrl.add(ldeap.getDMUNames().get(i));
 			for(double d : arr) {
 				tempArrl.add(Double.toString(MathUtils.round(d,OSDEAParameters.getRoundingDecimals())));
 			}
+			i++;
 			strData.add(tempArrl);
 		}
 		
