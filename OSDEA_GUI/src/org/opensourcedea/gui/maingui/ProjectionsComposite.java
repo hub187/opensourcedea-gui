@@ -13,7 +13,9 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.utils.Dimensions;
+import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class ProjectionsComposite extends Composite {
@@ -106,7 +108,7 @@ public class ProjectionsComposite extends Composite {
 			ArrayList<String> tempArr = new ArrayList<String>();
 			tempArr.add(ldeap.getDMUNames().get(i));
 			for(int j = 0; j < nbVar; j++) {
-				tempArr.add(Double.toString(ldeap.getLdeapSolution().getProjections()[i][j]));
+				tempArr.add(Double.toString(MathUtils.round(ldeap.getLdeapSolution().getProjections()[i][j],OSDEAParameters.getRoundingDecimals())));
 			}
 			data.add(tempArr);
 		}

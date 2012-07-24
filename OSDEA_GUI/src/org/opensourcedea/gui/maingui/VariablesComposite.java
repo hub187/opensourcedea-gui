@@ -42,7 +42,6 @@ import org.opensourcedea.ldeaproblem.LVariable;
 public class VariablesComposite extends Composite {
 	
 	
-	private Label variablesLabel;
 	private final Navigation nav;
 	private LDEAProblem ldeap;
 	private ArrayList<String> varl = new ArrayList<String>();
@@ -369,8 +368,8 @@ public class VariablesComposite extends Composite {
 	
 	public void checkIfVarAreOK() throws NoVariableException, UnselectedVariablesException, UnvalidVariableChoiceException {
 		Integer nbVar = null;
-		if(nav.getNumberOfVariableNames() != null) {
-			nbVar = nav.getNumberOfVariableNames();
+		if(ldeap.getNumberOfVariables() != null) {
+			nbVar = ldeap.getNumberOfVariables();
 		}
 		else {
 			throw new NoVariableException();

@@ -103,7 +103,15 @@ public class LDEAProblem implements Serializable {
 	}
 	
 	
-	
+	public Integer getNumberOfVariables() {
+		if(getVariableNames() != null) {
+			return getVariableNames().size();
+		}
+		else {
+			return null;
+		}
+		
+	}
 
 
 

@@ -231,26 +231,21 @@ public class Navigation extends Composite {
 		((VariablesComposite)getVariableTreeItem().getData()).refreshVarList();
 	}
 	
-	private void setRawDataTable(ArrayList<String> headers, ArrayList<ArrayList<String>> data) {
+	private void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
 		
-		((RawDataComposite)getRawDataTreeItem().getData()).setRawDataTable(headers, data);
+		((RawDataComposite)getRawDataTreeItem().getData()).setRawDataTable(ldeap);
 
 	}
 	
 	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap) {
 		
-		//Takes time to create (apparently even more on first time) => to investigate
+		//Takes time to create (apparently more on first time) => to investigate
 		DEAPProblemComposite problemComp = new DEAPProblemComposite(osdeaMainComp.getDataPanel(), ldeap, this, stl);
 		RawDataComposite dataComp = null;
-		if(ldeap.getVariableNames() != null && ldeap.getDataMatrix() != null && ldeap.getDMUNames() != null) {
-			dataComp = new RawDataComposite(osdeaMainComp.getDataPanel(),ldeap.getVariableNames(),
-					ldeap.getDMUNames(), ldeap.getDataMatrix());
-		}
-		else {
-			dataComp = new RawDataComposite(osdeaMainComp.getDataPanel());
-		}
+		dataComp = new RawDataComposite(osdeaMainComp.getDataPanel(), ldeap);
+		
 		VariablesComposite variablesComp = new VariablesComposite(osdeaMainComp.getDataPanel(), this, ldeap, stl);
-		//Takes time to create (apparently even more on first time) => to investigate
+		//Takes time to create (apparently more on first time) => to investigate
 		ModelDetailsComposite modelComp = new ModelDetailsComposite(osdeaMainComp.getDataPanel(), ldeap, stl);
 		SolutionComposite solutionComp = new SolutionComposite(osdeaMainComp.getDataPanel());
 		ObjectivesComposite objectivesComp = new ObjectivesComposite(osdeaMainComp.getDataPanel());
@@ -441,17 +436,6 @@ public class Navigation extends Composite {
 	}
 
 	
-	
-	/*
-	 * Used by variable composite to get number of variables (used when checking if all variables were assigned).
-	 */
-	public Integer getNumberOfVariableNames() {
-		if(((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).getVariableNames() != null) {
-			return Integer.valueOf(((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).getVariableNames().size());
-		}
-		return null;
-	}
-	
 
 	
 	private TreeItem getRawDataTreeItem() {
@@ -565,22 +549,6 @@ public class Navigation extends Composite {
 	}
 
 	
-//	private ModelDetailsComposite getActiveModeldetailsComposite() {
-//		TreeItem it = getActiveModelDetailsTreeItem();
-//		return (ModelDetailsComposite)it.getData();
-//	}
-//	
-//	private TreeItem getActiveModelDetailsTreeItem() {
-//		TreeItem ret = null;
-//		TreeItem deaPTI = getSelectedDEAProblemTreeItem();
-//		for(TreeItem i : deaPTI.getItems()) {
-//			if(i.getText().equals(modeDetailsItemText)) {
-//				ret = i;
-//			}
-//		}
-//		return ret;
-//	}
-	
 	
 	private void setDataOK() {
 		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
@@ -592,8 +560,7 @@ public class Navigation extends Composite {
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
 	 * wizard doesn't know about the inner structure of the program).
 	 */
-	public void importData(ArrayList<double[]> dataMatrix, ArrayList<String> dmuNames, ArrayList<String> variableNames,
-			ArrayList<ArrayList<String>> fullDataMatrixString) {
+	public void importData(ArrayList<double[]> dataMatrix, ArrayList<String> dmuNames, ArrayList<String> variableNames) { //, ArrayList<ArrayList<String>> fullDataMatrixString) {
 		
 		boolean backupProblem = false;
 		LDEAProblem ldeap = null;
@@ -626,7 +593,7 @@ public class Navigation extends Composite {
 				ldeap.setDMUNames(dmuNames);
 				ldeap.setVariableNames(variableNames);
 				refreshVarList();
-				setRawDataTable(headers, fullDataMatrixString);
+				setRawDataTable(ldeap);
 				setDataOK();
 				ldeap.setModified(true);
 				stl.setNotificalLabelDelayStandard("Successful Imported " + ldeap.getDMUNames().size() + " DMUs, " + ldeap.getVariableNames().size() + " Variables.");
@@ -733,7 +700,6 @@ public class Navigation extends Composite {
 	
 	
 	public void addFilePath(String fullFilePath) {
-//		filePathHashMap.put(getSelectedDEAProblemTreeItem(), fullFilePath);
 		addFilePath(fullFilePath, getSelectedDEAProblemTreeItem());
 	}
 	
@@ -742,13 +708,6 @@ public class Navigation extends Composite {
 	}
 	
 	public String getFilePath() {
-//		TreeItem selectedDEATI = getSelectedDEAProblemTreeItem();
-//		if(filePathHashMap.containsKey(selectedDEATI)) {
-//			return (String) filePathHashMap.get(selectedDEATI);
-//		}
-//		else {
-//			return null;
-//		}
 		
 		return getFilePath(getSelectedDEAProblemTreeItem());
 		
@@ -762,7 +721,6 @@ public class Navigation extends Composite {
 	}
 	
 	public void updateFilePath(String newFilePath) {
-//		filePathHashMap.put(getSelectedDEAProblemTreeItem(), newFilePath);
 		updateFilePath(newFilePath, getSelectedDEAProblemTreeItem());
 	}
 	

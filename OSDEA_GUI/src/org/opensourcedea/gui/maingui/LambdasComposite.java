@@ -17,7 +17,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.opensourcedea.dea.NonZeroLambda;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.utils.Dimensions;
+import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class LambdasComposite extends Composite {
@@ -85,27 +87,27 @@ public class LambdasComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
-		ArrayList<Integer> efficientDMUs = new ArrayList<Integer>();
+		ArrayList<Integer> efficientReferencedDMUs = new ArrayList<Integer>();
 		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
 			Iterator<NonZeroLambda> it = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
 			while(it.hasNext()) {
 				NonZeroLambda tempNzl = it.next();
-				if(!efficientDMUs.contains(tempNzl.getDMUIndex())){
-					efficientDMUs.add(tempNzl.getDMUIndex());
+				if(!efficientReferencedDMUs.contains(tempNzl.getDMUIndex())){
+					efficientReferencedDMUs.add(tempNzl.getDMUIndex());
 				}
 			}
 		}
-		Collections.sort(efficientDMUs);
+		Collections.sort(efficientReferencedDMUs);
 		
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
-		Iterator<Integer> it = efficientDMUs.iterator();
+		Iterator<Integer> it = efficientReferencedDMUs.iterator();
 		while(it.hasNext()) {
 			headers.add(ldeap.getDMUNames().get(it.next()));
 		}
 		
-		int nbNzl = efficientDMUs.size();
+		int nbNzl = efficientReferencedDMUs.size();
 		
 		int width = Dimensions.getTotalStringLength(tableComp, headers);
 		FormData fdata = (FormData) tableComp.getLayoutData();
@@ -130,8 +132,8 @@ public class LambdasComposite extends Composite {
 			ArrayList<String> tempArr = new ArrayList<String>();
 			tempArr.add(ldeap.getDMUNames().get(i));
 			for(int j = 0; j < nbNzl; j++) {
-				if(nzlHashMap.containsKey(efficientDMUs.get(j))) {
-					tempArr.add(Double.toString(nzlHashMap.get(efficientDMUs.get(j))));
+				if(nzlHashMap.containsKey(efficientReferencedDMUs.get(j))) {
+					tempArr.add(Double.toString(MathUtils.round(nzlHashMap.get(efficientReferencedDMUs.get(j)),OSDEAParameters.getRoundingDecimals())));
 				}
 				else {
 					tempArr.add("0");

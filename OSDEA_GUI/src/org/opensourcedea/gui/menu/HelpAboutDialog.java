@@ -48,7 +48,7 @@ public class HelpAboutDialog extends Dialog {
 	public HelpAboutDialog (Shell parent, int style) {
 		super (parent, style);
 		
-		imgReg = Images.getFullImageRegistry(parent.getDisplay());
+		imgReg = Images.getMainGUIImageRegistry(parent.getDisplay());
 		potIcon = imgReg.get("potIcon");
 		
 	}

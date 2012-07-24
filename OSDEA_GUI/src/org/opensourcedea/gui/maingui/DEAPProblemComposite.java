@@ -96,7 +96,7 @@ public class DEAPProblemComposite extends Composite {
 		
 		//Sets correct layout for solveButton and progressGroup when progress group needs to be hidden
 		if(!ldeap.isSolved()) {
-			hideProgressGroup();
+			showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
 		}
 		else {
 			showProgressGroupSolved();
@@ -254,7 +254,7 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-	private void showProgressGroupNotSolved(String solveButtonText) {
+	public void showProgressGroupNotSolved(String solveButtonText) {
 		FormData formData = new FormData();
 		formData.left = new FormAttachment(0, 20);
 		formData.right = new FormAttachment(100, -20);
@@ -263,7 +263,12 @@ public class DEAPProblemComposite extends Composite {
 		progress.getProgressGroup().setLayoutData(formData);
 		
 		progress.setProgressBar(0);
-		progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(0, 100, ldeap.getDataMatrix().size()));
+		if(ldeap.getDataMatrix() != null){
+			progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(0, ldeap.getDataMatrix().size(), 0));
+		}
+		else {
+			progress.updateProgressLabelText(OSDEAConstants.getSolvedDMUsProgress(0, 0, 0));
+		}
 		
 		solveButton.setText(solveButtonText);
 		
@@ -296,27 +301,6 @@ public class DEAPProblemComposite extends Composite {
 		comp.layout();
 	}
 	
-	public void hideProgressGroup() {
-		
-		progress.getProgressGroup().setVisible(false);
-		if(!ldeap.isSolved()){
-			solveButton.setText(OSDEAConstants.solveButtonText);
-		}
-		else {
-			solveButton.setText("Reset DEA Problem");
-		}
-		solveButton.pack();
-		
-		fdata = new FormData();
-		fdata.left = new FormAttachment(0, 20);
-		fdata.top = new FormAttachment(probStatus.getRemActionsGroup(), 20);
-		solveButton.setEnabled(true);
-		solveButton.setLayoutData(fdata);
-		
-		comp.layout();
-	}
-
-
 
 
 }

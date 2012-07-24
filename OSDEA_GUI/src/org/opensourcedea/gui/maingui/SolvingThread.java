@@ -50,7 +50,7 @@ public class SolvingThread extends Thread {
 					display.syncExec(new Runnable() {
 							public void run() {
 								stl.setNotificalLabelDelayStandard("Solving cancelled.");
-								comp.hideProgressGroup();
+								comp.showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
 							}});
 					return;
 				}
@@ -73,7 +73,7 @@ public class SolvingThread extends Thread {
 					MessageDialog.openWarning(nav.getShell(), "Solve error", "The problem" +
 							"could not be solved properly!");
 					stl.setNotificalLabelDelayStandard("Solving error.");
-					comp.hideProgressGroup();
+					comp.showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
 				}});
 		}
 	}

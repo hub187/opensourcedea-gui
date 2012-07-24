@@ -21,7 +21,7 @@ public class ImportFileWizard extends Wizard {
 	private ArrayList<String> variableNames = new ArrayList<String>();
 	private ArrayList<String> dmuNames = new ArrayList<String>();
 	private ArrayList<double[]> dataMatrix = new ArrayList<double[]>();
-	private ArrayList<ArrayList<String>> fullDataMatrixString = new ArrayList<ArrayList<String>>();
+//	private ArrayList<ArrayList<String>> fullDataMatrixString = new ArrayList<ArrayList<String>>();
 	private OSDEA_StatusLine stl;
 	private final String instructions = "- The file needs to be in a .csv format.\n" +
 			"- The first row of the file must contain the headers.\n" +
@@ -100,11 +100,11 @@ public class ImportFileWizard extends Wizard {
 					tempArrl.add(nextLine[0]);
 					for(int i = 1; i < nextLine.length; i++) {
 						tempArr2[i - 1] = Double.parseDouble(nextLine[i]);
-						tempArrl.add(nextLine[i]);
+//						tempArrl.add(nextLine[i]);
 					}
 
 					dataMatrix.add(tempArr2);
-					fullDataMatrixString.add(tempArrl);
+//					fullDataMatrixString.add(tempArrl);
 
 				}
 			} catch (FileNotFoundException e) {
@@ -132,7 +132,7 @@ public class ImportFileWizard extends Wizard {
 			return true;
 		}
 		
-		navigation.importData(dataMatrix, dmuNames, variableNames, fullDataMatrixString);
+		navigation.importData(dataMatrix, dmuNames, variableNames);//, fullDataMatrixString);
 
 		return true;
 	}

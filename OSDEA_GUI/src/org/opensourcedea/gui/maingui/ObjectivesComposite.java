@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
@@ -105,7 +106,7 @@ public class ObjectivesComposite extends Composite {
 				tempArr.add("1");
 			}
 			else{
-				tempArr.add(Double.toString(ldeap.getLdeapSolution().getObjective(i)));
+				tempArr.add(Double.toString(MathUtils.round(ldeap.getLdeapSolution().getObjective(i),OSDEAParameters.getRoundingDecimals())));
 			}
 			data.add(tempArr);
 		}

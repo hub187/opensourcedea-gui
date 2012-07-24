@@ -1,6 +1,7 @@
  package org.opensourcedea.gui.maingui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -11,7 +12,10 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.gui.parameters.OSDEAParameters;
 import org.opensourcedea.gui.utils.Images;
+import org.opensourcedea.gui.utils.MathUtils;
+import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class RawDataComposite extends Composite {
 
@@ -19,33 +23,15 @@ public class RawDataComposite extends Composite {
 	private Composite comp;
 	private GenericTable tableClass;
 
-	public RawDataComposite(Composite parentComp) {
-		super(parentComp, 0);
-		
-		createControls();
-
-	}
 	
-	public RawDataComposite(Composite parentComp, ArrayList<String> variableName, ArrayList<String> dmuNames, ArrayList<double[]> dataMatrix) {
+	public RawDataComposite(Composite parentComp, LDEAProblem ldeap) {
 		super(parentComp, 0);
 
 		createControls();
 		
-		ArrayList<String> headers = variableName;
-		
-		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		
-		for(int i = 0; i < dmuNames.size(); i++) {
-			ArrayList<String> tempArr = new ArrayList<String>();
-			tempArr.add(dmuNames.get(i));
-			for(double d : dataMatrix.get(i)) {
-				tempArr.add(Double.toString(d));
-			}
-			data.add(tempArr);
+		if(ldeap.getDataMatrix() != null && ldeap.getVariableNames() != null) {
+			setRawDataTable(ldeap);
 		}
-		
-		setRawDataTable(headers, data);
-		
 		
 	}
 	
@@ -78,9 +64,25 @@ public class RawDataComposite extends Composite {
 
 
 
-	public void setRawDataTable(ArrayList<String> headers, ArrayList<ArrayList<String>> data) {
-
-		tableClass = new GenericTable(comp, headers, data);
+	public void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
+		
+		
+		ArrayList<String> headers = ldeap.getVariableNames();
+		ArrayList<double[]> data = ldeap.getDataMatrix();
+		
+		//Iterates through data
+		ArrayList<ArrayList<String>> strData = new ArrayList<ArrayList<String>>();
+		Iterator<double[]> dmus = data.iterator();
+		while(dmus.hasNext()) {
+			double[] arr = dmus.next();
+			ArrayList<String> tempArrl = new ArrayList<String>();
+			for(double d : arr) {
+				tempArrl.add(Double.toString(MathUtils.round(d,OSDEAParameters.getRoundingDecimals())));
+			}
+			strData.add(tempArrl);
+		}
+		
+		tableClass = new GenericTable(comp, headers, strData);
 		tableClass.setTable();
 
 		Color grey = new Color (Display.getCurrent (), 240, 240, 240);

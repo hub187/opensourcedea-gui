@@ -66,6 +66,8 @@ public class Images {
 		imgReg.put("import", ImageDescriptor.createFromFile(Images.class, "../images/page_white_put.png"));
 		imgReg.put("export", ImageDescriptor.createFromFile(Images.class, "../images/page_white_get.png"));
 		imgReg.put("close", ImageDescriptor.createFromFile(Images.class, "../images/box_closed.png"));
+		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "../images/pot2422-48x48x32.png"));
+		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "../images/potSmall.png"));
 
 		
 		return imgReg;
