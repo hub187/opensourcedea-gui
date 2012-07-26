@@ -1,6 +1,6 @@
 package org.opensourcedea.gui.parameters;
 
-public class OSDEAParameters {
+public class OSDEAGUIParameters {
 	
 	private static int progressBarMaximum = 1000;
 	private static int roundingDecimals = 3;
@@ -11,7 +11,7 @@ public class OSDEAParameters {
 	}
 
 	public static void setProgressBarMaximum(int progressBarMaximum) {
-		OSDEAParameters.progressBarMaximum = progressBarMaximum;
+		OSDEAGUIParameters.progressBarMaximum = progressBarMaximum;
 	}
 
 	public static int getRoundingDecimals() {
@@ -19,7 +19,7 @@ public class OSDEAParameters {
 	}
 
 	public static void setRoundingDecimals(int roundingDecimals) {
-		OSDEAParameters.roundingDecimals = roundingDecimals;
+		OSDEAGUIParameters.roundingDecimals = roundingDecimals;
 	}
 
 	public static int getDecimalsToEvaluateEfficiency() {
@@ -28,7 +28,7 @@ public class OSDEAParameters {
 
 	public static void setDecimalsToEvaluateEfficiency(
 			int decimalsToEvaluateEfficiency) {
-		OSDEAParameters.decimalsToEvaluateEfficiency = decimalsToEvaluateEfficiency;
+		OSDEAGUIParameters.decimalsToEvaluateEfficiency = decimalsToEvaluateEfficiency;
 	}
 	
 }

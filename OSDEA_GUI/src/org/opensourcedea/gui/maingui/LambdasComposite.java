@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.opensourcedea.dea.NonZeroLambda;
-import org.opensourcedea.gui.parameters.OSDEAParameters;
+import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -133,7 +133,7 @@ public class LambdasComposite extends Composite {
 			tempArr.add(ldeap.getDMUNames().get(i));
 			for(int j = 0; j < nbNzl; j++) {
 				if(nzlHashMap.containsKey(efficientReferencedDMUs.get(j))) {
-					tempArr.add(Double.toString(MathUtils.round(nzlHashMap.get(efficientReferencedDMUs.get(j)),OSDEAParameters.getRoundingDecimals())));
+					tempArr.add(Double.toString(MathUtils.round(nzlHashMap.get(efficientReferencedDMUs.get(j)),OSDEAGUIParameters.getRoundingDecimals())));
 				}
 				else {
 					tempArr.add("0");

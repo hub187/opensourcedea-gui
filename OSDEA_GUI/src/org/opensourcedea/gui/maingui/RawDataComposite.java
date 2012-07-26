@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.opensourcedea.gui.parameters.OSDEAParameters;
+import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 import org.opensourcedea.gui.utils.Images;
 import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -82,7 +82,7 @@ public class RawDataComposite extends Composite {
 			ArrayList<String> tempArrl = new ArrayList<String>();
 			tempArrl.add(ldeap.getDMUNames().get(i));
 			for(double d : arr) {
-				tempArrl.add(Double.toString(MathUtils.round(d,OSDEAParameters.getRoundingDecimals())));
+				tempArrl.add(Double.toString(MathUtils.round(d,OSDEAGUIParameters.getRoundingDecimals())));
 			}
 			i++;
 			strData.add(tempArrl);

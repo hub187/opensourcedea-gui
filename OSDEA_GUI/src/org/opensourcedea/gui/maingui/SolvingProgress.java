@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.opensourcedea.gui.parameters.OSDEAParameters;
+import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 
 
 /**
@@ -46,7 +46,7 @@ public class SolvingProgress {
 		progressStatusLabel.setLayoutData(formData);
 
 		progressBar = new ProgressBar(progressGroup, SWT.BORDER);
-		progressBar.setMaximum(OSDEAParameters.getProgressBarMaximum());
+		progressBar.setMaximum(OSDEAGUIParameters.getProgressBarMaximum());
 		formData = new FormData();
 		formData.left = new FormAttachment(0, 5);
 		formData.right = new FormAttachment(100, -5);
@@ -70,7 +70,7 @@ public class SolvingProgress {
 			return;
 		}
 		else {
-			progressBar.setSelection((int)(OSDEAParameters.getProgressBarMaximum() * percentage));
+			progressBar.setSelection((int)(OSDEAGUIParameters.getProgressBarMaximum() * percentage));
 		}
 	}
 	
