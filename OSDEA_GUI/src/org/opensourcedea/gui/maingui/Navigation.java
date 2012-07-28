@@ -251,6 +251,7 @@ public class Navigation extends Composite {
 		ObjectivesComposite objectivesComp = new ObjectivesComposite(osdeaMainComp.getDataPanel());
 		ProjectionsComposite projectionsComp = new ProjectionsComposite(osdeaMainComp.getDataPanel());
 		LambdasComposite lambdasComp = new LambdasComposite(osdeaMainComp.getDataPanel());
+		PeerGroupComposite peerComp = new PeerGroupComposite(osdeaMainComp.getDataPanel());
 		SlacksComposite slacksComp = new SlacksComposite(osdeaMainComp.getDataPanel());
 		WeightsComposite weightsComp = new WeightsComposite(osdeaMainComp.getDataPanel());
 		
@@ -307,7 +308,7 @@ public class Navigation extends Composite {
 		referenceSetTreeItem = new TreeItem (solutionTreeItem, 0);
 		referenceSetTreeItem.setText (peerGroupItemText);
 		referenceSetTreeItem.setImage(referenceSetImage);
-		referenceSetTreeItem.setData(lambdasComp);
+		referenceSetTreeItem.setData(peerComp);
 		
 		slacksTreeItem = new TreeItem (solutionTreeItem, 0);
 		slacksTreeItem.setText (slacksItemText);
@@ -516,6 +517,22 @@ public class Navigation extends Composite {
 		return null;
 	}
 	
+	private TreeItem getPeerGroupTreeItem() {
+		TreeItem parent = getSelectedDEAProblemTreeItem();
+		
+		for(TreeItem it : parent.getItems()) {
+			if(it.getText().equals(solutionItemText)) {
+				for(TreeItem innerIt : it.getItems()) {
+					if(innerIt.getText().equals(peerGroupItemText)) {
+						return innerIt;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	private TreeItem getSlacksTreeItem() {
 		TreeItem parent = getSelectedDEAProblemTreeItem();
 		
@@ -628,6 +645,9 @@ public class Navigation extends Composite {
 		LambdasComposite lambdaComp = (LambdasComposite)getLambdasTreeItem().getData();
 		lambdaComp.displaySolution(ldeap);
 		
+		//PeerGroup
+		PeerGroupComposite peerComp = (PeerGroupComposite)getPeerGroupTreeItem().getData();
+		peerComp.displaySolution(ldeap);
 		
 		//Slacks
 		SlacksComposite slackComp = (SlacksComposite)getSlacksTreeItem().getData();
@@ -664,7 +684,11 @@ public class Navigation extends Composite {
 			//Lambdas
 			LambdasComposite lambdaComp = (LambdasComposite)getLambdasTreeItem().getData();
 			lambdaComp.resetComposite();		
-
+			
+			//Peer Group
+			PeerGroupComposite peerComp = (PeerGroupComposite)getPeerGroupTreeItem().getData();
+			peerComp.resetComposite();
+			
 			//Slacks
 			SlacksComposite slackComp = (SlacksComposite)getSlacksTreeItem().getData();
 			slackComp.resetComposite();
