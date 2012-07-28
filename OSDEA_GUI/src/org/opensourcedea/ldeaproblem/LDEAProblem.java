@@ -56,6 +56,7 @@ public class LDEAProblem implements Serializable {
 			getLdeapSolution().setSlacks(deap.getSlacks());
 			getLdeapSolution().setWeights(deap.getWeight());
 			getLdeapSolution().setStatus(deap.getOptimisationStatus());
+			getLdeapSolution().setEfficient(deap.getEfficiencyStatus());
 
 			if(getModelType().getReturnToScale() == ReturnsToScale.DECREASING ||
 					getModelType().getReturnToScale() == ReturnsToScale.INCREASING ||

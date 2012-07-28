@@ -97,6 +97,7 @@ public class ObjectivesComposite extends Composite {
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
 		headers.add("Objective Value");
+		headers.add("Efficient");
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
@@ -108,6 +109,8 @@ public class ObjectivesComposite extends Composite {
 			else{
 				tempArr.add(Double.toString(MathUtils.round(ldeap.getLdeapSolution().getObjective(i),OSDEAGUIParameters.getRoundingDecimals())));
 			}
+			String eff = ldeap.getLdeapSolution().getEfficient()[i] == true ? "Yes" : "";
+			tempArr.add(eff);
 			data.add(tempArr);
 		}
 		
