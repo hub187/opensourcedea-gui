@@ -78,7 +78,7 @@ public class Main_GUI {
 	stl.setNotificalLabelDelayStandard("OSDEA is ready!");
 	
 	
-	
+	shell.layout();
 	
 	shell.addShellListener(new ShellAdapter()
 	{
