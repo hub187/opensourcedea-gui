@@ -69,7 +69,7 @@ public class OSDEA_StatusLine {
 	    formData.left = new FormAttachment(0);
 	    formData.right = new FormAttachment(100);
 	    formData.bottom = new FormAttachment(100);
-	    formData.height = 35;
+	    formData.height = 15;
 		compStatusLine.setLayoutData(formData);
 		
 		
