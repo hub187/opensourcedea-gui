@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Event;
@@ -29,7 +28,6 @@ public class OSDEA_CoolBar {
 	private ToolItem newToolItem, openToolItem, saveToolItem, importToolItem;
 	private CoolItem fileCoolItem, toolsCoolItem;
 	private Point fileSizePoint, filePreferredPoint, toolsSizePoint, toolsPreferredPoint;
-	private FormLayout layout;
 	private FormData coolData;
 	private final ImageRegistry imgReg;
 	
@@ -101,14 +99,12 @@ public class OSDEA_CoolBar {
 	    
 	    
 	    
-		//Layout
-		layout = new FormLayout();
-		shell.setLayout(layout);
 		coolData = new FormData();
 		coolData.left = new FormAttachment(0);
 		coolData.right = new FormAttachment(100);
 		coolData.top = new FormAttachment(0);
 		coolBar.setLayoutData(coolData);
+		
 		coolBar.addListener(SWT.Resize, new Listener() {
 			public void handleEvent(Event event) {
 				shell.layout();

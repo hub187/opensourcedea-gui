@@ -249,7 +249,12 @@ public class ModelDetailsComposite extends Composite {
 			for(ModelType tempMod : ModelType.values()) {// modTypesCombo.getCombo().getItems()) {
 				if(modType.equals(tempMod.toString())){
 					modTypesCombo.getCombo().select(i);
-					modTypeComboSelectionChanged(ldeap.getModelType(), description, paramGroup, descGroup);
+					this.getDisplay().syncExec(new Runnable() {
+						public void run() {
+							modTypeComboSelectionChanged(ldeap.getModelType(), description, paramGroup, descGroup);
+						}
+					});
+					
 					break;
 				}
 				i++;
@@ -344,7 +349,9 @@ public class ModelDetailsComposite extends Composite {
 		}
 
 
-		updateStatusStl();
+				updateStatusStl();
+
+		
 
 	}
 

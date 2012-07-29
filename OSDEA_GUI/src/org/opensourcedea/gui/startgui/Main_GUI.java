@@ -7,9 +7,9 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
@@ -47,7 +47,7 @@ public class Main_GUI {
     
     shell = new Shell(display);
     shell.setText("OSDEA");
-    shell.setLayout(new FillLayout());
+    shell.setLayout(new FormLayout());
 	shell.setSize(1000,550);
 	ImageRegistry imgReg = Images.getMainGUIImageRegistry(display);
     shell.setImage(imgReg.get("potIcon"));
@@ -61,8 +61,6 @@ public class Main_GUI {
     final OSDEAMainComposite mainComp = new OSDEAMainComposite(shell, stl, SWT.BORDER);
     
     coolBar = new OSDEA_CoolBar(shell, mainComp.getNavigation(), stl).getCoolBar();
-    
-    
     
     shell.setMenuBar(new OSDEA_Menu(shell, stl, mainComp.getNavigation()).getMenu());
     

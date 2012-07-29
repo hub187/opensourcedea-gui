@@ -276,8 +276,9 @@ public class DEAPProblemComposite extends Composite {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
 		solveButton.setLayoutData(fdata);
-
-		comp.layout();
+		
+		
+		//comp.layout();
 	}
 	
 	public void showProgressGroupSolved() {
@@ -298,7 +299,7 @@ public class DEAPProblemComposite extends Composite {
 		solveButton.setLayoutData(fdata);
 		solveButton.setText("Reset DEA Problem");
 		
-		comp.layout();
+//		comp.layout();
 	}
 	
 

@@ -33,11 +33,6 @@ public class OSDEAMainComposite extends Composite {
 		instrComp = new InstructionsComposite(dataPanel);
 		setDataPanelTopControl(instrComp);
 
-		
-		
-		
-
-		
 		navigation = new Navigation(this, stl);
 		navigation.setLocation(0,0);
 		navigation.pack();

@@ -275,8 +275,11 @@ public class ModelDetailsParamGroup {
 		descGroup.setLayoutData(fdata);
 		descGroup.setLayout(new FormLayout());
 
-		
-		comp.layout();
+		paramGroup.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				comp.layout();
+			}
+		});
 		
 	}
 	
