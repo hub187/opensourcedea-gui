@@ -1,7 +1,6 @@
 package org.opensourcedea.gui.maingui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -15,7 +14,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.opensourcedea.dea.NonZeroLambda;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
@@ -86,51 +84,20 @@ public class PeerGroupComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
-		ArrayList<Integer> efficientReferencedDMUs = new ArrayList<Integer>();
-		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
-			Iterator<NonZeroLambda> it = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
-			while(it.hasNext()) {
-				NonZeroLambda tempNzl = it.next();
-				if(!efficientReferencedDMUs.contains(tempNzl.getDMUIndex())){
-					efficientReferencedDMUs.add(tempNzl.getDMUIndex());
-				}
-			}
-		}
-		Collections.sort(efficientReferencedDMUs);
-		
-		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
 		headers.add("Peer Group");
 		
 		String longest = "";
 		
-		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
-			ArrayList<String> tempArr = new ArrayList<String>();
-			tempArr.add(ldeap.getDMUNames().get(i));
-			
-			StringBuffer strb = new StringBuffer();
-			Iterator<NonZeroLambda> nzl = ldeap.getLdeapSolution().getReferenceSet(i).iterator();
-			
-			while(nzl.hasNext()) {
-				strb.append(ldeap.getDMUNames().get(nzl.next().getDMUIndex()));
-				if(nzl.hasNext()) {
-					strb.append(", ");
-				}
-				else {
-					strb.append(".");
-				}
+		ArrayList<ArrayList<String>> data = ldeap.returnPeerGroup();
+		
+		Iterator<ArrayList<String>> dmuIt = data.iterator();
+		while(dmuIt.hasNext()) {
+			String peer = dmuIt.next().get(1);
+			if(peer.length() > longest.length()) {
+				longest = peer;
 			}
-			
-			if(strb.length() > longest.length()) {
-				longest = strb.toString();
-			}
-			
-			tempArr.add(strb.toString());
-			
-			data.add(tempArr);
-			
 		}
 		
 		

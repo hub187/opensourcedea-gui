@@ -2,10 +2,14 @@ package org.opensourcedea.ldeaproblem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.opensourcedea.dea.DEAPSolution;
 import org.opensourcedea.dea.DEAProblem;
 import org.opensourcedea.dea.ModelType;
+import org.opensourcedea.dea.NonZeroLambda;
 import org.opensourcedea.dea.ReturnsToScale;
 import org.opensourcedea.dea.SolverReturnStatus;
 import org.opensourcedea.dea.VariableOrientation;
@@ -16,7 +20,7 @@ import org.opensourcedea.exception.ProblemNotSolvedProperlyException;
 
 
 public class LDEAProblem implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -29,7 +33,7 @@ public class LDEAProblem implements Serializable {
 	private boolean isModified;
 	private DEAPSolution ldeapSolution;
 
-	
+
 
 
 
@@ -38,14 +42,14 @@ public class LDEAProblem implements Serializable {
 		variable = new LVariable();
 		setModified(true);
 		setSolved(false);
-		
+
 	}
-	
+
 	public void initDEAPSolution(int nbDMUs, int nbVariables) {
 		ldeapSolution = new DEAPSolution(nbDMUs, nbVariables);
 	}
-	
-	
+
+
 	public void copyLDEAPSolution(DEAProblem deap) throws ProblemNotSolvedProperlyException, IncompatibleModelTypeException {
 		if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
 			setSolved(true);
@@ -76,7 +80,7 @@ public class LDEAProblem implements Serializable {
 					getLdeapSolution().setU0Weight(i, deap.getU0Weight(i));
 				}
 			}
-			
+
 
 			setModified(true);
 
@@ -85,25 +89,25 @@ public class LDEAProblem implements Serializable {
 			setSolved(false);
 		}
 	}
-	
+
 
 	public void setLdeapSolution(DEAPSolution ldeapSolution) {
 		this.ldeapSolution = ldeapSolution;
 	}
-	
-	
+
+
 	public DEAPSolution getLdeapSolution() {
 		return ldeapSolution;
 	}
-	
-	
+
+
 	public void deleteSolution() {
 		int nbDMUs = ldeapSolution.getObjectives().length;
 		int nbVariables = ldeapSolution.getWeights()[0].length;
 		initDEAPSolution(nbDMUs, nbVariables);
 	}
-	
-	
+
+
 	public Integer getNumberOfVariables() {
 		if(getVariableNames() != null) {
 			return getVariableNames().size();
@@ -111,7 +115,7 @@ public class LDEAProblem implements Serializable {
 		else {
 			return null;
 		}
-		
+
 	}
 
 
@@ -132,8 +136,8 @@ public class LDEAProblem implements Serializable {
 	public void setSolved(boolean isSolved) {
 		this.isSolved = isSolved;
 	}
-	
-	
+
+
 	public boolean isModified() {
 		return isModified;
 	}
@@ -147,16 +151,16 @@ public class LDEAProblem implements Serializable {
 	public LModelDetails getModelDetails() {
 		return modelDetails;
 	}
-	
+
 	public LVariable getLModelVariables() {
 		return variable;
 	}
-	
-	
+
+
 	public void setDMUNames(ArrayList<String> parentDMUNames) {
 		dmuNames = parentDMUNames;
 	}
-	
+
 	public ArrayList<String> getDMUNames() {
 		return dmuNames;
 	}
@@ -168,64 +172,64 @@ public class LDEAProblem implements Serializable {
 	public void setDataMatrix(ArrayList<double[]> dataMatrix) {
 		this.dataMatrix = dataMatrix;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	public ModelType getModelType() {
 		return modelDetails.getModelType();
 	}
 	public void setModelType(ModelType modelType) {
 		this.modelDetails.setModelType(modelType);
 	}
-	
-	
+
+
 	public double getRtsLowerBound() {
 		return modelDetails.getRtsLB();
 	}
 	public void setRtsLowerBound(double rtsLowerBound) {
 		this.modelDetails.setRtsLB(rtsLowerBound);
 	}
-	
-	
+
+
 	public double getRtsUpperBound() {
 		return modelDetails.getRtsUB();
 	}
 	public void setRtsUpperBound(double rtsUpperBound) {
 		this.modelDetails.setRtsUB(rtsUpperBound);
 	}
-	
-	
 
-	
+
+
+
 	public String getModelName() {
 		return this.modelDetails.getModelName();
 	}
 	public void setModelName(String modelName) {
 		this.modelDetails.setModelName(modelName);
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	public ArrayList<String> getVariableNames() {
 		return variable.getVariableNames();
 	}
 	public void setVariableNames(ArrayList<String> variableNames) {
 		this.variable.setVariableNames(variableNames);
 	}
-	
-	
+
+
 	public ArrayList<VariableOrientation> getVariableOrientation() {
 		return this.variable.getVariableOrientations();
 	}
 	public void setVariableOrientation(ArrayList<VariableOrientation> variableOrientation) {
 		this.variable.setVariableOrientations(variableOrientation);
 	}
-	
-	
+
+
 	public ArrayList<VariableType> getVariableType() {
 		return this.variable.getVariableTypes();
 	}
@@ -233,6 +237,92 @@ public class LDEAProblem implements Serializable {
 		this.variable.setVariableTypes(variableType);
 	}
 
-	
-	
+
+	/**
+	 * Returns the sorted list of efficient DMUs that are found at least once in the reference set of non-efficient DMUs.
+	 * @return ArrayList<Integer> returnEfficientReferencedDMUs
+	 */
+	public ArrayList<Integer> returnEfficientReferencedDMUs() {
+
+		ArrayList<Integer> efficientReferencedDMUs = new ArrayList<Integer>();
+		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
+			Iterator<NonZeroLambda> it = getLdeapSolution().getReferenceSet()[i].iterator();
+			while(it.hasNext()) {
+				NonZeroLambda tempNzl = it.next();
+				if(!efficientReferencedDMUs.contains(tempNzl.getDMUIndex())){
+					efficientReferencedDMUs.add(tempNzl.getDMUIndex());
+				}
+			}
+		}
+		Collections.sort(efficientReferencedDMUs);
+
+		return efficientReferencedDMUs;
+	}
+
+
+	/**
+	 * Returns the processed lambdas. The process lambdas take the form of a matrix where each row corresponds to a DMU (DMU index is preserved) 
+	 * and each column corresponds to the efficient DMUs (sorted list). The value in each cell is the double corresponding to each non-zero lambda.
+	 * Please note that it is necessary to add the DMU Name if this matrix is to be displayed.
+	 * @return ArrayList<ArrayList<Double>> returnProcessedLambdas
+	 */
+	public ArrayList<ArrayList<Double>> returnProcessedLambdas() {
+
+		ArrayList<Integer> efficientReferencedDMUs = returnEfficientReferencedDMUs();
+
+		ArrayList<ArrayList<Double>> data = new ArrayList<ArrayList<Double>>();
+		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
+			Iterator<NonZeroLambda> itNzl = getLdeapSolution().getReferenceSet()[i].iterator();
+			HashMap<Integer, Double> nzlHashMap = new HashMap<Integer, Double>();
+			while(itNzl.hasNext()) {
+				NonZeroLambda tempNzl = itNzl.next();
+				nzlHashMap.put(tempNzl.getDMUIndex(), tempNzl.getLambdaValue());
+			}
+
+			ArrayList<Double> tempArr = new ArrayList<Double>();
+			for(int j = 0; j < efficientReferencedDMUs.size(); j++) {
+				if(nzlHashMap.containsKey(efficientReferencedDMUs.get(j))) {
+					tempArr.add(nzlHashMap.get(efficientReferencedDMUs.get(j)));
+				}
+				else {
+					tempArr.add(0.0);
+				}
+			}
+
+			data.add(tempArr);
+		}
+		return data;
+	}
+
+
+	public ArrayList<ArrayList<String>> returnPeerGroup() {
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
+			ArrayList<String> tempArr = new ArrayList<String>();
+			tempArr.add(getDMUNames().get(i));
+
+			StringBuffer strb = new StringBuffer();
+			Iterator<NonZeroLambda> nzl = getLdeapSolution().getReferenceSet(i).iterator();
+
+			while(nzl.hasNext()) {
+				strb.append(getDMUNames().get(nzl.next().getDMUIndex()));
+				if(nzl.hasNext()) {
+					strb.append(", ");
+				}
+				else {
+					strb.append(".");
+				}
+			}
+
+			tempArr.add(strb.toString());
+
+			data.add(tempArr);
+
+		}
+
+		return data;
+
+	}
+
+
 }

@@ -1,8 +1,6 @@
 package org.opensourcedea.gui.maingui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
@@ -16,7 +14,6 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.opensourcedea.dea.NonZeroLambda;
 import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.gui.utils.MathUtils;
@@ -87,18 +84,7 @@ public class LambdasComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
-		ArrayList<Integer> efficientReferencedDMUs = new ArrayList<Integer>();
-		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
-			Iterator<NonZeroLambda> it = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
-			while(it.hasNext()) {
-				NonZeroLambda tempNzl = it.next();
-				if(!efficientReferencedDMUs.contains(tempNzl.getDMUIndex())){
-					efficientReferencedDMUs.add(tempNzl.getDMUIndex());
-				}
-			}
-		}
-		Collections.sort(efficientReferencedDMUs);
-		
+		ArrayList<Integer> efficientReferencedDMUs = ldeap.returnEfficientReferencedDMUs();
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
@@ -106,8 +92,7 @@ public class LambdasComposite extends Composite {
 		while(it.hasNext()) {
 			headers.add(ldeap.getDMUNames().get(it.next()));
 		}
-		
-		int nbNzl = efficientReferencedDMUs.size();
+
 		
 		int width = Dimensions.getTotalStringLength(tableComp, headers);
 		FormData fdata = (FormData) tableComp.getLayoutData();
@@ -120,32 +105,21 @@ public class LambdasComposite extends Composite {
 		sComp.setMinSize(prefSize);
 		
 		
+		ArrayList<ArrayList<Double>> lambdas = ldeap.returnProcessedLambdas();
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for(int i = 0; i < ldeap.getLdeapSolution().getReferenceSet().length; i++) {
-			Iterator<NonZeroLambda> itNzl = ldeap.getLdeapSolution().getReferenceSet()[i].iterator();
-			HashMap<Integer, Double> nzlHashMap = new HashMap<Integer, Double>();
-			while(itNzl.hasNext()) {
-				NonZeroLambda tempNzl = itNzl.next();
-				nzlHashMap.put(tempNzl.getDMUIndex(), tempNzl.getLambdaValue());
-			}
-			
+		int dmuIndex = 0;
+		
+		Iterator<ArrayList<Double>> dmuIt = lambdas.iterator();
+		while(dmuIt.hasNext()) {
+			Iterator<Double> lambdaIt = dmuIt.next().iterator();
 			ArrayList<String> tempArr = new ArrayList<String>();
-			tempArr.add(ldeap.getDMUNames().get(i));
-			for(int j = 0; j < nbNzl; j++) {
-				if(nzlHashMap.containsKey(efficientReferencedDMUs.get(j))) {
-					tempArr.add(Double.toString(MathUtils.round(nzlHashMap.get(efficientReferencedDMUs.get(j)),OSDEAGUIParameters.getRoundingDecimals())));
-				}
-				else {
-					tempArr.add("0");
-				}
+			tempArr.add(ldeap.getDMUNames().get(dmuIndex++));
+			while(lambdaIt.hasNext()) {
+				tempArr.add(Double.toString(MathUtils.round(lambdaIt.next(), OSDEAGUIParameters.getRoundingDecimals())));
 			}
-			
 			data.add(tempArr);
 		}
-		
 
-		
-		
 		
 		GenericTable solTable = new GenericTable(tableComp, headers, data);
 		solTable.setTable();

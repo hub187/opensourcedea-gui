@@ -299,7 +299,7 @@ public class DEAPProblemComposite extends Composite {
 		solveButton.setLayoutData(fdata);
 		solveButton.setText("Reset DEA Problem");
 		
-//		comp.layout();
+		//comp.layout();
 	}
 	
 
