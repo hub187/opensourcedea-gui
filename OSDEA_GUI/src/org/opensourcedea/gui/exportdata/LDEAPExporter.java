@@ -117,10 +117,12 @@ public class LDEAPExporter {
 			wb.setSheetName(6, "Peer Group");
 			
 			//Slacks
-			
+			exportSlacks(wb);
+			wb.setSheetName(7, "Slacks");
 			
 			//Weights
-
+			exportWeights(wb);
+			wb.setSheetName(8, "Weights");
 		}
 
 
@@ -320,6 +322,19 @@ public class LDEAPExporter {
 			cell = row.createCell(i++);
 			cell.setCellValue(ldeap.getDMUNames().get(it.next()));
 		}
+		
+		ArrayList<ArrayList<Double>> data = ldeap.returnProcessedLambdas();
+		for(int rowNum = 0; rowNum < data.size(); rowNum++) {
+			row = lambdaSheet.createRow(rowNum + 1);
+			cell = row.createCell(0);
+			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
+			int l = 1;
+			Iterator<Double> itd = data.get(rowNum).iterator();
+			while(itd.hasNext()) {
+				cell = row.createCell(l++);
+				cell.setCellValue(itd.next());
+			}
+		}
 	}
 
 	
@@ -343,10 +358,55 @@ public class LDEAPExporter {
 			cell = row.createCell(1);
 			cell.setCellValue(peerGroup.get(rowNum).get(1));
 		}
-		
 	}
 	
+	private void exportSlacks(Workbook wb) {
+		Sheet slacksSheet = wb.createSheet();
 
+		Row row = null;
+		Cell cell = null; 
+		row = slacksSheet.createRow(0);
+		cell = row.createCell(0);
+		cell.setCellValue("DMU Name");
+		for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+			cell = row.createCell(i + 1);
+			cell.setCellValue(ldeap.getVariableNames().get(i));
+		}
+		
+		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getSlacks().length; rowNum++) {
+			row = slacksSheet.createRow(rowNum + 1);
+			cell = row.createCell(0);
+			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
+			for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+				cell = row.createCell(i + 1);
+				cell.setCellValue(ldeap.getLdeapSolution().getSlack(rowNum, i));
+			}
+		}
+	}
+	
+	private void exportWeights(Workbook wb) {
+		Sheet weightsSheet = wb.createSheet();
+
+		Row row = null;
+		Cell cell = null; 
+		row = weightsSheet.createRow(0);
+		cell = row.createCell(0);
+		cell.setCellValue("DMU Name");
+		for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+			cell = row.createCell(i + 1);
+			cell.setCellValue(ldeap.getVariableNames().get(i));
+		}
+		
+		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getWeights().length; rowNum++) {
+			row = weightsSheet.createRow(rowNum + 1);
+			cell = row.createCell(0);
+			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
+			for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+				cell = row.createCell(i + 1);
+				cell.setCellValue(ldeap.getLdeapSolution().getWeight(rowNum, i));
+			}
+		}
+	}
 
 
 }
