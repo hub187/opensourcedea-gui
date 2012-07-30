@@ -28,12 +28,6 @@ public class OSDEA_Menu {
 		shell = parentShell;
 		this.nav = parentNavigation;
 		stl = parentStl;
-
-		
-	}
-	
-	
-	public Menu getMenu() {
 		
 		imgReg = Images.getFullImageRegistry(shell.getDisplay());
 		newImage = imgReg.get("new");
@@ -46,8 +40,7 @@ public class OSDEA_Menu {
 		saveAllImage = imgReg.get("saveAll");
 		closeImage = imgReg.get("close");
 		
-		menuBar = new Menu(shell, SWT.BAR);
-		
+	
 	    menuBar = new Menu(shell, SWT.BAR);
 	    
 	    fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
@@ -134,9 +127,12 @@ public class OSDEA_Menu {
 	    helpGetHelpItem.addSelectionListener(new HelpGetHelpItemListener(stl));
 	    helpAboutItem.addSelectionListener(new HelpAboutItemListener(shell));
 
-
-	    return menuBar;
-	    
+		
+	}
+	
+	
+	public Menu getMenu() {
+	    return menuBar;	    
 	}
 
 	

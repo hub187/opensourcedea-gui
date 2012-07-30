@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="libraries/org.eclipse.equinox.common_3.6.0.v20110523.jar"/>
 	<classpathentry kind="lib" path="libraries/org.eclipse.jface_3.7.0.I20110522-1430.jar" sourcepath="libraries/org.eclipse.jface.source_3.7.0.I20110522-1430.jar"/>
 	<classpathentry kind="lib" path="libraries/org.eclipse.osgi_3.7.1.R37x_v20110808-1106.jar" sourcepath="libraries/org.eclipse.osgi.source_3.7.1.R37x_v20110808-1106.jar"/>
-	<classpathentry kind="lib" path="libraries/swt.jar" sourcepath="libraries/OSDEASolver-v0.287-sources.jar"/>
+	<classpathentry kind="lib" path="libraries/swt.jar" sourcepath="libraries/src.zip"/>
 	<classpathentry kind="lib" path="libraries/swing2swt.jar"/>
 	<classpathentry kind="lib" path="libraries/opencsv-2.3.jar" sourcepath="libraries/opencsv_src.zip"/>
 	<classpathentry kind="lib" path="libraries/org.eclipse.core.databinding_1.4.0.I20110111-0800.jar"/>

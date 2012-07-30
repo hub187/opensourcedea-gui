@@ -10,7 +10,6 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -19,6 +18,8 @@ import org.opensourcedea.gui.menu.LDEAPSaver;
 import org.opensourcedea.gui.menu.OSDEA_CoolBar;
 import org.opensourcedea.gui.menu.OSDEA_Menu;
 import org.opensourcedea.gui.utils.Images;
+import org.opensourcedea.gui.utils.OS;
+import org.opensourcedea.gui.utils.Sys;
 
 
 public class Main_GUI {
@@ -26,9 +27,8 @@ public class Main_GUI {
   private Display display;
   private Shell shell;
   private CoolBar coolBar;
-  private Composite statusLine;
   private OSDEA_StatusLine stl;
-  private FormData formData;
+  private FormData fdata;
   private DialogCrash dialogCrash;
   
   
@@ -56,21 +56,47 @@ public class Main_GUI {
 
     
     stl = new OSDEA_StatusLine(shell);
-    statusLine = stl.getCompStatusLine();
     
-    final OSDEAMainComposite mainComp = new OSDEAMainComposite(shell, stl, SWT.BORDER);
+    final OSDEAMainComposite mainComp = new OSDEAMainComposite(shell, stl, SWT.NONE);
     
     coolBar = new OSDEA_CoolBar(shell, mainComp.getNavigation(), stl).getCoolBar();
-    
+
     shell.setMenuBar(new OSDEA_Menu(shell, stl, mainComp.getNavigation()).getMenu());
     
     
-	formData = new FormData();
-	formData.left = new FormAttachment(0);
-	formData.right = new FormAttachment(100);
-	formData.top = new FormAttachment(coolBar);
-	formData.bottom = new FormAttachment(statusLine);
-	mainComp.setLayoutData(formData);
+    //Layouts
+    
+    //stl
+    fdata = new FormData();
+    fdata.left = new FormAttachment(0);
+    fdata.right = new FormAttachment(100);
+    fdata.bottom = new FormAttachment(100);
+    //to compensate for potential SWT linux bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=386271
+    int height = Sys.getOS() == OS.WINDOWS ? 15 : 35;
+    fdata.height = height;
+    stl.getCompStatusLine().setLayoutData(fdata);
+    
+    //Main Comp
+	fdata = new FormData();
+	fdata.left = new FormAttachment(0);
+	fdata.right = new FormAttachment(100);
+	fdata.top = new FormAttachment(coolBar);
+	fdata.bottom = new FormAttachment(stl.getCompStatusLine());
+	mainComp.setLayoutData(fdata);
+	
+	//CoolBar
+	fdata = new FormData();
+	fdata.left = new FormAttachment(0);
+	fdata.right = new FormAttachment(100);
+	fdata.top = new FormAttachment(0);
+	coolBar.setLayoutData(fdata);
+	
+	//Menu
+	fdata = new FormData();
+	fdata.left = new FormAttachment(0);
+	fdata.right = new FormAttachment(100);
+	fdata.top = new FormAttachment(0);
+	coolBar.setLayoutData(fdata);
 	
 	
 	stl.setNotificalLabelDelayStandard("OSDEA is ready!");

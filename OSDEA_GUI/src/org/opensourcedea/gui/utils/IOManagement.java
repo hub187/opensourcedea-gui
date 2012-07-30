@@ -101,7 +101,7 @@ public class IOManagement {
 	
 	private static int getIndexBeforeFileName(String str) {
 		int i = 0;
-		if(System.getProperty("os.name").startsWith("Windows")) {
+		if(Sys.getOS() == OS.WINDOWS) {
 			i = str.lastIndexOf("\\");
 		}
 		else /*suppose linux system*/ {

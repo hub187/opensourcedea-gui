@@ -21,57 +21,51 @@ public class OSDEA_StatusLine {
 	
 	public OSDEA_StatusLine(Shell parentShell) {
 		shell = parentShell;
-		
+		 compStatusLine = new Composite(shell, SWT.BORDER);
+		    compStatusLine.setLayout(new FormLayout());
+		    
+		    stlNotificationLabel = new Label(compStatusLine, SWT.NONE);
+		    stlNotificationLabel.setText("");
+		    formData = new FormData();
+		    formData.left = new FormAttachment(0);
+		    formData.top = new FormAttachment(0);
+		    formData.bottom = new FormAttachment(100);
+		    stlNotificationLabel.setLayoutData(formData);
+		    
+		    
+		    stlPositionLabel = new Label(compStatusLine, SWT.NONE);
+		    stlPositionLabel.setText("");
+		    formData = new FormData();
+		    formData.left = new FormAttachment(30);
+		    stlPositionLabel.setLayoutData(formData);
+		    
+		    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
+		    formData = new FormData();
+		    formData.height = 15;
+		    formData.right = new FormAttachment(stlPositionLabel, -2);
+		    sepLabel.setLayoutData(formData);
+		    
+		    
+		    stlStatusLabel = new Label(compStatusLine, SWT.NONE);
+		    stlStatusLabel.setText("");
+		    formData = new FormData();
+//		    formData.right = new FormAttachment(100);
+		    formData.left = new FormAttachment(30, 285);
+		    stlStatusLabel.setLayoutData(formData);
+		    
+		    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
+		    formData = new FormData();
+		    formData.height = 15;
+		    formData.right = new FormAttachment(stlStatusLabel, -2);
+		    sepLabel.setLayoutData(formData);
+		    
+
+		    
 	}
 	
 	public Composite getCompStatusLine(){
 		
-	    compStatusLine = new Composite(shell, SWT.BORDER);
-	    compStatusLine.setLayout(new FormLayout());
-	    
-	    stlNotificationLabel = new Label(compStatusLine, SWT.NONE);
-	    stlNotificationLabel.setText("");
-	    formData = new FormData();
-	    formData.left = new FormAttachment(0);
-	    formData.top = new FormAttachment(0);
-	    formData.bottom = new FormAttachment(100);
-	    stlNotificationLabel.setLayoutData(formData);
-	    
-	    
-	    stlPositionLabel = new Label(compStatusLine, SWT.NONE);
-	    stlPositionLabel.setText("");
-	    formData = new FormData();
-	    formData.left = new FormAttachment(30);
-	    stlPositionLabel.setLayoutData(formData);
-	    
-	    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
-	    formData = new FormData();
-	    formData.height = 15;
-	    formData.right = new FormAttachment(stlPositionLabel, -2);
-	    sepLabel.setLayoutData(formData);
-	    
-	    
-	    stlStatusLabel = new Label(compStatusLine, SWT.NONE);
-	    stlStatusLabel.setText("");
-	    formData = new FormData();
-//	    formData.right = new FormAttachment(100);
-	    formData.left = new FormAttachment(30, 285);
-	    stlStatusLabel.setLayoutData(formData);
-	    
-	    sepLabel = new Label(compStatusLine, SWT.SEPARATOR | SWT.SHADOW_OUT | SWT.VERTICAL);
-	    formData = new FormData();
-	    formData.height = 15;
-	    formData.right = new FormAttachment(stlStatusLabel, -2);
-	    sepLabel.setLayoutData(formData);
-	    
-	    
-	    formData = new FormData();
-	    formData.left = new FormAttachment(0);
-	    formData.right = new FormAttachment(100);
-	    formData.bottom = new FormAttachment(100);
-	    formData.height = 15;
-		compStatusLine.setLayoutData(formData);
-		
+	   
 		
 		return compStatusLine;
 		

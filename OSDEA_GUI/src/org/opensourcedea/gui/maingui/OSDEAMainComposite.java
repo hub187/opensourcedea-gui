@@ -25,7 +25,8 @@ public class OSDEAMainComposite extends Composite {
 		super(parent, style);
 	
 		stl = parentStl;
-
+		
+		this.setLayout(new FormLayout());
 		
 		dataPanel = new Composite(this, SWT.BORDER);
 		dataPanel.setLayout(stackLayout);
