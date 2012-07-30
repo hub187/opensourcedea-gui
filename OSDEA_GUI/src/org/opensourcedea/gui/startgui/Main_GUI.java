@@ -90,13 +90,7 @@ public class Main_GUI {
 	fdata.right = new FormAttachment(100);
 	fdata.top = new FormAttachment(0);
 	coolBar.setLayoutData(fdata);
-	
-	//Menu
-	fdata = new FormData();
-	fdata.left = new FormAttachment(0);
-	fdata.right = new FormAttachment(100);
-	fdata.top = new FormAttachment(0);
-	coolBar.setLayoutData(fdata);
+
 	
 	
 	stl.setNotificalLabelDelayStandard("OSDEA is ready!");
