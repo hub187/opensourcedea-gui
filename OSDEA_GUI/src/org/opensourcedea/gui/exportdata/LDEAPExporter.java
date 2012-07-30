@@ -11,11 +11,13 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.opensourcedea.dea.ReturnsToScale;
+import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class LDEAPExporter {
@@ -23,10 +25,12 @@ public class LDEAPExporter {
 	private LDEAProblem ldeap;
 	private Shell shell;
 	private static final String[] filterNames = {
-		"Excel 2007 File (*.xls)"
+		"Excel 2007 File (*.xls)",
+		"Excel 2010 File (*.xlsx)"
 	};
 	private static final String[] filterExts = {
-		"*.xls"
+		"*.xls",
+		"*.xlsx"
 	};
 
 
@@ -37,13 +41,13 @@ public class LDEAPExporter {
 	}
 
 
-	public void exportToFile() throws IOException {
+	public boolean exportToFile() throws IOException {
 
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 		dialog.setFilterNames(filterNames);
 		dialog.setFilterExtensions(filterExts);
 		if(ldeap.getModelName() != ""){
-			dialog.setFileName(ldeap.getModelName() + ".xls");
+			dialog.setFileName(ldeap.getModelName());// + ".xls");
 		}
 
 
@@ -53,7 +57,7 @@ public class LDEAPExporter {
 		while(!dontCare) {
 			fileName = dialog.open();
 			if (fileName == null) {
-				break;
+				return false;
 			}
 			File f = new File(fileName);
 			if(f.exists()){
@@ -68,16 +72,25 @@ public class LDEAPExporter {
 
 
 		if(fileName != null) {
-			FileOutputStream out = new FileOutputStream(fileName);
-			Workbook wb = new HSSFWorkbook();
 
-			buildFile(wb);			
-
-			wb.write(out);
-			out.close();
-
+			if(IOManagement.getExtension(fileName) == "xls") {
+				FileOutputStream out = new FileOutputStream(fileName);
+				Workbook wb = new HSSFWorkbook();
+				buildFile(wb);			
+				wb.write(out);
+				out.close();
+			}
+			else {
+				FileOutputStream out = new FileOutputStream(fileName);
+				Workbook wb = new XSSFWorkbook();
+				buildFile(wb);			
+				wb.write(out);
+				out.close();
+			}
 
 		}
+
+		return true;
 	}
 
 
@@ -110,16 +123,16 @@ public class LDEAPExporter {
 			//Lambdas
 			exportLambdas(wb);
 			wb.setSheetName(5, "Lambdas");
-			
-			
+
+
 			//Peer Group
 			exportPeerGroup(wb);
 			wb.setSheetName(6, "Peer Group");
-			
+
 			//Slacks
 			exportSlacks(wb);
 			wb.setSheetName(7, "Slacks");
-			
+
 			//Weights
 			exportWeights(wb);
 			wb.setSheetName(8, "Weights");
@@ -310,11 +323,11 @@ public class LDEAPExporter {
 		Row row = null;
 		Cell cell = null; 
 		row = lambdaSheet.createRow(0);
-		
+
 		ArrayList<Integer> efficientReferencedDMUs = ldeap.returnEfficientReferencedDMUs();
-		
+
 		int i = 1;
-		
+
 		cell = row.createCell(0);
 		cell.setCellValue("DMU Name");
 		Iterator<Integer> it = efficientReferencedDMUs.iterator();
@@ -322,7 +335,7 @@ public class LDEAPExporter {
 			cell = row.createCell(i++);
 			cell.setCellValue(ldeap.getDMUNames().get(it.next()));
 		}
-		
+
 		ArrayList<ArrayList<Double>> data = ldeap.returnProcessedLambdas();
 		for(int rowNum = 0; rowNum < data.size(); rowNum++) {
 			row = lambdaSheet.createRow(rowNum + 1);
@@ -337,7 +350,7 @@ public class LDEAPExporter {
 		}
 	}
 
-	
+
 	private void exportPeerGroup(Workbook wb) {
 		Sheet pgSheet = wb.createSheet();
 
@@ -348,9 +361,9 @@ public class LDEAPExporter {
 		cell.setCellValue("DMU Name");
 		cell = row.createCell(1);
 		cell.setCellValue("Peer Group");
-		
+
 		ArrayList<ArrayList<String>> peerGroup = ldeap.returnPeerGroup();
-		
+
 		for(int rowNum = 0; rowNum < peerGroup.size(); rowNum++) {
 			row = pgSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
@@ -359,7 +372,7 @@ public class LDEAPExporter {
 			cell.setCellValue(peerGroup.get(rowNum).get(1));
 		}
 	}
-	
+
 	private void exportSlacks(Workbook wb) {
 		Sheet slacksSheet = wb.createSheet();
 
@@ -372,7 +385,7 @@ public class LDEAPExporter {
 			cell = row.createCell(i + 1);
 			cell.setCellValue(ldeap.getVariableNames().get(i));
 		}
-		
+
 		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getSlacks().length; rowNum++) {
 			row = slacksSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
@@ -383,7 +396,7 @@ public class LDEAPExporter {
 			}
 		}
 	}
-	
+
 	private void exportWeights(Workbook wb) {
 		Sheet weightsSheet = wb.createSheet();
 
@@ -396,7 +409,7 @@ public class LDEAPExporter {
 			cell = row.createCell(i + 1);
 			cell.setCellValue(ldeap.getVariableNames().get(i));
 		}
-		
+
 		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getWeights().length; rowNum++) {
 			row = weightsSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);

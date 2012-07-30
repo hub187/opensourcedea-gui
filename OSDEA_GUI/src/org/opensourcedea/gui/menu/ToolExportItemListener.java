@@ -29,15 +29,20 @@ public class ToolExportItemListener implements SelectionListener {
 		LDEAProblem ldeap = nav.getSelectedDEAProblem();
 
 		LDEAPExporter exporter = new LDEAPExporter(ldeap, nav.getShell());
+		boolean completedExport;
 		try {
-			exporter.exportToFile();
+			completedExport = exporter.exportToFile();
 		} catch (IOException e) {
 			stl.setNotificalLabelDelayStandard("The DEA Problem could not be exported!");
 			return;
 		}
 		
-		stl.setNotificalLabelDelayStandard("DEA Problem was exported successfully!");
-
+		if(completedExport){
+			stl.setNotificalLabelDelayStandard("DEA Problem was exported successfully!");
+		}
+		else {
+			stl.setNotificalLabelDelayStandard("DEA Problem was cancelled!");
+		}
 	}
 	
 	@Override

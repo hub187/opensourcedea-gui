@@ -18,5 +18,9 @@
 	<classpathentry kind="lib" path="libraries/org.eclipse.core.runtime_3.7.0.v20110110.jar"/>
 	<classpathentry kind="lib" path="libraries/OSDEASolver-v0.287-f.jar" sourcepath="libraries/OSDEASolver-v0.287-sources.jar"/>
 	<classpathentry kind="lib" path="libraries/poi-3.8-20120326.jar"/>
+	<classpathentry kind="lib" path="libraries/poi-ooxml-3.8-20120326.jar"/>
+	<classpathentry kind="lib" path="libraries/poi-ooxml-schemas-3.8-20120326.jar"/>
+	<classpathentry kind="lib" path="libraries/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="libraries/dom4j-1.6.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
