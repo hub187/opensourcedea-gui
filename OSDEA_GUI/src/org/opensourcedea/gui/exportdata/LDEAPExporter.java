@@ -73,7 +73,7 @@ public class LDEAPExporter {
 
 		if(fileName != null) {
 
-			if(IOManagement.getExtension(fileName) == "xls") {
+			if(IOManagement.getExtension(fileName).equals("xls")) {
 				FileOutputStream out = new FileOutputStream(fileName);
 				Workbook wb = new HSSFWorkbook();
 				buildFile(wb);			
@@ -183,6 +183,7 @@ public class LDEAPExporter {
 		cell.setCellValue("Model Description");
 		cell = row.createCell(1);
 		cell.setCellValue(ldeap.getModelType().getDescription());
+	
 
 		if(ldeap.getModelType().getReturnToScale() != ReturnsToScale.CONSTANT &&
 				ldeap.getModelType().getReturnToScale() != ReturnsToScale.VARIABLE) {
@@ -201,9 +202,12 @@ public class LDEAPExporter {
 
 		}
 
-
-
-
+		
+		//autoSize
+		for(int i = 0; i < 2; i++) {
+			modelDetailsSheet.autoSizeColumn(i);
+		}
+		
 
 	}
 
@@ -235,6 +239,12 @@ public class LDEAPExporter {
 
 			}
 		}
+		
+		//autoSize
+		for(int i = 0; i < ldeap.getDataMatrix().get(0).length + 1; i++) {
+			dataSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 
@@ -261,6 +271,12 @@ public class LDEAPExporter {
 			cell = row.createCell(2);
 			cell.setCellValue(ldeap.getVariableType().get(rowNum).toString());
 		}
+		
+		//autoSize
+		for(int i = 0; i < 3; i++) {
+			varSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 	private void exportObjectives(Workbook wb) {
@@ -287,6 +303,12 @@ public class LDEAPExporter {
 			String eff = ldeap.getLdeapSolution().getEfficient()[rowNum] ? "Yes" : "";
 			cell.setCellValue(eff);
 		}
+		
+		//autoSize
+		for(int i = 0; i < 3; i++) {
+			objSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 
@@ -312,7 +334,13 @@ public class LDEAPExporter {
 				cell = row.createCell(cellNum + 1);
 				cell.setCellValue(ldeap.getLdeapSolution().getProjections(rowNum)[cellNum]);
 			}
-		}	
+		}
+		
+		//autoSize
+		for(int i = 0; i < ldeap.getNumberOfVariables() + 1; i++) {
+			projSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 
@@ -326,13 +354,13 @@ public class LDEAPExporter {
 
 		ArrayList<Integer> efficientReferencedDMUs = ldeap.returnEfficientReferencedDMUs();
 
-		int i = 1;
+		int rowi = 1;
 
 		cell = row.createCell(0);
 		cell.setCellValue("DMU Name");
 		Iterator<Integer> it = efficientReferencedDMUs.iterator();
 		while(it.hasNext()) {
-			cell = row.createCell(i++);
+			cell = row.createCell(rowi++);
 			cell.setCellValue(ldeap.getDMUNames().get(it.next()));
 		}
 
@@ -348,6 +376,12 @@ public class LDEAPExporter {
 				cell.setCellValue(itd.next());
 			}
 		}
+		
+		//autoSize
+		for(int i = 0; i < efficientReferencedDMUs.size() + 1 + 1; i++) {
+			lambdaSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 
@@ -371,6 +405,12 @@ public class LDEAPExporter {
 			cell = row.createCell(1);
 			cell.setCellValue(peerGroup.get(rowNum).get(1));
 		}
+		
+		//autoSize
+		for(int i = 0; i < 2; i++) {
+			pgSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 	private void exportSlacks(Workbook wb) {
@@ -395,6 +435,12 @@ public class LDEAPExporter {
 				cell.setCellValue(ldeap.getLdeapSolution().getSlack(rowNum, i));
 			}
 		}
+		
+		//autoSize
+		for(int i = 0; i < ldeap.getNumberOfVariables() + 1; i++) {
+			slacksSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 	private void exportWeights(Workbook wb) {
@@ -419,6 +465,12 @@ public class LDEAPExporter {
 				cell.setCellValue(ldeap.getLdeapSolution().getWeight(rowNum, i));
 			}
 		}
+		
+		//autoSize
+		for(int i = 0; i < ldeap.getNumberOfVariables() + 1; i++) {
+			weightsSheet.autoSizeColumn(i);
+		}
+		
 	}
 
 
