@@ -3,10 +3,8 @@ package org.opensourcedea.gui.maingui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -19,7 +17,6 @@ import org.opensourcedea.gui.exceptions.UnselectedVariablesException;
 import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
-import org.opensourcedea.gui.utils.Images;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class Navigation extends Composite {
@@ -27,15 +24,11 @@ public class Navigation extends Composite {
 	
 	private Tree tree;
 	
-	private TreeItem deaProblemTreeItem, rawDataTreeItem, variablesTreeItem, modelDetailsTreeItem,
-	solutionTreeItem, objectivesTreeItem, projectionsTreeItem, lambdasTreeItem,
-	referenceSetTreeItem, slacksTreeItem, weightsTreeItem;
+
 	
-	private Image deaProblemImage, rawDataImage, iosImage, deaModelImage, solutionImage,
-	objectivesImage, projectionsImage, lambdasImage, referenceSetImage, slacksImage,
-	weightsImage;
+
 	
-	private final ImageRegistry imgReg;
+	
 	
 	private OSDEA_StatusLine stl;
 	
@@ -54,19 +47,7 @@ public class Navigation extends Composite {
 		
 		super(parent, SWT.BORDER);
 		this.parent = parent;
-		imgReg = Images.getFullImageRegistry(this.getDisplay());
-		deaProblemImage = imgReg.get("deaProblem");
-		rawDataImage = imgReg.get("rawData");
-		iosImage = imgReg.get("variables");
-		deaModelImage = imgReg.get("modelDetails");
-		solutionImage = imgReg.get("solution");
-		objectivesImage = imgReg.get("objective");
-		projectionsImage = imgReg.get("projections");
-		
-		lambdasImage = imgReg.get("lambdas");
-		referenceSetImage = imgReg.get("referenceSet");
-		slacksImage = imgReg.get("slacks");
-		weightsImage = imgReg.get("weights");
+
 		
 		stl = parentStl;
 		
@@ -239,94 +220,30 @@ public class Navigation extends Composite {
 	
 	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap) {
 		
-		//Takes time to create (apparently more on first time) => to investigate
-		DEAPProblemComposite problemComp = new DEAPProblemComposite(osdeaMainComp.getDataPanel(), ldeap, this, stl);
-		RawDataComposite dataComp = null;
-		dataComp = new RawDataComposite(osdeaMainComp.getDataPanel(), ldeap);
+		TreeItem deaProblemTreeItem = new TreeItem (tree, 0);
 		
-		VariablesComposite variablesComp = new VariablesComposite(osdeaMainComp.getDataPanel(), this, ldeap, stl);
-		//Takes time to create (apparently more on first time) => to investigate
-		ModelDetailsComposite modelComp = new ModelDetailsComposite(osdeaMainComp.getDataPanel(), ldeap, stl);
-		SolutionComposite solutionComp = new SolutionComposite(osdeaMainComp.getDataPanel());
-		ObjectivesComposite objectivesComp = new ObjectivesComposite(osdeaMainComp.getDataPanel());
-		ProjectionsComposite projectionsComp = new ProjectionsComposite(osdeaMainComp.getDataPanel());
-		LambdasComposite lambdasComp = new LambdasComposite(osdeaMainComp.getDataPanel());
-		PeerGroupComposite peerComp = new PeerGroupComposite(osdeaMainComp.getDataPanel());
-		SlacksComposite slacksComp = new SlacksComposite(osdeaMainComp.getDataPanel());
-		WeightsComposite weightsComp = new WeightsComposite(osdeaMainComp.getDataPanel());
+		Object[] treeArr = new Object[11];
+		treeArr[0] = tree;
+		treeArr[1] = rawDataItemText;
+		treeArr[2] = variablesItemText;
+		treeArr[3] = modelDetailsItemText;
+		treeArr[4] = solutionItemText;
+		treeArr[5] = objectivesItemText;
+		treeArr[6] = projectionsItemText;
+		treeArr[7] = lambdasItemText;
+		treeArr[8] = peerGroupItemText;
+		treeArr[9] = slacksItemText;
+		treeArr[10] = weightsItemText;
 		
-		
-		Object[] deaPTreeItemData = new Object[2];
-		deaPTreeItemData[0] = ldeap;
-		deaPTreeItemData[1] = problemComp;
-		
-		deaProblemTreeItem = new TreeItem (tree, 0);
-		deaProblemTreeItem.setText (deaProblemName);
-		deaProblemTreeItem.setImage(deaProblemImage);
-		deaProblemTreeItem.setData(deaPTreeItemData);
-		
-		rawDataTreeItem = new TreeItem (deaProblemTreeItem, 0);
-		rawDataTreeItem.setText (rawDataItemText);
-		rawDataTreeItem.setImage(rawDataImage);
-		rawDataTreeItem.setData(dataComp);
-		
-		variablesTreeItem = new TreeItem (deaProblemTreeItem, 0);
-		variablesTreeItem.setText (variablesItemText);
-		variablesTreeItem.setImage(iosImage);
-		variablesTreeItem.setData(variablesComp);
-		
-		modelDetailsTreeItem = new TreeItem (deaProblemTreeItem, 0);
-		modelDetailsTreeItem.setText (modelDetailsItemText);
-		modelDetailsTreeItem.setImage(deaModelImage);
-		modelDetailsTreeItem.setData(modelComp);
-		
-		
-		solutionTreeItem = new TreeItem (deaProblemTreeItem, 0);
-		solutionTreeItem.setText (solutionItemText);
-		solutionTreeItem.setImage(solutionImage);
-		solutionTreeItem.setData(solutionComp);
-		
-		
-		objectivesTreeItem = new TreeItem (solutionTreeItem, 0);
-		objectivesTreeItem.setText (objectivesItemText);
-		objectivesTreeItem.setImage(objectivesImage);
-		objectivesTreeItem.setData(objectivesComp);
-		
-		
-		projectionsTreeItem = new TreeItem (solutionTreeItem, 0);
-		projectionsTreeItem.setText (projectionsItemText);
-		projectionsTreeItem.setImage(projectionsImage);
-		projectionsTreeItem.setData(projectionsComp);
-		
-		
-		lambdasTreeItem = new TreeItem (solutionTreeItem, 0);
-		lambdasTreeItem.setText (lambdasItemText);
-		lambdasTreeItem.setImage(lambdasImage);
-		lambdasTreeItem.setData(lambdasComp);
-		
-		
-		referenceSetTreeItem = new TreeItem (solutionTreeItem, 0);
-		referenceSetTreeItem.setText (peerGroupItemText);
-		referenceSetTreeItem.setImage(referenceSetImage);
-		referenceSetTreeItem.setData(peerComp);
-		
-		slacksTreeItem = new TreeItem (solutionTreeItem, 0);
-		slacksTreeItem.setText (slacksItemText);
-		slacksTreeItem.setImage(slacksImage);
-		slacksTreeItem.setData(slacksComp);
-		
-		
-		weightsTreeItem = new TreeItem (solutionTreeItem, 0);
-		weightsTreeItem.setText (weightsItemText);
-		weightsTreeItem.setImage(weightsImage);
-		weightsTreeItem.setData(weightsComp);
+		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, deaProblemName, this, osdeaMainComp.getDataPanel(),
+				stl, deaProblemTreeItem, treeArr);
+		addProbThread.start();
 
+		/* This *should* work as this is the ref of deaProblemTreeItem that is passed in the method 
+		 * and the thread doesn't instantiate a new ref (i.e. no TreeItem deaProblemTreeItem = new TreeItem etc..).
+		 * However, I will need to check the behaviour when opening massive problems (problems that will take several seconds to open).
+		 * */
 		
-		fireSelectionChange(deaProblemTreeItem);
-		
-		if(ldeap.isSolved()){
-			displaySolution();
-		}
 		
 		return deaProblemTreeItem;
 		
@@ -753,7 +670,7 @@ public class Navigation extends Composite {
 	}
 	
 	
-	private void fireSelectionChange(TreeItem item) {
+	public void fireSelectionChange(TreeItem item) {
 		Event event = new Event();
 		event.item = item;
 		tree.select(item);

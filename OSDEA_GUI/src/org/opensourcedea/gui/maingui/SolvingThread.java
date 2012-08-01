@@ -17,7 +17,6 @@ public class SolvingThread extends Thread {
 	private Navigation nav;
 	private OSDEA_StatusLine stl;
 	private volatile boolean stopRequested = false;
-	boolean cancelled = true;
 	private LDEAProblem ldeap;
 	private DEAPProblemComposite comp;
 	private SolvingProgress progress;
