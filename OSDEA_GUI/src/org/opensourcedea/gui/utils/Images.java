@@ -1,5 +1,7 @@
 package org.opensourcedea.gui.utils;
 
+import java.net.URL;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
@@ -12,6 +14,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.opensourcedea.gui.images.*;
 
 
 public class Images {
@@ -42,7 +45,10 @@ public class Images {
 	public static ImageRegistry getFullImageRegistry(Display display) {
 		ImageRegistry imgReg = new ImageRegistry(display);
 		
-		imgReg.put("new", ImageDescriptor.createFromFile(Images.class, "../images/page_white.png"));
+		URL imgURL = Images.class.getResource("../images/page_white.png");
+		imgReg.put("new", ImageDescriptor.createFromURL(imgURL));
+		
+//		imgReg.put("new", ImageDescriptor.createFromFile(Images.class, "../images/page_white.png"));
 		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "../images/help.png"));
 		imgReg.put("accept", ImageDescriptor.createFromFile(Images.class, "../images/accept.png"));
 		imgReg.put("error", ImageDescriptor.createFromFile(Images.class, "../images/error.png"));
