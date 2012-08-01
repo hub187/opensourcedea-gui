@@ -22,7 +22,7 @@ public class ToolExportItemListener implements SelectionListener {
 	public void exportData() {
 
 		if(nav.getSelectedDEAProblem() == null){
-			stl.setNotificalLabelDelayStandard("Close failed!");
+			stl.setNotificalLabelDelayStandard("Export failed!");
 			return;
 		}
 
