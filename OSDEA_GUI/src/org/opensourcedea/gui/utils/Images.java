@@ -21,7 +21,7 @@ public class Images {
 	
 	public static ImageRegistry getHelpImageRegistry(Display display) {
 		ImageRegistry imgReg = new ImageRegistry(display);
-		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "../images/help.png"));
+		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/help.png"));
 		return imgReg;
 	}
 	
@@ -45,35 +45,35 @@ public class Images {
 	public static ImageRegistry getFullImageRegistry(Display display) {
 		ImageRegistry imgReg = new ImageRegistry(display);
 		
-		URL imgURL = Images.class.getResource("../images/page_white.png");
+		URL imgURL = Images.class.getResource("/org/opensourcedea/gui/images/page_white.png");
 		imgReg.put("new", ImageDescriptor.createFromURL(imgURL));
 		
 //		imgReg.put("new", ImageDescriptor.createFromFile(Images.class, "../images/page_white.png"));
-		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "../images/help.png"));
-		imgReg.put("accept", ImageDescriptor.createFromFile(Images.class, "../images/accept.png"));
-		imgReg.put("error", ImageDescriptor.createFromFile(Images.class, "../images/error.png"));
-		imgReg.put("deaProblem", ImageDescriptor.createFromFile(Images.class, "../images/folder_page.png"));
-		imgReg.put("rawData", ImageDescriptor.createFromFile(Images.class, "../images/table.png"));
-		imgReg.put("variables", ImageDescriptor.createFromFile(Images.class, "../images/variable.png"));
-		imgReg.put("modelDetails", ImageDescriptor.createFromFile(Images.class, "../images/widgets.png"));
-		imgReg.put("solution", ImageDescriptor.createFromFile(Images.class, "../images/folder_star.png"));
-		imgReg.put("objective", ImageDescriptor.createFromFile(Images.class, "../images/investment_menu_quality.png"));
-		imgReg.put("projections", ImageDescriptor.createFromFile(Images.class, "../images/edit_path.png"));
-		imgReg.put("lambdas", ImageDescriptor.createFromFile(Images.class, "../images/lambda-small.png"));
-		imgReg.put("referenceSet", ImageDescriptor.createFromFile(Images.class, "../images/group.png"));
-		imgReg.put("slacks", ImageDescriptor.createFromFile(Images.class, "../images/go-last-2.png"));
-		imgReg.put("weights", ImageDescriptor.createFromFile(Images.class, "../images/balance.png"));
-		imgReg.put("importWizard", ImageDescriptor.createFromFile(Images.class, "../images/document-import-2.png"));
-		imgReg.put("exclamation", ImageDescriptor.createFromFile(Images.class, "../images/exclamation.png"));
-		imgReg.put("open", ImageDescriptor.createFromFile(Images.class, "../images/folder.png"));
-		imgReg.put("save", ImageDescriptor.createFromFile(Images.class, "../images/disk.png"));
-		imgReg.put("saveAll",  ImageDescriptor.createFromFile(Images.class, "../images/disk_multiple.png"));
-		imgReg.put("exit", ImageDescriptor.createFromFile(Images.class, "../images/cross.png"));
-		imgReg.put("import", ImageDescriptor.createFromFile(Images.class, "../images/page_white_put.png"));
-		imgReg.put("export", ImageDescriptor.createFromFile(Images.class, "../images/page_white_get.png"));
-		imgReg.put("close", ImageDescriptor.createFromFile(Images.class, "../images/box_closed.png"));
-		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "../images/pot2422-48x48x32.png"));
-		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "../images/potSmall.png"));
+		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/help.png"));
+		imgReg.put("accept", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images//accept.png"));
+		imgReg.put("error", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/error.png"));
+		imgReg.put("deaProblem", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/folder_page.png"));
+		imgReg.put("rawData", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/table.png"));
+		imgReg.put("variables", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/variable.png"));
+		imgReg.put("modelDetails", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/widgets.png"));
+		imgReg.put("solution", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/folder_star.png"));
+		imgReg.put("objective", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/investment_menu_quality.png"));
+		imgReg.put("projections", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/edit_path.png"));
+		imgReg.put("lambdas", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/lambda-small.png"));
+		imgReg.put("referenceSet", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/group.png"));
+		imgReg.put("slacks", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/go-last-2.png"));
+		imgReg.put("weights", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/balance.png"));
+		imgReg.put("importWizard", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/document-import-2.png"));
+		imgReg.put("exclamation", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/exclamation.png"));
+		imgReg.put("open", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/folder.png"));
+		imgReg.put("save", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/disk.png"));
+		imgReg.put("saveAll",  ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/disk_multiple.png"));
+		imgReg.put("exit", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/cross.png"));
+		imgReg.put("import", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/page_white_put.png"));
+		imgReg.put("export", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/page_white_get.png"));
+		imgReg.put("close", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/box_closed.png"));
+		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot2422-48x48x32.png"));
+		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/potSmall.png"));
 
 		
 		return imgReg;
@@ -81,8 +81,8 @@ public class Images {
 	
 	public static ImageRegistry getMainGUIImageRegistry(Display display) {
 		ImageRegistry imgReg = new ImageRegistry(display);
-		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "../images/pot2422-48x48x32.png"));
-		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "../images/potSmall.png"));
+		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot2422-48x48x32.png"));
+		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/potSmall.png"));
 		return imgReg;
 	}
 	
