@@ -14,7 +14,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.opensourcedea.gui.images.*;
 
 
 public class Images {
@@ -50,7 +49,7 @@ public class Images {
 		
 //		imgReg.put("new", ImageDescriptor.createFromFile(Images.class, "../images/page_white.png"));
 		imgReg.put("help", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/help.png"));
-		imgReg.put("accept", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images//accept.png"));
+		imgReg.put("accept", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/accept.png"));
 		imgReg.put("error", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/error.png"));
 		imgReg.put("deaProblem", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/folder_page.png"));
 		imgReg.put("rawData", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/table.png"));
