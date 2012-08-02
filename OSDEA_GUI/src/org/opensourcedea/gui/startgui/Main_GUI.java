@@ -48,7 +48,15 @@ public class Main_GUI {
     shell = new Shell(display);
     shell.setText("OSDEA");
     shell.setLayout(new FormLayout());
-	shell.setSize(1000,550);
+    
+  //to compensate for potential SWT linux bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=386271
+    if(Sys.getOS() == OS.WINDOWS ) {
+    	shell.setSize(1000,550);
+    }
+    else {
+    	shell.setMaximized(true);
+    }
+    
 	ImageRegistry imgReg = Images.getMainGUIImageRegistry(display);
     shell.setImage(imgReg.get("potIcon"));
     
@@ -71,9 +79,6 @@ public class Main_GUI {
     fdata.left = new FormAttachment(0);
     fdata.right = new FormAttachment(100);
     fdata.bottom = new FormAttachment(100);
-    //to compensate for potential SWT linux bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=386271
-    int height = Sys.getOS() == OS.WINDOWS ? 15 : 35;
-    fdata.height = height;
     stl.getCompStatusLine().setLayoutData(fdata);
     
     //Main Comp
