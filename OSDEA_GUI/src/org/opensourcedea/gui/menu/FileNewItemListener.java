@@ -33,7 +33,7 @@ public class FileNewItemListener implements SelectionListener {
 			@Override
 			public void run() {
 				nav.addDEAProblem("New DEA Problem");
-				stl.setNotificalLabelDelayStandard("Created new DEA Problem.");
+//				stl.setNotificalLabelDelayStandard("Created new DEA Problem.");
 			}
 		});
 		

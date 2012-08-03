@@ -16,6 +16,8 @@ public class AddDEAProblemThread extends Thread {
 	private Composite dataPanel;
 	private OSDEA_StatusLine stl;
 	private Navigation nav;
+	private String stlStr;	
+
 	private TreeItem deaProblemTreeItem, rawDataTreeItem, variablesTreeItem, modelDetailsTreeItem,
 	solutionTreeItem, objectivesTreeItem, projectionsTreeItem, lambdasTreeItem,
 	referenceSetTreeItem, slacksTreeItem, weightsTreeItem;
@@ -33,13 +35,14 @@ public class AddDEAProblemThread extends Thread {
 
 
 	public AddDEAProblemThread(LDEAProblem ldeap, String deaProblemName, Navigation nav, Composite dataPanel,
-			OSDEA_StatusLine stl, TreeItem deaProblemTreeItem, Object[] params) {
+			OSDEA_StatusLine stl, TreeItem deaProblemTreeItem, Object[] params, String stlStr) {
 		this.ldeap = ldeap;
 		this.deaProblemName = deaProblemName;
 		this.dataPanel = dataPanel;
 		this.stl = stl;
 		this.deaProblemTreeItem = deaProblemTreeItem;
 		this.nav = nav;
+		this.stlStr = stlStr;
 
 		imgReg = Images.getFullImageRegistry(nav.getDisplay());
 		deaProblemImage = imgReg.get("deaProblem");
@@ -173,6 +176,10 @@ public class AddDEAProblemThread extends Thread {
 		if(ldeap.isSolved()){
 			nav.displaySolution();
 		}
+
+
+		stl.setNotificalLabelDelayStandard(stlStr);
+
 
 		this.interrupt();
 	}

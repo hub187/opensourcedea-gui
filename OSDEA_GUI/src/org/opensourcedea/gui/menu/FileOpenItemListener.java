@@ -48,9 +48,9 @@ public class FileOpenItemListener implements SelectionListener {
 				fis.close();
 				ois.close();
 				
-				TreeItem ti = nav.addDEAProblem(ldeap.getModelName(), ldeap);
+				TreeItem ti = nav.addDEAProblem(ldeap.getModelName(), ldeap, "File opened successfully.");
 				nav.addFilePath(fileName, ti);
-				stl.setNotificalLabelDelayStandard("File opened successfully.");
+//				stl.setNotificalLabelDelayStandard("File opened successfully.");
 				
 			}
 			catch (Exception ex) {

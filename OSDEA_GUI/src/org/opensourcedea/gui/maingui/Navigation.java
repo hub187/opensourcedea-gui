@@ -218,7 +218,7 @@ public class Navigation extends Composite {
 
 	}
 	
-	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap) {
+	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap, String stlStr) {
 		
 		TreeItem deaProblemTreeItem = new TreeItem (tree, 0);
 		
@@ -236,7 +236,7 @@ public class Navigation extends Composite {
 		treeArr[10] = weightsItemText;
 		
 		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, deaProblemName, this, osdeaMainComp.getDataPanel(),
-				stl, deaProblemTreeItem, treeArr);
+				stl, deaProblemTreeItem, treeArr, stlStr);
 		addProbThread.start();
 
 		/* This *should* work as this is the ref of deaProblemTreeItem that is passed in the method 
@@ -257,7 +257,7 @@ public class Navigation extends Composite {
 		LDEAProblem ldeap = new LDEAProblem();
 		ldeap.setModelName(deaProblemName);
 		
-		addDEAProblem(deaProblemName, ldeap);
+		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.");
 		
 	}
 	
