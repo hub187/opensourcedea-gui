@@ -78,6 +78,9 @@ public class PeerGroupComposite extends Composite {
 		tableComp = new Composite(comp, SWT.BORDER);
 		tableComp.setLayoutData(fdata);
 		tableComp.setLayout(new FillLayout());
+		
+		comp.layout();
+		
 	}
 	
 	
