@@ -212,9 +212,9 @@ public class Navigation extends Composite {
 		((VariablesComposite)getVariableTreeItem().getData()).refreshVarList();
 	}
 	
-	private void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
+	private void setRawDataTable(LDEAProblem ldeap) {
 		
-		((RawDataComposite)getRawDataTreeItem().getData()).setRawDataTable(ldeap);
+		((RawDataComposite)getRawDataTreeItem().getData()).displayData(ldeap);
 
 	}
 	
@@ -574,16 +574,19 @@ public class Navigation extends Composite {
 		WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
 		weightsComp.displaySolution(ldeap);
 		
+		//deactivating widgets
+		ModelDetailsComposite modDetailsComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+		modDetailsComp.setWidgetsEnabled(false);
+		
+		VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+		varComp.setWidgetsEnabled(false);
+		
 	}
 	
 	public void deleteSolution() {
 		
-		
-		
 		LDEAProblem ldeap = getSelectedDEAProblem();
-		
 		DEAPSolution backup = ldeap.getLdeapSolution();
-		
 		boolean modified = ldeap.isModified();
 		
 		
@@ -613,10 +616,21 @@ public class Navigation extends Composite {
 			//Weight
 			WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
 			weightsComp.resetComposite();
-
+			
+			
+			//activating widgets
+			ModelDetailsComposite modDetailsComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+			modDetailsComp.setWidgetsEnabled(true);
+			
+			VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+			varComp.setWidgetsEnabled(true);
+			
+			
+			
 			ldeap.setSolved(false);
 			ldeap.setModified(true);
-
+			
+			
 			stl.setNotificalLabelDelayStandard("Problem reset successfully.");
 		}
 		catch (Exception e) {
@@ -636,6 +650,26 @@ public class Navigation extends Composite {
 			stl.setStatusLabel("Problem Solved");
 		}
 		
+	}
+	
+	public void completeProblemReset() {
+		LDEAProblem ldeap = getSelectedDEAProblem();
+		boolean modified = ldeap.isModified();
+		
+		
+		try {
+			RawDataComposite rawComp = (RawDataComposite)getRawDataTreeItem().getData();
+			rawComp.resetComposite();
+			
+			VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+			varComp.cleanAllLists();
+			
+			deleteSolution();
+			
+		}
+		catch (Exception e) {
+			
+		}
 	}
 	
 	

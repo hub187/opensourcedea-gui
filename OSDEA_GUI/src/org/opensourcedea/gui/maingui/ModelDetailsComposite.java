@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -65,6 +66,7 @@ public class ModelDetailsComposite extends Composite {
 	private Spinner rtsUBSpinner;
 	private Label rtsUBLabelText;
 	private LDEAProblem ldeap;
+	private Button resetButton;
 
 	private ComboViewer modTypesCombo;
 
@@ -182,27 +184,29 @@ public class ModelDetailsComposite extends Composite {
 		});
 
 
-
+		
+		//INSTANTIATING THE PARAM GROUP CLASS
 		final ModelDetailsParamGroup paramGroup = new ModelDetailsParamGroup(comp, bindingContext, ldeap, modTypesCombo, descGroup,
 				orList,  rtsList, effList);
 
 
 
-		modTypesCombo.setContentProvider(new ObservableListContentProvider());//ArrayContentProvider.getInstance());
+		modTypesCombo.setContentProvider(new ObservableListContentProvider());
 
-		modTypesCombo.setInput(paramGroup.getFilteredList());//ModelType.values());
+		modTypesCombo.setInput(paramGroup.getFilteredList());
 
 
+		//get ref of buttons and combos from Param Group
 		orientationCombo = paramGroup.getOrientationCombo();
 		efficiencyCombo = paramGroup.getEfficiencyCombo();
 		rtsCombo = paramGroup.getRtsCombo();
 		rtsLBSpinner = paramGroup.getRtsLBSpinner();
 		rtsUBSpinner = paramGroup.getRtsUBSpinner();
 		rtsUBLabelText = paramGroup.getRtsUBLabelText();
+		resetButton = paramGroup.getResetButton();
 
 
 
-		
 
 
 
@@ -225,15 +229,13 @@ public class ModelDetailsComposite extends Composite {
 
 			}
 		});
-
-
-
+		
+		
 
 
 		sComp.setContent(comp);
 		sComp.setExpandVertical(true);
 		sComp.setExpandHorizontal(true);
-		//		sComp.setMinSize(comp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		Point prefSize = comp.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		prefSize.x = prefSize.x + 10;
@@ -241,12 +243,10 @@ public class ModelDetailsComposite extends Composite {
 		sComp.setMinSize(prefSize);
 
 
-
-
 		if(ldeap.getModelType() != null) {
 			String modType = ldeap.getModelType().toString();
 			int i = 0;
-			for(ModelType tempMod : ModelType.values()) {// modTypesCombo.getCombo().getItems()) {
+			for(ModelType tempMod : ModelType.values()) {
 				if(modType.equals(tempMod.toString())){
 					modTypesCombo.getCombo().select(i);
 					this.getDisplay().syncExec(new Runnable() {
@@ -254,12 +254,14 @@ public class ModelDetailsComposite extends Composite {
 							modTypeComboSelectionChanged(ldeap.getModelType(), description, paramGroup, descGroup);
 						}
 					});
-					
+
 					break;
 				}
 				i++;
 			}
 		}
+
+
 
 	}
 
@@ -272,6 +274,17 @@ public class ModelDetailsComposite extends Composite {
 		else {
 			stl.setStatusLabel("You need to select a Model Type.");
 		}
+	}
+
+	public void setWidgetsEnabled(boolean enabled) {
+		modTypesCombo.getCombo().setEnabled(enabled);
+		orientationCombo.getCombo().setEnabled(enabled);
+		efficiencyCombo.getCombo().setEnabled(enabled);
+		rtsCombo.getCombo().setEnabled(enabled);
+		rtsUBSpinner.setEnabled(enabled);
+		rtsLBSpinner.setEnabled(enabled);
+		resetButton.setEnabled(enabled);
+		
 	}
 
 
@@ -349,9 +362,9 @@ public class ModelDetailsComposite extends Composite {
 		}
 
 
-				updateStatusStl();
+		updateStatusStl();
 
-		
+
 
 	}
 

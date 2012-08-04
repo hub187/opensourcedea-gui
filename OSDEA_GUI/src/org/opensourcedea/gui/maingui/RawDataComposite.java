@@ -20,23 +20,23 @@ import org.opensourcedea.ldeaproblem.LDEAProblem;
 public class RawDataComposite extends Composite {
 
 	private Label rawDataLabel;
-	private Composite comp;
+	private Composite tableComp;
 	private GenericTable tableClass;
 
 	
 	public RawDataComposite(Composite parentComp, LDEAProblem ldeap) {
 		super(parentComp, 0);
 
-		createControls();
+		resetComposite();
 		
 		if(ldeap.getDataMatrix() != null && ldeap.getVariableNames() != null) {
-			setRawDataTable(ldeap);
+			displayData(ldeap);
 		}
 		
 	}
 	
 	
-	private void createControls() {
+	public void resetComposite() {
 		
 		this.setLayout(new FormLayout());
 
@@ -56,15 +56,22 @@ public class RawDataComposite extends Composite {
 		fData.left = new FormAttachment(0, 20);
 		fData.bottom = new FormAttachment(100, -10);
 		fData.right = new FormAttachment(100, -25);
-
-		comp = new Composite(this, SWT.BORDER);
-		comp.setLayoutData(fData);
-		comp.setLayout(new FillLayout());
+		
+		if(tableComp != null) {
+			tableComp.dispose();
+		}
+		
+		tableComp = new Composite(this, SWT.BORDER);
+		tableComp.setLayoutData(fData);
+		tableComp.setLayout(new FillLayout());
+		
+		this.layout();
+		
 	}
 
 
 
-	public void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
+	public void displayData(LDEAProblem ldeap) {
 		
 		
 		ArrayList<String> headers = new ArrayList<String>();
@@ -88,12 +95,12 @@ public class RawDataComposite extends Composite {
 			strData.add(tempArrl);
 		}
 		
-		tableClass = new GenericTable(comp, headers, strData);
+		tableClass = new GenericTable(tableComp, headers, strData);
 		tableClass.setTable();
 
 		Color grey = new Color (Display.getCurrent (), 240, 240, 240);
-		comp.setBackground(grey);
-		comp.layout();
+		tableComp.setBackground(grey);
+		tableComp.layout();
 
 		rawDataLabel.setText("Imported data:");
 

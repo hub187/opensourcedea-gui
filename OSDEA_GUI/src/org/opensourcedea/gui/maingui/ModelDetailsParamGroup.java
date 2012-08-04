@@ -245,6 +245,10 @@ public class ModelDetailsParamGroup {
 		return rtsUBLabelText;
 	}
 	
+	public Button getResetButton() {
+		return resetButton;
+	}
+	
 	public Group getParamGroup() {
 		return paramGroup;
 	}
