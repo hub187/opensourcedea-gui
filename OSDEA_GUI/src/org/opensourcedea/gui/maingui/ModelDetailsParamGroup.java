@@ -54,23 +54,23 @@ public class ModelDetailsParamGroup {
 	private final IObservableValue orientationObservable;
 	private final IObservableValue efficiencyObservable;
 	private final IObservableValue rtsObservable;
-	
+
 	final String allOr;
 	final String inputOr;
 	final String outputOr;
 	final String nonOr;
-	
+
 	final String allRts;
 	final String constRts;
 	final String varRts;
 	final String genRts;
 	final String incRts;
 	final String decRts;
-	
+
 	final String allEff;
 	final String techEff;
 	final String mixEff;
-	
+
 	private DataBindingContext bindingContext;
 	private IObservableList filteredList;
 	private LDEAProblem parentLdeap;
@@ -82,26 +82,26 @@ public class ModelDetailsParamGroup {
 		this.parentLdeap = parentLdeap;
 		this.locModTypesCombo = modTypeCombo;
 		this.locDescGroup = descGroup;
-		
-		
+
+
 		allOr = orList.get(0);
 		inputOr = orList.get(1);
 		outputOr = orList.get(2);
 		nonOr = orList.get(3);
-		
+
 		allRts = rtsList.get(0);
 		constRts = rtsList.get(1);
 		varRts = rtsList.get(2);
 		genRts = rtsList.get(3);
 		incRts = rtsList.get(4);
 		decRts = rtsList.get(5);
-		
+
 		allEff = effList.get(0);
 		techEff = effList.get(1);
 		mixEff = effList.get(2);
 
-		
-		
+
+
 		paramGroup = new Group(comp, SWT.NONE);
 		paramGroup.setText("Model Characteristics");
 		FormData fdata = new FormData();
@@ -115,30 +115,30 @@ public class ModelDetailsParamGroup {
 		resetButton.setText("Reset Filters");
 		resetButton.setLocation(10, 25);
 		resetButton.pack();
-		
-		
+
+
 		ArrayList<String> orientationList = new ArrayList<String>();
 		orientationList.add(allOr);
 		orientationList.add(inputOr);
 		orientationList.add(outputOr);
 		orientationList.add(nonOr);
-		
+
 		ArrayList<String> efficiencyList = new ArrayList<String>();
 		efficiencyList.add(allEff);
 		efficiencyList.add(techEff);
 		efficiencyList.add(mixEff);
-		
+
 		//Combo boxes all have the same width based on the longest String across all of them
 		int orWidth = Dimensions.getMaxStringWidth(paramGroup, orientationList);
 		int effWidth = Dimensions.getMaxStringWidth(paramGroup, efficiencyList);
 		int rtsWidth = Dimensions.getMaxStringWidth(paramGroup, rtsList);
 		int width = Math.max(orWidth, effWidth);
 		width = Math.max(width, rtsWidth) + 30;
-		
+
 		orientationCombo = new ComboViewer(paramGroup, SWT.READ_ONLY);
 		orientationCombo.setContentProvider(ArrayContentProvider.getInstance());
 
-		
+
 		orientationCombo.setInput(orientationList);
 		orientationCombo.getCombo().setBounds(10, 60, width, 20);
 		orientationCombo.getCombo().select(0);
@@ -196,13 +196,14 @@ public class ModelDetailsParamGroup {
 		rtsUBLabelText.setText("INFINITY (1E30)");
 
 
+
 		bindRtsLBSpinner(rtsLBSpinner);
 		bindRtsUBSpinner(rtsUBSpinner);
 
 
 		addResetButtonListener(resetButton);
 
-		
+
 		orientationObservable = SWTObservables.observeSelection(orientationCombo.getCombo());
 		efficiencyObservable = SWTObservables.observeSelection(efficiencyCombo.getCombo());
 		rtsObservable = SWTObservables.observeSelection(rtsCombo.getCombo());
@@ -210,49 +211,51 @@ public class ModelDetailsParamGroup {
 		computeModTypesList();
 
 		addRtsComboListener(rtsCombo);
-		
-		
+
+
 
 
 	}
+
+
 
 
 	public IObservableList getFilteredList() {
 		return filteredList;
 	}
-	
+
 	public ComboViewer getOrientationCombo() {
 		return orientationCombo;
 	}
-	
+
 	public ComboViewer getEfficiencyCombo() {
 		return efficiencyCombo;
 	}
-	
+
 	public ComboViewer getRtsCombo() {
 		return rtsCombo;
 	}
-	
+
 	public Spinner getRtsLBSpinner() {
 		return rtsLBSpinner;
 	}
-	
+
 	public Spinner getRtsUBSpinner() {
 		return rtsUBSpinner;
 	}
-	
+
 	public Label getRtsUBLabelText() {
 		return rtsUBLabelText;
 	}
-	
+
 	public Button getResetButton() {
 		return resetButton;
 	}
-	
+
 	public Group getParamGroup() {
 		return paramGroup;
 	}
-	
+
 	public void disableSpinners() {
 		rtsLBSpinner.setEnabled(false);
 		rtsUBSpinner.setEnabled(false);
@@ -260,17 +263,17 @@ public class ModelDetailsParamGroup {
 		rtsUBSpinner.setVisible(true);
 		rtsUBLabelText.setVisible(false);
 	}
-	
+
 	public void setSmallParamGroupSize(Group paramGroup, Group descGroup) {
 
-		
+
 		FormData fdata = new FormData();
 		fdata.top = new FormAttachment(0, 70);
 		fdata.height = 80;
 		fdata.left = new FormAttachment(0, 20);
 		fdata.right = new FormAttachment(100, -10);
 		paramGroup.setLayoutData(fdata);
-		
+
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 180);
 		fdata.bottom = new FormAttachment(100, -10);
@@ -284,18 +287,18 @@ public class ModelDetailsParamGroup {
 				comp.layout();
 			}
 		});
-		
+
 	}
-	
+
 	public void setBigParamGroupSize(Group paramGroup, Group descGroup) {
-		
+
 		FormData fdata = new FormData();
 		fdata.top = new FormAttachment(0, 70);
 		fdata.height = 120;
 		fdata.left = new FormAttachment(0, 20);
 		fdata.right = new FormAttachment(100, -10);
 		paramGroup.setLayoutData(fdata);
-		
+
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 210);
 		fdata.bottom = new FormAttachment(100, -10);
@@ -303,13 +306,13 @@ public class ModelDetailsParamGroup {
 		fdata.right = new FormAttachment(100, -10);
 		descGroup.setLayoutData(fdata);
 		descGroup.setLayout(new FormLayout());
-		
+
 		comp.layout();
-		
+
 	}
-	
-	
-	
+
+
+
 	private void bindRtsLBSpinner(Spinner rtsLBSpinner) {
 
 
@@ -362,16 +365,16 @@ public class ModelDetailsParamGroup {
 
 		UpdateValueStrategy rtsLBstrategyM2T = new UpdateValueStrategy();
 		rtsLBstrategyM2T. setConverter(rtsLBconverterM2T);
-		
+
 
 		bindingContext.bindValue(SWTObservables.observeSelection(rtsLBSpinner),
 				BeansObservables.observeValue(parentLdeap.getModelDetails(), "rtsLB"),
 				rtsLBstrategyT2M, rtsLBstrategyM2T);
-		
 
-		
+
+
 	}
-	
+
 	private void bindRtsUBSpinner(Spinner rtsUBSpinner) {
 		IConverter rtsUBconverterT2M = new IConverter() {
 
@@ -427,8 +430,8 @@ public class ModelDetailsParamGroup {
 				BeansObservables.observeValue(parentLdeap.getModelDetails(), "rtsUB"),
 				rtsUBstrategyT2M, rtsUBstrategyM2T);
 	}
-	
-	
+
+
 	private void computeModTypesList() {
 		filteredList = new ComputedList() {
 			@SuppressWarnings({ "rawtypes" })
@@ -513,8 +516,8 @@ public class ModelDetailsParamGroup {
 
 		};
 	}
-	
-	
+
+
 	private void addResetButtonListener(Button resetButton) {
 		resetButton.addSelectionListener(new SelectionListener() {
 
@@ -529,18 +532,16 @@ public class ModelDetailsParamGroup {
 				resetFilters();
 
 			}
-
-			private void resetFilters() {
-				orientationCombo.getCombo().select(0);
-				efficiencyCombo.getCombo().select(0);
-				rtsCombo.getCombo().select(0);
-//				setSmallParamGroupSize(paramGroup, locDescGroup);
-			}
-
 		});
 	}
 	
-	
+	public void resetFilters() {
+		orientationCombo.getCombo().select(0);
+		efficiencyCombo.getCombo().select(0);
+		rtsCombo.getCombo().select(0);
+	}
+
+
 	private void addRtsComboListener(ComboViewer rtsCombo) {
 		rtsCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -549,7 +550,7 @@ public class ModelDetailsParamGroup {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				if(!selection.isEmpty()) {
 					String selectedRTS = (String)selection.getFirstElement();
-					
+
 					if(new String(constRts).equals(selectedRTS) ||
 							new String(varRts).equals(selectedRTS)) {
 						disableSpinners();
@@ -563,7 +564,7 @@ public class ModelDetailsParamGroup {
 						}
 						else {
 							ModelType modType = (ModelType)selectedModType.getFirstElement();
-							
+
 							if(modType.getReturnToScale() == ReturnsToScale.GENERAL) {
 								rtsLBSpinner.setEnabled(true);
 								rtsUBSpinner.setEnabled(true);
@@ -577,7 +578,7 @@ public class ModelDetailsParamGroup {
 								disableSpinners();
 								setBigParamGroupSize(paramGroup, locDescGroup);
 							}
-								
+
 						}
 					}
 					else if(new String(decRts).equals(selectedRTS)){
@@ -604,18 +605,18 @@ public class ModelDetailsParamGroup {
 						setBigParamGroupSize(paramGroup, locDescGroup);
 					}
 
-					
+
 				}
-				
-				
+
+
 			}
-			
+
 		});
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
 

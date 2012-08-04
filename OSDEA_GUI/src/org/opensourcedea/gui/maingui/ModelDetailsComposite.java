@@ -281,8 +281,7 @@ public class ModelDetailsComposite extends Composite {
 	
 	public void resetModDetailsComposite() {
 		modTypesCombo.getCombo().deselectAll();
-		
-		
+		paramGroup.resetFilters();
 		
 	}
 

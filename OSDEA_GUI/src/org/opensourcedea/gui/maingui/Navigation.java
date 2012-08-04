@@ -15,6 +15,7 @@ import org.opensourcedea.dea.DEAPSolution;
 import org.opensourcedea.gui.exceptions.NoVariableException;
 import org.opensourcedea.gui.exceptions.UnselectedVariablesException;
 import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
+import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -183,6 +184,9 @@ public class Navigation extends Composite {
 			areDataOK = true;
 			setDataOK();
 		}
+		else {
+			setDataNOK();
+		}
 		
 		if(areVarOK && areDataOK && isModelOK) {
 			comp.setAllOK();
@@ -196,6 +200,16 @@ public class Navigation extends Composite {
 		else {
 			stl.setStatusLabel("You still have a few more things to do");
 		}
+		
+		//Check if solved
+		DEAPProblemComposite dataComp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+		if(getSelectedDEAProblem().isSolved()) {
+			dataComp.showProgressGroupSolved();
+		}
+		else {
+			dataComp.showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
+		}
+		
 	}
 	
 	
@@ -490,6 +504,12 @@ public class Navigation extends Composite {
 	}
 	
 	
+	private void setDataNOK() {
+		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+		comp.setDataNOK();
+	}
+	
+	
 	/*
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
 	 * wizard doesn't know about the inner structure of the program).
@@ -653,8 +673,12 @@ public class Navigation extends Composite {
 	}
 	
 	public void completeProblemReset() {
-		LDEAProblem ldeap = getSelectedDEAProblem();
-		boolean modified = ldeap.isModified();
+		
+		Object[] deaPTreeItemData = new Object[2];
+		deaPTreeItemData[0] = new LDEAProblem();
+		deaPTreeItemData[1] = ((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+		
+		getSelectedDEAProblemTreeItem().setData(deaPTreeItemData);
 		
 		
 		try {
@@ -669,9 +693,11 @@ public class Navigation extends Composite {
 			
 			deleteSolution();
 			
+			checkProblemStatus();
+			
 		}
 		catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 	

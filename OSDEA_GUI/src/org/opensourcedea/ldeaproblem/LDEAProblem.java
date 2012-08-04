@@ -102,9 +102,7 @@ public class LDEAProblem implements Serializable {
 
 
 	public void deleteSolution() {
-		int nbDMUs = ldeapSolution.getObjectives().length;
-		int nbVariables = ldeapSolution.getWeights()[0].length;
-		initDEAPSolution(nbDMUs, nbVariables);
+		ldeapSolution = null;
 	}
 
 
