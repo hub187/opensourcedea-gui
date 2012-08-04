@@ -664,6 +664,9 @@ public class Navigation extends Composite {
 			VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
 			varComp.cleanAllLists();
 			
+			ModelDetailsComposite modComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+			modComp.resetModDetailsComposite();
+			
 			deleteSolution();
 			
 		}

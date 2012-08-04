@@ -69,17 +69,42 @@ public class ModelDetailsComposite extends Composite {
 	private Button resetButton;
 
 	private ComboViewer modTypesCombo;
-
-
+	
+	
+	private final ScrolledComposite sComp;
+	private final Composite comp;
+	private final Group descGroup;
+	private final Text description;
+	private ModelDetailsParamGroup paramGroup;
+	private DataBindingContext bindingContext;
+	
 
 	public ModelDetailsComposite(Composite parentComp, final LDEAProblem parentLdeap, OSDEA_StatusLine stl) {
 		super(parentComp, 0);
 
 		this.stl = stl;
 		this.ldeap = parentLdeap;
-
+		
+		sComp = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
+		comp = new Composite(sComp, SWT.NONE);
+		descGroup = new Group(comp, SWT.NONE);
+		description = new Text(descGroup, SWT.WRAP | SWT.MULTI);
+		bindingContext = null;
+		final ArrayList<String> orList = new ArrayList<String>();
+		Collections.addAll(orList, new String[]{allOr, inputOr, outputOr, nonOr}); 
+		final ArrayList<String> rtsList = new ArrayList<String>();
+		Collections.addAll(rtsList, new String[]{allRts, constRts, varRts, genRts, incRts, decRts});
+		final ArrayList<String> effList = new ArrayList<String>();
+		Collections.addAll(effList, new String[]{allEff, techEff, mixEff});
+		paramGroup = null;
+		
+		
 		Realm.runWithDefault(SWTObservables.getRealm(parentComp.getDisplay()), new Runnable() { 
-			public void run() { 
+			public void run() {
+				bindingContext = new DataBindingContext();
+				paramGroup = new ModelDetailsParamGroup(comp, bindingContext, ldeap, modTypesCombo, descGroup,
+						orList,  rtsList, effList);
+				
 				createControls();
 			}
 		});
@@ -87,17 +112,15 @@ public class ModelDetailsComposite extends Composite {
 	}
 
 
-
-	@SuppressWarnings({"unchecked","rawtypes"})
-	void createControls() {
+	private void createControls() {
 
 		this.setLayout(new GridLayout());
 
-		ScrolledComposite sComp = new ScrolledComposite(this, SWT.V_SCROLL | SWT.H_SCROLL);
+		
 		sComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		sComp.setLayout(new FormLayout());
 
-		Composite comp = new Composite(sComp, SWT.NONE);
+		
 		FormData fdata = new FormData();
 		fdata.left = new FormAttachment(0);
 		fdata.right = new FormAttachment(100);
@@ -110,18 +133,10 @@ public class ModelDetailsComposite extends Composite {
 				"You can use the filters to narrow down the models.";
 		Images.setHelpIcon(comp, helpText, 10, 20);
 
-		ArrayList<String> orList = new ArrayList<String>();
-		Collections.addAll(orList, new String[]{allOr, inputOr, outputOr, nonOr}); 
-
-		ArrayList rtsList = new ArrayList<String>();
-		Collections.addAll(rtsList, new String[]{allRts, constRts, varRts, genRts, incRts, decRts});
-
-		ArrayList effList = new ArrayList<String>();
-		Collections.addAll(effList, new String[]{allEff, techEff, mixEff});
 
 
-		//BINDINGS
-		DataBindingContext bindingContext = new DataBindingContext();
+
+		
 
 
 
@@ -135,7 +150,7 @@ public class ModelDetailsComposite extends Composite {
 
 
 		//DESCRIPTION GROUP
-		final Group descGroup = new Group(comp, SWT.NONE);
+		
 		descGroup.setText("Model Description");
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 180);
@@ -145,7 +160,7 @@ public class ModelDetailsComposite extends Composite {
 		descGroup.setLayoutData(fdata);
 		descGroup.setLayout(new FormLayout());
 
-		final Text description = new Text(descGroup, SWT.WRAP | SWT.MULTI);// | SWT.BORDER);
+		
 		Color tr = new Color(comp.getDisplay(), 240, 240, 240);
 		description.setBackground(tr);
 		fdata = new FormData();
@@ -185,9 +200,7 @@ public class ModelDetailsComposite extends Composite {
 
 
 		
-		//INSTANTIATING THE PARAM GROUP CLASS
-		final ModelDetailsParamGroup paramGroup = new ModelDetailsParamGroup(comp, bindingContext, ldeap, modTypesCombo, descGroup,
-				orList,  rtsList, effList);
+
 
 
 
@@ -243,6 +256,7 @@ public class ModelDetailsComposite extends Composite {
 		sComp.setMinSize(prefSize);
 
 
+
 		if(ldeap.getModelType() != null) {
 			String modType = ldeap.getModelType().toString();
 			int i = 0;
@@ -262,9 +276,15 @@ public class ModelDetailsComposite extends Composite {
 		}
 
 
-
 	}
-
+	
+	
+	public void resetModDetailsComposite() {
+		modTypesCombo.getCombo().deselectAll();
+		
+		
+		
+	}
 
 
 	public void updateStatusStl() {
