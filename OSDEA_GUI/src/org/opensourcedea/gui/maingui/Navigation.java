@@ -674,12 +674,8 @@ public class Navigation extends Composite {
 	
 	public void completeProblemReset() {
 		
-		Object[] deaPTreeItemData = new Object[2];
-		deaPTreeItemData[0] = new LDEAProblem();
-		deaPTreeItemData[1] = ((Object[])getSelectedDEAProblemTreeItem().getData())[1];
-		
-		getSelectedDEAProblemTreeItem().setData(deaPTreeItemData);
-		
+
+		((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).resetLDEAProblem();
 		
 		try {
 			RawDataComposite rawComp = (RawDataComposite)getRawDataTreeItem().getData();

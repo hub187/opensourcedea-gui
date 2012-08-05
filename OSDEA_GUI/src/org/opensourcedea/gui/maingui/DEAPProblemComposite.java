@@ -249,8 +249,9 @@ public class DEAPProblemComposite extends Composite {
 	public void setAllOK() {
 		probStatus.getRemActionsGroup().setText("You're all set!");
 		solveButton.setEnabled(true);
-		stl.setNotificalLabelDelayStandard("You are ready to solve!");
-
+		if(!nav.getSelectedDEAProblem().isSolved()){
+			stl.setNotificalLabelDelayStandard("You are ready to solve!");
+		}
 	}
 
 	public void setAllNOK() {

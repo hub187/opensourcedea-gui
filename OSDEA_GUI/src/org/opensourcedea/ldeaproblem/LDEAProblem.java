@@ -48,7 +48,21 @@ public class LDEAProblem implements Serializable {
 	public void initDEAPSolution(int nbDMUs, int nbVariables) {
 		ldeapSolution = new DEAPSolution(nbDMUs, nbVariables);
 	}
-
+	
+	
+	public void resetLDEAProblem() {
+		dmuNames = null;
+		dataMatrix = null;
+		modelDetails.setModelName(null);
+		modelDetails.setModelType(null);
+		variable.setVariableNames(null);
+		variable.setVariableOrientations(null);
+		variable.setVariableTypes(null);
+		ldeapSolution = null;
+		setSolved(false);
+		setModified(true);
+		
+	}
 
 	public void copyLDEAPSolution(DEAProblem deap) throws ProblemNotSolvedProperlyException, IncompatibleModelTypeException {
 		if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
@@ -240,7 +254,7 @@ public class LDEAProblem implements Serializable {
 	 * Returns the sorted list of efficient DMUs that are found at least once in the reference set of non-efficient DMUs.
 	 * @return ArrayList<Integer> returnEfficientReferencedDMUs
 	 */
-	public ArrayList<Integer> returnEfficientReferencedDMUs() {
+	public ArrayList<Integer> getEfficientReferencedDMUs() {
 
 		ArrayList<Integer> efficientReferencedDMUs = new ArrayList<Integer>();
 		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
@@ -264,9 +278,9 @@ public class LDEAProblem implements Serializable {
 	 * Please note that it is necessary to add the DMU Name if this matrix is to be displayed.
 	 * @return ArrayList<ArrayList<Double>> returnProcessedLambdas
 	 */
-	public ArrayList<ArrayList<Double>> returnProcessedLambdas() {
+	public ArrayList<ArrayList<Double>> getProcessedLambdas() {
 
-		ArrayList<Integer> efficientReferencedDMUs = returnEfficientReferencedDMUs();
+		ArrayList<Integer> efficientReferencedDMUs = getEfficientReferencedDMUs();
 
 		ArrayList<ArrayList<Double>> data = new ArrayList<ArrayList<Double>>();
 		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
@@ -293,7 +307,7 @@ public class LDEAProblem implements Serializable {
 	}
 
 
-	public ArrayList<ArrayList<String>> returnPeerGroup() {
+	public ArrayList<ArrayList<String>> getPeerGroup() {
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < getLdeapSolution().getReferenceSet().length; i++) {
 			ArrayList<String> tempArr = new ArrayList<String>();

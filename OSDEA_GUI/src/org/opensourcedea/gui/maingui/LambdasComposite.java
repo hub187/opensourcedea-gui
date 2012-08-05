@@ -87,7 +87,7 @@ public class LambdasComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
-		ArrayList<Integer> efficientReferencedDMUs = ldeap.returnEfficientReferencedDMUs();
+		ArrayList<Integer> efficientReferencedDMUs = ldeap.getEfficientReferencedDMUs();
 		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
@@ -108,7 +108,7 @@ public class LambdasComposite extends Composite {
 		sComp.setMinSize(prefSize);
 		
 		
-		ArrayList<ArrayList<Double>> lambdas = ldeap.returnProcessedLambdas();
+		ArrayList<ArrayList<Double>> lambdas = ldeap.getProcessedLambdas();
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		int dmuIndex = 0;
 		

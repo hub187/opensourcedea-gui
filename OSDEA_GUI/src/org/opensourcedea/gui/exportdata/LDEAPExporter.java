@@ -352,7 +352,7 @@ public class LDEAPExporter {
 		Cell cell = null; 
 		row = lambdaSheet.createRow(0);
 
-		ArrayList<Integer> efficientReferencedDMUs = ldeap.returnEfficientReferencedDMUs();
+		ArrayList<Integer> efficientReferencedDMUs = ldeap.getEfficientReferencedDMUs();
 
 		int rowi = 1;
 
@@ -364,7 +364,7 @@ public class LDEAPExporter {
 			cell.setCellValue(ldeap.getDMUNames().get(it.next()));
 		}
 
-		ArrayList<ArrayList<Double>> data = ldeap.returnProcessedLambdas();
+		ArrayList<ArrayList<Double>> data = ldeap.getProcessedLambdas();
 		for(int rowNum = 0; rowNum < data.size(); rowNum++) {
 			row = lambdaSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
@@ -396,7 +396,7 @@ public class LDEAPExporter {
 		cell = row.createCell(1);
 		cell.setCellValue("Peer Group");
 
-		ArrayList<ArrayList<String>> peerGroup = ldeap.returnPeerGroup();
+		ArrayList<ArrayList<String>> peerGroup = ldeap.getPeerGroup();
 
 		for(int rowNum = 0; rowNum < peerGroup.size(); rowNum++) {
 			row = pgSheet.createRow(rowNum + 1);

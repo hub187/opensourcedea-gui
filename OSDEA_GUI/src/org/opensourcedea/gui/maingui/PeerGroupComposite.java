@@ -93,7 +93,7 @@ public class PeerGroupComposite extends Composite {
 		
 		String longest = "";
 		
-		ArrayList<ArrayList<String>> data = ldeap.returnPeerGroup();
+		ArrayList<ArrayList<String>> data = ldeap.getPeerGroup();
 		
 		Iterator<ArrayList<String>> dmuIt = data.iterator();
 		while(dmuIt.hasNext()) {
