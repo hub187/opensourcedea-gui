@@ -50,12 +50,12 @@ public class Main_GUI {
     shell.setLayout(new FormLayout());
     
   //to compensate for potential SWT linux bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=386271
-//    if(Sys.getOS() == OS.WINDOWS ) {
+    if(Sys.getOS() == OS.WINDOWS ) {
     	shell.setSize(1000,550);
-//    }
-//    else {
-//    	shell.setMaximized(true);
-//    }
+    }
+    else {
+    	shell.setMaximized(true);
+    }
     
 	ImageRegistry imgReg = Images.getMainGUIImageRegistry(display);
     shell.setImage(imgReg.get("potIcon"));
