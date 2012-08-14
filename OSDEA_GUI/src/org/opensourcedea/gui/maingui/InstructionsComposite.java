@@ -70,6 +70,7 @@ public class InstructionsComposite extends Composite {
 		mainComp.setLayoutData(fdata);
 		mainComp.setLayout(new FormLayout());		
 		
+        
 		
 		Label label0 = new Label(mainComp, SWT.NONE);
 		fdata = new FormData();
@@ -137,7 +138,7 @@ public class InstructionsComposite extends Composite {
 		easyLabel0.setLayoutData(fdata);
 		easyLabel0.setText("If you are familiar with Data envelopment Analysis, using OSDEA should be straight forward");
 		
-		Label easyLabel1 = new Label(mainComp, SWT.NONE);
+		Label easyLabel1 = new Label(mainComp, SWT.WRAP);
 		fdata = new FormData();
 		fdata.top = new FormAttachment(easyLabel0, 5);
 		fdata.left = new FormAttachment(0);
