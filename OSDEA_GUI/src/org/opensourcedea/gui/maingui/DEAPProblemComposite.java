@@ -212,6 +212,12 @@ public class DEAPProblemComposite extends Composite {
 		probStatus.getDataLabel().setText("Data were imported successfully.");
 		probStatus.getDataLabel().pack();
 	}
+	
+	public void setDataNOK() {
+		Images.paintCanvas(probStatus.getDataCanvas(), "error");
+		probStatus.getDataLabel().setText("Import some data!");
+		probStatus.getDataLabel().pack();
+	}
 
 
 	public void setVariablesOK() {
@@ -243,8 +249,9 @@ public class DEAPProblemComposite extends Composite {
 	public void setAllOK() {
 		probStatus.getRemActionsGroup().setText("You're all set!");
 		solveButton.setEnabled(true);
-		stl.setNotificalLabelDelayStandard("You are ready to solve!");
-
+		if(!nav.getSelectedDEAProblem().isSolved()){
+			stl.setNotificalLabelDelayStandard("You are ready to solve!");
+		}
 	}
 
 	public void setAllNOK() {
@@ -276,9 +283,8 @@ public class DEAPProblemComposite extends Composite {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
 		solveButton.setLayoutData(fdata);
-		
-		
-		//comp.layout();
+		solveButton.pack();
+
 	}
 	
 	public void showProgressGroupSolved() {
@@ -298,8 +304,8 @@ public class DEAPProblemComposite extends Composite {
 		fdata.top = new FormAttachment(progress.getProgressGroup(), 20);
 		solveButton.setLayoutData(fdata);
 		solveButton.setText("Reset DEA Problem");
-		
-		//comp.layout();
+		solveButton.pack();
+
 	}
 	
 

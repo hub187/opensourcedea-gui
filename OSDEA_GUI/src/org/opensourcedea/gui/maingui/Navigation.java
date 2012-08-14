@@ -15,6 +15,7 @@ import org.opensourcedea.dea.DEAPSolution;
 import org.opensourcedea.gui.exceptions.NoVariableException;
 import org.opensourcedea.gui.exceptions.UnselectedVariablesException;
 import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
+import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -183,6 +184,9 @@ public class Navigation extends Composite {
 			areDataOK = true;
 			setDataOK();
 		}
+		else {
+			setDataNOK();
+		}
 		
 		if(areVarOK && areDataOK && isModelOK) {
 			comp.setAllOK();
@@ -196,6 +200,16 @@ public class Navigation extends Composite {
 		else {
 			stl.setStatusLabel("You still have a few more things to do");
 		}
+		
+		//Check if solved
+		DEAPProblemComposite dataComp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+		if(getSelectedDEAProblem().isSolved()) {
+			dataComp.showProgressGroupSolved();
+		}
+		else {
+			dataComp.showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
+		}
+		
 	}
 	
 	
@@ -212,9 +226,9 @@ public class Navigation extends Composite {
 		((VariablesComposite)getVariableTreeItem().getData()).refreshVarList();
 	}
 	
-	private void setRawDataTable(LDEAProblem ldeap) {// ArrayList<ArrayList<String>> data) {
+	private void setRawDataTable(LDEAProblem ldeap) {
 		
-		((RawDataComposite)getRawDataTreeItem().getData()).setRawDataTable(ldeap);
+		((RawDataComposite)getRawDataTreeItem().getData()).displayData(ldeap);
 
 	}
 	
@@ -490,6 +504,12 @@ public class Navigation extends Composite {
 	}
 	
 	
+	private void setDataNOK() {
+		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+		comp.setDataNOK();
+	}
+	
+	
 	/*
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
 	 * wizard doesn't know about the inner structure of the program).
@@ -574,16 +594,19 @@ public class Navigation extends Composite {
 		WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
 		weightsComp.displaySolution(ldeap);
 		
+		//deactivating widgets
+		ModelDetailsComposite modDetailsComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+		modDetailsComp.setWidgetsEnabled(false);
+		
+		VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+		varComp.setWidgetsEnabled(false);
+		
 	}
 	
 	public void deleteSolution() {
 		
-		
-		
 		LDEAProblem ldeap = getSelectedDEAProblem();
-		
 		DEAPSolution backup = ldeap.getLdeapSolution();
-		
 		boolean modified = ldeap.isModified();
 		
 		
@@ -613,10 +636,21 @@ public class Navigation extends Composite {
 			//Weight
 			WeightsComposite weightsComp = (WeightsComposite)getWeightsTreeItem().getData();
 			weightsComp.resetComposite();
-
+			
+			
+			//activating widgets
+			ModelDetailsComposite modDetailsComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+			modDetailsComp.setWidgetsEnabled(true);
+			
+			VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+			varComp.setWidgetsEnabled(true);
+			
+			
+			
 			ldeap.setSolved(false);
 			ldeap.setModified(true);
-
+			
+			
 			stl.setNotificalLabelDelayStandard("Problem reset successfully.");
 		}
 		catch (Exception e) {
@@ -636,6 +670,31 @@ public class Navigation extends Composite {
 			stl.setStatusLabel("Problem Solved");
 		}
 		
+	}
+	
+	public void completeProblemReset() {
+		
+
+		((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).resetLDEAProblem();
+		
+		try {
+			RawDataComposite rawComp = (RawDataComposite)getRawDataTreeItem().getData();
+			rawComp.resetComposite();
+			
+			VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
+			varComp.cleanAllLists();
+			
+			ModelDetailsComposite modComp = (ModelDetailsComposite)getModelDetailsTreeItem().getData();
+			modComp.resetModDetailsComposite();
+			
+			deleteSolution();
+			
+			checkProblemStatus();
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

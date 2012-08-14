@@ -21,7 +21,6 @@ public class ImportFileWizard extends Wizard {
 	private ArrayList<String> variableNames = new ArrayList<String>();
 	private ArrayList<String> dmuNames = new ArrayList<String>();
 	private ArrayList<double[]> dataMatrix = new ArrayList<double[]>();
-//	private ArrayList<ArrayList<String>> fullDataMatrixString = new ArrayList<ArrayList<String>>();
 	private OSDEA_StatusLine stl;
 	private final String instructions = "- The file needs to be in a .csv format.\n" +
 			"- The first row of the file must contain the headers.\n" +
@@ -51,7 +50,6 @@ public class ImportFileWizard extends Wizard {
 		
 		String str = "";
 		
-		//		String fileName = dirPage.getFileName();
 		try {
 			try {
 				reader = new CSVReader(new FileReader(dirPage.getFileName()));
@@ -59,8 +57,6 @@ public class ImportFileWizard extends Wizard {
 				//First line = headers
 				nextLine = reader.readNext();
 				if (nextLine != null) {
-					//nbOfVariables  = nextLine.length - 1;
-					//variableNames = new String[nbOfVariables];
 					for(int i = 1; i < nextLine.length; i++) {
 						if(str.equals(nextLine[i])){
 							MessageDialog.openWarning(this.getShell(), "Warning", "The variable name after variable '" + variableNames.get(variableNames.size() - 1) +
@@ -69,7 +65,7 @@ public class ImportFileWizard extends Wizard {
 							stl.setNotificalLabelDelayStandard("Data not imported: a Variable Name was empty!");
 							return true;
 						}
-						variableNames.add(nextLine[i]); //[i-1] = nextLine[i];
+						variableNames.add(nextLine[i]);
 					}
 				}
 				else {
@@ -100,11 +96,9 @@ public class ImportFileWizard extends Wizard {
 					tempArrl.add(nextLine[0]);
 					for(int i = 1; i < nextLine.length; i++) {
 						tempArr2[i - 1] = Double.parseDouble(nextLine[i]);
-//						tempArrl.add(nextLine[i]);
 					}
 
 					dataMatrix.add(tempArr2);
-//					fullDataMatrixString.add(tempArrl);
 
 				}
 			} catch (FileNotFoundException e) {
@@ -132,7 +126,7 @@ public class ImportFileWizard extends Wizard {
 			return true;
 		}
 		
-		navigation.importData(dataMatrix, dmuNames, variableNames);//, fullDataMatrixString);
+		navigation.importData(dataMatrix, dmuNames, variableNames);
 
 		return true;
 	}

@@ -246,11 +246,22 @@ public class VariablesComposite extends Composite {
 		});
 		
 		
-		
-		
-
-		
-		
+	}
+	
+	
+	public void setWidgetsEnabled(boolean enabled) {
+		inputList.setEnabled(enabled);
+		inputList.deselectAll();
+		outputList.setEnabled(enabled);
+		outputList.deselectAll();
+		ndInputList.setEnabled(enabled);
+		ndInputList.deselectAll();
+		ndOutputList.setEnabled(enabled);
+		ndOutputList.deselectAll();
+		ncInputList.setEnabled(enabled);
+		ncInputList.deselectAll();
+		ncOutputList.setEnabled(enabled);
+		ncOutputList.deselectAll();
 	}
 	
 	public void cleanAllLists() {
