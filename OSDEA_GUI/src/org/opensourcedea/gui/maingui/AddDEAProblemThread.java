@@ -17,6 +17,7 @@ public class AddDEAProblemThread extends Thread {
 	private Composite dataPanel;
 	private OSDEA_StatusLine stl;
 	private Navigation nav;
+	private Display display;
 	private String stlStr;	
 	
 	private TreeItem deapTreeItem, rawDataTreeItem, variablesTreeItem, modelDetailsTreeItem,
@@ -36,14 +37,25 @@ public class AddDEAProblemThread extends Thread {
 	
 
 	public AddDEAProblemThread(LDEAProblem ldeap, String deaProblemName, Display display,
-			OSDEA_StatusLine stl, Navigation nav, Object[] params, String stlStr, Composite dataPanel,
-			TreeItem deapTreeItem) {
+			OSDEA_StatusLine stl, Navigation nav, Object[] params, TreeItem[] treeItArr, String stlStr, Composite dataPanel) {
 		this.ldeap = ldeap;
 		this.deaProblemName = deaProblemName;
 		this.stl = stl;
 		this.stlStr = stlStr;
 		this.dataPanel = dataPanel;
-		this.deapTreeItem = deapTreeItem;
+		this.display = stl.getCompStatusLine().getDisplay();
+		
+		this.deapTreeItem = treeItArr[0];
+		this.rawDataTreeItem = treeItArr[1];
+		this.variablesTreeItem = treeItArr[2];
+		this.modelDetailsTreeItem = treeItArr[3];
+		this.solutionTreeItem = treeItArr[4];
+		this.objectivesTreeItem = treeItArr[5];
+		this.projectionsTreeItem = treeItArr[6];
+		this.lambdasTreeItem = treeItArr[7];
+		this.referenceSetTreeItem = treeItArr[8];
+		this.slacksTreeItem = treeItArr[9];
+		this.weightsTreeItem = treeItArr[10];
 		
 		//TO CHANGE
 		this.nav = nav;
@@ -62,25 +74,23 @@ public class AddDEAProblemThread extends Thread {
 		slacksImage = imgReg.get("slacks");
 		weightsImage = imgReg.get("weights");
 
-		rawDataItemText = (String)params[1];
-		variablesItemText = (String)params[2];
-		modelDetailsItemText = (String)params[3];
-		solutionItemText = (String)params[4];
-		objectivesItemText = (String)params[5];
-		projectionsItemText = (String)params[6];
-		lambdasItemText = (String)params[7];
-		peerGroupItemText = (String)params[8];
-		slacksItemText = (String)params[9];
-		weightsItemText = (String)params[10];
+		rawDataItemText = (String)params[0];
+		variablesItemText = (String)params[1];
+		modelDetailsItemText = (String)params[2];
+		solutionItemText = (String)params[3];
+		objectivesItemText = (String)params[4];
+		projectionsItemText = (String)params[5];
+		lambdasItemText = (String)params[6];
+		peerGroupItemText = (String)params[7];
+		slacksItemText = (String)params[8];
+		weightsItemText = (String)params[9];
 
 
 	}
 
 	public void run() {
 
-
-
-		nav.getDisplay().syncExec(new Runnable() {
+		display.syncExec(new Runnable() {
 			public void run() {
 				addProblem();
 

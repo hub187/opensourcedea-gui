@@ -47,7 +47,7 @@ public class FileOpenItemListener implements SelectionListener {
 				fis.close();
 				ois.close();
 				
-				nav.addDEAProblem(ldeap.getModelName(), ldeap, "File opened successfully.", fileName);
+				nav.addNavigationItem(ldeap.getModelName(), ldeap, "File opened successfully.", fileName);
 				
 			}
 			catch (Exception ex) {

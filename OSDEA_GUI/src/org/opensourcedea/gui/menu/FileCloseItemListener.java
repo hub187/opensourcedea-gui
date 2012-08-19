@@ -52,10 +52,10 @@ public class FileCloseItemListener implements SelectionListener {
 				return;
 			}
 
-			nav.closeDEAProblem();
+			nav.closeNavigationItem();
 		}
 		else {
-			nav.closeDEAProblem();
+			nav.closeNavigationItem();
 		}
 
 	}

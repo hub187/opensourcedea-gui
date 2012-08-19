@@ -233,55 +233,28 @@ public class Navigation extends Composite {
 
 	}
 	
-	public void addDEAProblem(String itemName, LDEAProblem ldeap, String stlString, String fileName) {
+	public void addNavigationItem(String itemName, LDEAProblem ldeap, String stlString, String fileName) {
 		
 		TreeItem treeItem = new TreeItem (tree, 0);
-		
-		DEAProblemTreeItem deapti = new DEAProblemTreeItem(stl, this, osdeaMainComp.getDataPanel(), treeItem);
-		
+		DEAProblemTreeItem deapti = new DEAProblemTreeItem(ldeap, stl, this, osdeaMainComp.getDataPanel(), treeItem);
 		deapti.addItemToNav(itemName, ldeap, stlString);
-		
-//		Object[] treeArr = new Object[11];
-//		treeArr[0] = tree;
-//		treeArr[1] = rawDataItemText;
-//		treeArr[2] = variablesItemText;
-//		treeArr[3] = modelDetailsItemText;
-//		treeArr[4] = solutionItemText;
-//		treeArr[5] = objectivesItemText;
-//		treeArr[6] = projectionsItemText;
-//		treeArr[7] = lambdasItemText;
-//		treeArr[8] = peerGroupItemText;
-//		treeArr[9] = slacksItemText;
-//		treeArr[10] = weightsItemText;
-//		
-//		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, itemName, this, osdeaMainComp.getDataPanel(),
-//				stl, treeItem, treeArr, stlStr);
-//		addProbThread.start();
-
-		/* This *should* work as this is the ref of deaProblemTreeItem that is passed in the method 
-		 * and the thread doesn't instantiate a new ref (i.e. no TreeItem deaProblemTreeItem = new TreeItem etc..).
-		 * However, I will need to check the behaviour when opening massive problems (problems that will take several seconds to open).
-		 * */
-		
 		addFilePath(fileName, treeItem);
-		
-//		return deaProblemTreeItem;
 		
 	}
 	
 	/*
 	 * Used by listeners when creating new problems
 	 */
-	public void addDEAProblem(String deaProblemName) {
+	public void addNavigationItem(String deaProblemName) {
 
 		LDEAProblem ldeap = new LDEAProblem();
 		ldeap.setModelName(deaProblemName);
 		
-		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.", "");
+		addNavigationItem(deaProblemName, ldeap, "Created new DEA Problem.", "");
 		
 	}
 	
-	public void closeDEAProblem() {
+	public void closeNavigationItem() {
 
 		TreeItem ti = getSelectedDEAProblemTreeItem();
 		
@@ -575,6 +548,7 @@ public class Navigation extends Composite {
 	
 	public void displaySolution() {
 		LDEAProblem ldeap = getSelectedDEAProblem();
+	
 		
 		//Objectives
 		ObjectivesComposite objComp = (ObjectivesComposite)getObjectivesTreeItem().getData();

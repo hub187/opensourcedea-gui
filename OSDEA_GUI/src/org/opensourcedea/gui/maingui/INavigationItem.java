@@ -7,6 +7,6 @@ public interface INavigationItem {
 	
 	public void addItemToNav(String itemName, Object domainObject, String stlString);
 	
-	
+	public void displaySolution();
 	
 }
