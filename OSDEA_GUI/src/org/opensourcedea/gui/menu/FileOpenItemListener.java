@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.TreeItem;
 import org.opensourcedea.gui.maingui.Navigation;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -48,9 +47,7 @@ public class FileOpenItemListener implements SelectionListener {
 				fis.close();
 				ois.close();
 				
-				TreeItem ti = nav.addDEAProblem(ldeap.getModelName(), ldeap, "File opened successfully.");
-				nav.addFilePath(fileName, ti);
-//				stl.setNotificalLabelDelayStandard("File opened successfully.");
+				nav.addDEAProblem(ldeap.getModelName(), ldeap, "File opened successfully.", fileName);
 				
 			}
 			catch (Exception ex) {

@@ -232,7 +232,7 @@ public class Navigation extends Composite {
 
 	}
 	
-	public TreeItem addDEAProblem(String deaProblemName, LDEAProblem ldeap, String stlStr) {
+	public void addDEAProblem(String deaProblemName, LDEAProblem ldeap, String stlStr, String fileName) {
 		
 		TreeItem deaProblemTreeItem = new TreeItem (tree, 0);
 		
@@ -258,8 +258,9 @@ public class Navigation extends Composite {
 		 * However, I will need to check the behaviour when opening massive problems (problems that will take several seconds to open).
 		 * */
 		
+		addFilePath(fileName, deaProblemTreeItem);
 		
-		return deaProblemTreeItem;
+//		return deaProblemTreeItem;
 		
 	}
 	
@@ -271,7 +272,7 @@ public class Navigation extends Composite {
 		LDEAProblem ldeap = new LDEAProblem();
 		ldeap.setModelName(deaProblemName);
 		
-		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.");
+		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.", "");
 		
 	}
 	
