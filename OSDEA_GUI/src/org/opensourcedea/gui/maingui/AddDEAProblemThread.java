@@ -3,6 +3,7 @@ package org.opensourcedea.gui.maingui;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.Images;
@@ -17,8 +18,8 @@ public class AddDEAProblemThread extends Thread {
 	private OSDEA_StatusLine stl;
 	private Navigation nav;
 	private String stlStr;	
-
-	private TreeItem deaProblemTreeItem, rawDataTreeItem, variablesTreeItem, modelDetailsTreeItem,
+	
+	private TreeItem deapTreeItem, rawDataTreeItem, variablesTreeItem, modelDetailsTreeItem,
 	solutionTreeItem, objectivesTreeItem, projectionsTreeItem, lambdasTreeItem,
 	referenceSetTreeItem, slacksTreeItem, weightsTreeItem;
 
@@ -32,19 +33,22 @@ public class AddDEAProblemThread extends Thread {
 
 	private final ImageRegistry imgReg;
 
+	
 
-
-	public AddDEAProblemThread(LDEAProblem ldeap, String deaProblemName, Navigation nav, Composite dataPanel,
-			OSDEA_StatusLine stl, TreeItem deaProblemTreeItem, Object[] params, String stlStr) {
+	public AddDEAProblemThread(LDEAProblem ldeap, String deaProblemName, Display display,
+			OSDEA_StatusLine stl, Navigation nav, Object[] params, String stlStr, Composite dataPanel,
+			TreeItem deapTreeItem) {
 		this.ldeap = ldeap;
 		this.deaProblemName = deaProblemName;
-		this.dataPanel = dataPanel;
 		this.stl = stl;
-		this.deaProblemTreeItem = deaProblemTreeItem;
-		this.nav = nav;
 		this.stlStr = stlStr;
+		this.dataPanel = dataPanel;
+		this.deapTreeItem = deapTreeItem;
+		
+		//TO CHANGE
+		this.nav = nav;
 
-		imgReg = Images.getFullImageRegistry(nav.getDisplay());
+		imgReg = Images.getFullImageRegistry(display);
 		deaProblemImage = imgReg.get("deaProblem");
 		rawDataImage = imgReg.get("rawData");
 		iosImage = imgReg.get("variables");
@@ -110,27 +114,27 @@ public class AddDEAProblemThread extends Thread {
 		deaPTreeItemData[1] = problemComp;
 
 
-		deaProblemTreeItem.setText (deaProblemName);
-		deaProblemTreeItem.setImage(deaProblemImage);
-		deaProblemTreeItem.setData(deaPTreeItemData);
+		deapTreeItem.setText (deaProblemName);
+		deapTreeItem.setImage(deaProblemImage);
+		deapTreeItem.setData(deaPTreeItemData);
 
-		rawDataTreeItem = new TreeItem (deaProblemTreeItem, 0);
+		rawDataTreeItem = new TreeItem (deapTreeItem, 0);
 		rawDataTreeItem.setText (rawDataItemText);
 		rawDataTreeItem.setImage(rawDataImage);
 		rawDataTreeItem.setData(dataComp);
 
-		variablesTreeItem = new TreeItem (deaProblemTreeItem, 0);
+		variablesTreeItem = new TreeItem (deapTreeItem, 0);
 		variablesTreeItem.setText (variablesItemText);
 		variablesTreeItem.setImage(iosImage);
 		variablesTreeItem.setData(variablesComp);
 
-		modelDetailsTreeItem = new TreeItem (deaProblemTreeItem, 0);
+		modelDetailsTreeItem = new TreeItem (deapTreeItem, 0);
 		modelDetailsTreeItem.setText (modelDetailsItemText);
 		modelDetailsTreeItem.setImage(deaModelImage);
 		modelDetailsTreeItem.setData(modelComp);
 
 
-		solutionTreeItem = new TreeItem (deaProblemTreeItem, 0);
+		solutionTreeItem = new TreeItem (deapTreeItem, 0);
 		solutionTreeItem.setText (solutionItemText);
 		solutionTreeItem.setImage(solutionImage);
 		solutionTreeItem.setData(solutionComp);
@@ -171,7 +175,7 @@ public class AddDEAProblemThread extends Thread {
 		weightsTreeItem.setData(weightsComp);
 
 
-		nav.fireSelectionChange(deaProblemTreeItem);
+		nav.fireSelectionChange(deapTreeItem);
 
 		if(ldeap.isSolved()){
 			nav.displaySolution();

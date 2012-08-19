@@ -18,6 +18,7 @@ import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
 import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
+import org.opensourcedea.ldeaproblem.DEAProblemTreeItem;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
 public class Navigation extends Composite {
@@ -232,33 +233,37 @@ public class Navigation extends Composite {
 
 	}
 	
-	public void addDEAProblem(String deaProblemName, LDEAProblem ldeap, String stlStr, String fileName) {
+	public void addDEAProblem(String itemName, LDEAProblem ldeap, String stlString, String fileName) {
 		
-		TreeItem deaProblemTreeItem = new TreeItem (tree, 0);
+		TreeItem treeItem = new TreeItem (tree, 0);
 		
-		Object[] treeArr = new Object[11];
-		treeArr[0] = tree;
-		treeArr[1] = rawDataItemText;
-		treeArr[2] = variablesItemText;
-		treeArr[3] = modelDetailsItemText;
-		treeArr[4] = solutionItemText;
-		treeArr[5] = objectivesItemText;
-		treeArr[6] = projectionsItemText;
-		treeArr[7] = lambdasItemText;
-		treeArr[8] = peerGroupItemText;
-		treeArr[9] = slacksItemText;
-		treeArr[10] = weightsItemText;
+		DEAProblemTreeItem deapti = new DEAProblemTreeItem(stl, this, osdeaMainComp.getDataPanel(), treeItem);
 		
-		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, deaProblemName, this, osdeaMainComp.getDataPanel(),
-				stl, deaProblemTreeItem, treeArr, stlStr);
-		addProbThread.start();
+		deapti.addItemToNav(itemName, ldeap, stlString);
+		
+//		Object[] treeArr = new Object[11];
+//		treeArr[0] = tree;
+//		treeArr[1] = rawDataItemText;
+//		treeArr[2] = variablesItemText;
+//		treeArr[3] = modelDetailsItemText;
+//		treeArr[4] = solutionItemText;
+//		treeArr[5] = objectivesItemText;
+//		treeArr[6] = projectionsItemText;
+//		treeArr[7] = lambdasItemText;
+//		treeArr[8] = peerGroupItemText;
+//		treeArr[9] = slacksItemText;
+//		treeArr[10] = weightsItemText;
+//		
+//		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, itemName, this, osdeaMainComp.getDataPanel(),
+//				stl, treeItem, treeArr, stlStr);
+//		addProbThread.start();
 
 		/* This *should* work as this is the ref of deaProblemTreeItem that is passed in the method 
 		 * and the thread doesn't instantiate a new ref (i.e. no TreeItem deaProblemTreeItem = new TreeItem etc..).
 		 * However, I will need to check the behaviour when opening massive problems (problems that will take several seconds to open).
 		 * */
 		
-		addFilePath(fileName, deaProblemTreeItem);
+		addFilePath(fileName, treeItem);
 		
 //		return deaProblemTreeItem;
 		
