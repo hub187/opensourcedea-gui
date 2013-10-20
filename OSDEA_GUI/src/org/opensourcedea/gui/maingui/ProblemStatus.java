@@ -97,6 +97,7 @@ public class ProblemStatus {
 
 		dataLabel = new Label(remActionsGroup, SWT.NONE);
 		dataLabel.setText("Import some data!");
+		dataLabel.setToolTipText(dataHelp);
 
 
 
@@ -111,7 +112,7 @@ public class ProblemStatus {
 
 		variablesLabel = new Label(remActionsGroup, SWT.NONE);
 		variablesLabel.setText("Configure the problem variables!");
-
+		variablesLabel.setToolTipText(varHelp);
 
 
 		modelDetailsCanvas = new Canvas(remActionsGroup, SWT.NONE);
@@ -125,7 +126,7 @@ public class ProblemStatus {
 
 		modelDetailsLabel = new Label(remActionsGroup, SWT.NONE);
 		modelDetailsLabel.setText("Configure the DEA model type!");
-
+		modelDetailsLabel.setToolTipText(modelHelp);
 
 
 	}

@@ -308,6 +308,58 @@ public class DEAPProblemComposite extends Composite {
 
 	}
 	
+	/**
+	 * Gets an array of boolean about the status of the DEAProblem and then updates the main composite accordingly (Icons, Text & Status Line). 
+	 * @param statuses boolean[] {dataStatus, variableStatus, modelStatus, isSolved}
+	 */
+	public void setProblemStatus(boolean[] statuses) {
+		
+		boolean dataOK = statuses[0];
+		boolean varOK = statuses[1];
+		boolean modelOK = statuses[2];
+		boolean isSolved = statuses[3];
+		
+		if(dataOK){
+			setDataOK();
+		}
+		else {
+			setDataNOK();
+		}
+		
+		if(varOK){
+			setVariablesOK();
+		}
+		else {
+			setVariablesNOK();
+		}
+		
+		if(modelOK){
+			setModelDetailsOK();
+		}
+		else {
+			setModelDetailsNOK();
+		}
+		
+		
+		if(varOK && dataOK && modelOK) {
+			setAllOK();
+			if(isSolved) {
+				stl.setStatusLabel("Problem Solved");
+				showProgressGroupSolved();
+			}
+			else {
+				stl.setStatusLabel("You are ready to solve");
+				showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
+			}
+		}
+		else {
+			stl.setStatusLabel("You still have a few more things to do");
+		}
+		
+		
+		
+	}
+	
 
 
 }

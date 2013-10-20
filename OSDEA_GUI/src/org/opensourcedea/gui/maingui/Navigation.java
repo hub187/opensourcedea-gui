@@ -15,7 +15,6 @@ import org.opensourcedea.dea.DEAPSolution;
 import org.opensourcedea.gui.exceptions.NoVariableException;
 import org.opensourcedea.gui.exceptions.UnselectedVariablesException;
 import org.opensourcedea.gui.exceptions.UnvalidVariableChoiceException;
-import org.opensourcedea.gui.parameters.OSDEAConstants;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
@@ -152,63 +151,34 @@ public class Navigation extends Composite {
 
 	}
 	
+	private DEAPProblemComposite getSelectedDEAProblemComposite() {
+		return (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
+	}
+	
+	private boolean areModelDetailsOK() {
+		if( ((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).getModelDetails().getModelType() !=null )  {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public void checkProblemStatus() {
-		
-		
-		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
-		
+				
+		DEAPProblemComposite comp = getSelectedDEAProblemComposite();
 		
 		boolean areVarOK = true;
 		boolean areDataOK = false;
 		boolean isModelOK = false;
+		boolean isSolved = false;
 		
 		areVarOK = areVarOK();
+		isModelOK = areModelDetailsOK();
+		areDataOK = hasData();
+		isSolved = isSolved();
 		
-		if(areVarOK) {
-			comp.setVariablesOK();
-		}
-		else {
-			comp.setVariablesNOK();
-		}
-		
-		if( ((LDEAProblem)((Object[])getSelectedDEAProblemTreeItem().getData())[0]).getModelDetails().getModelType() !=null )  {
-			comp.setModelDetailsOK();
-			isModelOK = true;
-		}
-		else {
-			comp.setModelDetailsNOK();
-		}
-		
-		
-		if(hasData())  {
-			areDataOK = true;
-			setDataOK();
-		}
-		else {
-			setDataNOK();
-		}
-		
-		if(areVarOK && areDataOK && isModelOK) {
-			comp.setAllOK();
-			if(isSolved()) {
-				stl.setStatusLabel("Problem Solved");
-			}
-			else {
-				stl.setStatusLabel("You are ready to solve");
-			}
-		}
-		else {
-			stl.setStatusLabel("You still have a few more things to do");
-		}
-		
-		//Check if solved
-		DEAPProblemComposite dataComp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
-		if(getSelectedDEAProblem().isSolved()) {
-			dataComp.showProgressGroupSolved();
-		}
-		else {
-			dataComp.showProgressGroupNotSolved(OSDEAConstants.solveButtonText);
-		}
+		comp.setProblemStatus(new boolean[] {areDataOK, areVarOK, isModelOK, isSolved});
 		
 	}
 	
@@ -501,18 +471,7 @@ public class Navigation extends Composite {
 	}
 
 	
-	
-	private void setDataOK() {
-		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
-		comp.setDataOK();
-	}
-	
-	
-	private void setDataNOK() {
-		DEAPProblemComposite comp = (DEAPProblemComposite)((Object[])getSelectedDEAProblemTreeItem().getData())[1];
-		comp.setDataNOK();
-	}
-	
+		
 	
 	/*
 	 * used by the import file wizard. Allows the wizard to only read data and present it to the nav via this methods (thus the
@@ -552,7 +511,7 @@ public class Navigation extends Composite {
 				ldeap.setVariableNames(variableNames);
 				refreshVarList();
 				setRawDataTable(ldeap);
-				setDataOK();
+				checkProblemStatus();
 				ldeap.setModified(true);
 				stl.setNotificalLabelDelayStandard("Successful Imported " + ldeap.getDMUNames().size() + " DMUs, " + ldeap.getVariableNames().size() + " Variables.");
 			}
