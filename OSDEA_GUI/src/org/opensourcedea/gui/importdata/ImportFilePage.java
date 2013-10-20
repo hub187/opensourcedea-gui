@@ -83,7 +83,7 @@ public class ImportFilePage extends WizardPage
 		formData = new FormData();
 		formData.width = 380;
 		formData.left = new FormAttachment(2);
-		formData.right = new FormAttachment(100, -90);
+		formData.right = new FormAttachment(100, -110);
 		formData.top = new FormAttachment(fromFileLabel, 25);
 		pathText.setLayoutData(formData);
 		
@@ -91,6 +91,7 @@ public class ImportFilePage extends WizardPage
 		button.setText("  Browse...  ");
 		formData = new FormData();
 		formData.left = new FormAttachment(pathText, 10);
+		formData.right = new FormAttachment(100, -10);
 		formData.top = new FormAttachment(fromFileLabel, 22);
 		button.setLayoutData(formData);
 		
