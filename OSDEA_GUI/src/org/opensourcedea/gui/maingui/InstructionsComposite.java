@@ -178,15 +178,16 @@ public class InstructionsComposite extends Composite {
 		styleRange.start = 0;
 		styleRange.length = osdeaText.length();
 		styleRange.fontStyle = SWT.BOLD;
-//		styleRange.foreground = this.getDisplay().getSystemColor(SWT.COLOR_BLUE);
 		FontData fontData = new FontData();
 		fontData.setHeight(16);
 		Font font = new Font(this.getDisplay(), fontData);
 		
 		styleRange.font = font;
 		title.setStyleRange(styleRange);
-		Color grey = new Color (Display.getCurrent (), 240, 240, 240);
-		title.setBackground(grey);
+		//User Background colour instead of a grey that is system / desktop manager specific
+		//Color grey = new Color (Display.getCurrent (), 240, 240, 240);
+		Color backgroundColour = dataCanvas.getBackground();
+		title.setBackground(backgroundColour);
 		
 		gdata = new GridData();
 		gdata.horizontalIndent = 15;
