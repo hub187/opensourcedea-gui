@@ -346,6 +346,10 @@ public class Navigation extends Composite {
 		return false;
 	}
 	
+	/**
+	 * Returns the selected DEAProblemTreeItem reference
+	 * @return TreeItem DEAProblemTreeItem OR 'null' if no DEAProblem is selected.
+	 */
 	public LDEAProblem getSelectedDEAProblem() {
 		
 		try {

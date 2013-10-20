@@ -38,16 +38,22 @@ public class ToolImportItemListener implements SelectionListener {
 	
 	private void importData() {
 		
-		if(nav.getSelectedDEAProblem().isSolved()){
-			if(MessageDialog.openQuestion(nav.getShell(), "Reset DEA Problem", "You are trying to import data but the " +
-					"problem is already solved. If you click 'Yes', the problem will be completely reset (including variable and " +
-					"model settings.\n\n Do you wish to continue?")) {
-				nav.completeProblemReset();
+		try{
+			if(nav.getSelectedDEAProblem().isSolved()){
+				if(MessageDialog.openQuestion(nav.getShell(), "Reset DEA Problem", "You are trying to import data but the " +
+						"problem is already solved. If you click 'Yes', the problem will be completely reset (including variable and " +
+						"model settings.\n\n Do you wish to continue?")) {
+					nav.completeProblemReset();
+				}
+				else {
+					return;
+				}
+					
 			}
-			else {
-				return;
-			}
-				
+		}
+		catch (NullPointerException e ){
+			stl.setNotificalLabelDelayStandard("You cannot import data if no DEA Problem is selected!");
+			return;
 		}
 		
 		wizard = new ImportFileWizard(nav, stl);

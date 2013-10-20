@@ -54,7 +54,7 @@ public class Main_GUI {
     	shell.setSize(1000,550);
     }
     else {
-    	shell.setMaximized(true);
+    	//shell.setMaximized(true);
     }
     
 	ImageRegistry imgReg = Images.getMainGUIImageRegistry(display);
