@@ -161,7 +161,7 @@ public class VariablesComposite extends Composite {
 					}
 
 				}
-				else {
+				else if(ldeap.getVariableOrientation().get(i) == VariableOrientation.OUTPUT) {
 					switch (ldeap.getVariableType().get(i)) {
 					case STANDARD:
 						outputList.add(ldeap.getVariableNames().get(i));
@@ -176,6 +176,9 @@ public class VariablesComposite extends Composite {
 						varList.add(ldeap.getVariableNames().get(i));
 						break;
 					}
+				}
+				else {
+					varList.add(ldeap.getVariableNames().get(i));
 				}
 				
 			}
