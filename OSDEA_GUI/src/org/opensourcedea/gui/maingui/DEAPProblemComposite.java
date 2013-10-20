@@ -207,46 +207,69 @@ public class DEAPProblemComposite extends Composite {
 
 
 
-	public void setDataOK() {
-		Images.paintCanvas(probStatus.getDataCanvas(), "accept");
-		probStatus.getDataLabel().setText("Data were imported successfully.");
-		probStatus.getDataLabel().pack();
+	private void setData(boolean dataOK) {
+
+		if(dataOK){
+			Images.paintCanvas(probStatus.getDataCanvas(), "accept");
+			probStatus.getDataLabel().setText("Data were imported successfully.");
+			probStatus.getDataLabel().pack();
+		}
+		else {
+			Images.paintCanvas(probStatus.getDataCanvas(), "error");
+			probStatus.getDataLabel().setText("Import some data!");
+			probStatus.getDataLabel().pack();
+		}
+		
+		probStatus.setDataToolTips(dataOK);		
 	}
+
+
+	private void setVariables(VariablesStatusEnum varStatus) {
+		
+		switch (varStatus) {
+		case allVariablesCorrectlySet: {
+			Images.paintCanvas(probStatus.getVariablesCanvas(), "accept");
+			probStatus.getVariablesLabel().setText("Variables are configured correctly.");
+			probStatus.getVariablesLabel().pack();
+			break;
+		}
+		case NotAllVariablesSelected: {
+			Images.paintCanvas(probStatus.getVariablesCanvas(), "accept");
+			probStatus.getVariablesLabel().setText("Variables are configured correctly but some variables have not been selected.");
+			probStatus.getVariablesLabel().pack();
+			break;
+		}
+		default: {
+			Images.paintCanvas(probStatus.getVariablesCanvas(), "error");
+			probStatus.getVariablesLabel().setText("Configure the problem variables!");
+			probStatus.getVariablesLabel().pack();
+			setAllNOK();
+			break;
+		}
+		}
+		
+		probStatus.setVarToolTips(varStatus);
+
+	}
+
+	private void setModelDetails(boolean modelDetailsOK) {
+		if(modelDetailsOK) {
+			Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "accept");
+			probStatus.getmodelDetailsLabel().setText("A DEA Problem was selected.");
+			probStatus.getmodelDetailsLabel().pack();
+		}
+		else {
+			Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "error");
+			probStatus.getmodelDetailsLabel().setText("Configure the DEA model type!");
+			probStatus.getmodelDetailsLabel().pack();
+			setAllNOK();
+		}
+		
+		probStatus.setModelDetailsToolTips(modelDetailsOK);
+	}
+
 	
-	public void setDataNOK() {
-		Images.paintCanvas(probStatus.getDataCanvas(), "error");
-		probStatus.getDataLabel().setText("Import some data!");
-		probStatus.getDataLabel().pack();
-	}
-
-
-	public void setVariablesOK() {
-		Images.paintCanvas(probStatus.getVariablesCanvas(), "accept");
-		probStatus.getVariablesLabel().setText("Variables are configured correctly.");
-		probStatus.getVariablesLabel().pack();
-	}
-
-	public void setVariablesNOK() {
-		Images.paintCanvas(probStatus.getVariablesCanvas(), "error");
-		probStatus.getVariablesLabel().setText("Configure the problem variables!");
-		probStatus.getVariablesLabel().pack();
-		setAllNOK();
-	}
-
-	public void setModelDetailsOK() {
-		Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "accept");
-		probStatus.getmodelDetailsLabel().setText("A DEA Problem was selected.");
-		probStatus.getmodelDetailsLabel().pack();
-	}
-
-	public void setModelDetailsNOK() {
-		Images.paintCanvas(probStatus.getmodelDetailsCanvas(), "error");
-		probStatus.getmodelDetailsLabel().setText("Configure the DEA model type!");
-		probStatus.getmodelDetailsLabel().pack();
-		setAllNOK();
-	}
-
-	public void setAllOK() {
+	private void setAllOK() {
 		probStatus.getRemActionsGroup().setText("You're all set!");
 		solveButton.setEnabled(true);
 		if(!nav.getSelectedDEAProblem().isSolved()){
@@ -254,7 +277,7 @@ public class DEAPProblemComposite extends Composite {
 		}
 	}
 
-	public void setAllNOK() {
+	private void setAllNOK() {
 		probStatus.getRemActionsGroup().setText("You still need to:");
 		solveButton.setEnabled(false);
 	} 
@@ -312,40 +335,33 @@ public class DEAPProblemComposite extends Composite {
 	 * Gets an array of boolean about the status of the DEAProblem and then updates the main composite accordingly (Icons, Text & Status Line). 
 	 * @param statuses boolean[] {dataStatus, variableStatus, modelStatus, isSolved}
 	 */
-	public void setProblemStatus(boolean[] statuses) {
+	public void setProblemStatus(boolean dataStatus, VariablesStatusEnum varStatus, boolean modelDetailsStatus, boolean isSolved) {
 		
-		boolean areDataOK = statuses[0];
-		boolean areVarOK = statuses[1];
-		boolean areModelDetailsOK = statuses[2];
-		boolean isSolved = statuses[3];
-		
-		if(areDataOK){
-			setDataOK();
+		if(dataStatus){
+			setData(true);
 		}
 		else {
-			setDataNOK();
+			setData(false);
 		}
 		
-		if(areVarOK){
-			setVariablesOK();
-		}
-		else {
-			setVariablesNOK();
-		}
+		setVariables(varStatus);
 		
-		if(areModelDetailsOK){
-			setModelDetailsOK();
+
+		
+	
+		if(modelDetailsStatus){
+			setModelDetails(true);
 		}
 		else {
-			setModelDetailsNOK();
+			setModelDetails(false);
 		}
 		
-		probStatus.setDataToolTips(areDataOK);
-		probStatus.setVarToolTips(areVarOK);
-		probStatus.setModelDetailsToolTips(areModelDetailsOK);
 		
 		
-		if(areVarOK && areDataOK && areModelDetailsOK) {
+		
+		
+		
+		if((varStatus == VariablesStatusEnum.allVariablesCorrectlySet | varStatus == VariablesStatusEnum.NotAllVariablesSelected) && dataStatus && modelDetailsStatus) {
 			setAllOK();
 			if(isSolved) {
 				stl.setStatusLabel("Problem Solved");

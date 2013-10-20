@@ -362,43 +362,65 @@ public class VariablesComposite extends Composite {
 	
 	public void updateStatusStl() {
 		boolean areAllAVarOK = true;
-		try {
-			checkIfVarAreOK();
+		
+		switch (checkIfVarAreOK()) {
+		case allVariablesCorrectlySet: stl.setStatusLabel("Variables correctly configured."); break;
+		case NotAllVariablesSelected: stl.setStatusLabel("Variables correctly configured but some variables are not selected."); break;
+		default: stl.setStatusLabel("Missing inputs or outputs."); break;
 		}
-		catch (Exception e1) {
-			areAllAVarOK = false;
-		}
-		if(areAllAVarOK) {
-			stl.setStatusLabel("Variables correctly configured.");
-		}
-		else {
-			stl.setStatusLabel("Some variables are not assigned.");
-		}
+
 	}
 	
 	
-	public void checkIfVarAreOK() throws NoVariableException, UnselectedVariablesException, UnvalidVariableChoiceException {
+//	public void checkIfVarAreOK() throws NoVariableException, UnselectedVariablesException, UnvalidVariableChoiceException {
+//		Integer nbVar = null;
+//		if(ldeap.getNumberOfVariables() != null) {
+//			nbVar = ldeap.getNumberOfVariables();
+//		}
+//		else {
+//			throw new NoVariableException();
+//		}
+//		
+//		if(varList.getItemCount() > 0) {
+//			throw new UnselectedVariablesException();
+//		}
+//
+//		if(nbVar != null) {
+//			if(inputList.getItemCount() + ndInputList.getItemCount() + ncInputList.getItemCount() == 0 ||
+//					outputList.getItemCount() + ndOutputList.getItemCount() + ncOutputList.getItemCount() == 0) {
+//				throw new UnvalidVariableChoiceException();
+//			}
+//		}
+//	}
+	
+	public VariablesStatusEnum checkIfVarAreOK()  {
+		
 		Integer nbVar = null;
+		
 		if(ldeap.getNumberOfVariables() != null) {
 			nbVar = ldeap.getNumberOfVariables();
 		}
 		else {
-			throw new NoVariableException();
+			return VariablesStatusEnum.NoVariables;
+		}
+		
+		if(nbVar != null) {
+			if(inputList.getItemCount() + ndInputList.getItemCount() + ncInputList.getItemCount() == 0) {
+				return VariablesStatusEnum.NoInputSelected;
+			}
+			if(outputList.getItemCount() + ndOutputList.getItemCount() + ncOutputList.getItemCount() == 0) {
+				return VariablesStatusEnum.NoOutputSelected;
+			}
 		}
 		
 		if(varList.getItemCount() > 0) {
-			throw new UnselectedVariablesException();
+			return VariablesStatusEnum.NotAllVariablesSelected;
 		}
+				
+		return VariablesStatusEnum.allVariablesCorrectlySet;
 
-		if(nbVar != null) {
-			if(inputList.getItemCount() + ndInputList.getItemCount() + ncInputList.getItemCount() == 0 ||
-					outputList.getItemCount() + ndOutputList.getItemCount() + ncOutputList.getItemCount() == 0) {
-				throw new UnvalidVariableChoiceException();
-			}
-		}
+
 	}
-	
-
 	
 	
 	

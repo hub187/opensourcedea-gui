@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolTip;
 import org.opensourcedea.gui.utils.Images;
 
 public class ProblemStatus {
@@ -28,11 +27,11 @@ public class ProblemStatus {
 	private final String varHelp = "In order to configure the variables, you need to have imported some data.\n" +
 			"Once data has been imported, select the Variables tree item on the right hand side and assign each variable to a box.\n" +
 			"All variables need to be assigned and there must be at least 1 input. and 1 output.";
+	private final String someVarNotSelected = "Variables are correctly configured but some variables have not been selected!";
 	private final String modelHelp = "In order to select a model type, select the Model Details tree item on the right.\n" +
 			"You can then select a model type from the main Combo Box .\n" +
 			"If you want, you can use the filters to help you in selecting a model type.";
-	
-	private ToolTip dataToolTip;
+
 	
 	private Composite comp;
 	private StyledText deaPNameText;
@@ -95,7 +94,7 @@ public class ProblemStatus {
 		dataCanvas.setLayoutData(gdata);
 		Images.paintCanvas(dataCanvas, "error");
 		dataLabel = new Label(remActionsGroup, SWT.NONE);
-		dataLabel.setText("Import some data!");
+		dataLabel.setText("Import some data.");
 		setDataToolTips(false);
 		
 
@@ -107,8 +106,8 @@ public class ProblemStatus {
 		variablesCanvas.setLayoutData(gdata);
 		Images.paintCanvas(variablesCanvas, "error");
 		variablesLabel = new Label(remActionsGroup, SWT.NONE);
-		variablesLabel.setText("Configure the problem variables!");
-		setVarToolTips(false);
+		variablesLabel.setText("Configure the problem variables.");
+		setVarToolTips(VariablesStatusEnum.NoVariables);
 
 
 		modelDetailsCanvas = new Canvas(remActionsGroup, SWT.NONE);
@@ -119,7 +118,7 @@ public class ProblemStatus {
 		modelDetailsCanvas.setLayoutData(gdata);
 		Images.paintCanvas(modelDetailsCanvas, "error");
 		modelDetailsLabel = new Label(remActionsGroup, SWT.NONE);
-		modelDetailsLabel.setText("Configure the DEA model type!");
+		modelDetailsLabel.setText("Configure the DEA model type.");
 		setModelDetailsToolTips(false);
 
 	}
@@ -137,15 +136,26 @@ public class ProblemStatus {
 	}
 	
 	
-	public void setVarToolTips(boolean areVarOK) {
-		if(!areVarOK) {
-			variablesLabel.setToolTipText(varHelp);
-			variablesCanvas.setToolTipText(varHelp);
-		}
-		else {
+	public void setVarToolTips(VariablesStatusEnum varStatus) {
+		
+		switch (varStatus) {
+		case allVariablesCorrectlySet: {
 			variablesLabel.setToolTipText(null);
 			variablesCanvas.setToolTipText(null);
+			break;
 		}
+		case NotAllVariablesSelected: {
+			variablesLabel.setToolTipText(someVarNotSelected);
+			variablesCanvas.setToolTipText(someVarNotSelected);
+			break;
+		}
+		default: {
+			variablesLabel.setToolTipText(varHelp);
+			variablesCanvas.setToolTipText(varHelp);
+			break;
+		}
+		}
+		
 	}
 	
 	

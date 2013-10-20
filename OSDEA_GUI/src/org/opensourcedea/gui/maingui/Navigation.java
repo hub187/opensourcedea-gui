@@ -126,28 +126,11 @@ public class Navigation extends Composite {
 					
 	}
 	
-	private boolean areVarOK() {
-		
-		boolean areVarOK = true;
-		VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
-		try {
-			varComp.checkIfVarAreOK();
-		}
-		catch (UnselectedVariablesException e1) {
-			areVarOK = false;
-		}
-		catch (UnvalidVariableChoiceException e2) {
-			areVarOK = false;
-		}
-		catch (NoVariableException e3) {
-			areVarOK = false;
-		}
+	private VariablesStatusEnum checkVarStatus() {
 
+		VariablesComposite varComp = (VariablesComposite)getVariableTreeItem().getData();
 		
-		if(areVarOK) {
-			return true;
-		}
-		return false;
+		return varComp.checkIfVarAreOK();
 
 	}
 	
@@ -168,17 +151,16 @@ public class Navigation extends Composite {
 				
 		DEAPProblemComposite comp = getSelectedDEAProblemComposite();
 		
-		boolean areVarOK = true;
 		boolean areDataOK = false;
 		boolean isModelOK = false;
 		boolean isSolved = false;
 		
-		areVarOK = areVarOK();
+		VariablesStatusEnum varStatus = checkVarStatus();
 		isModelOK = areModelDetailsOK();
 		areDataOK = hasData();
 		isSolved = isSolved();
 		
-		comp.setProblemStatus(new boolean[] {areDataOK, areVarOK, isModelOK, isSolved});
+		comp.setProblemStatus(areDataOK, varStatus, isModelOK, isSolved);
 		
 	}
 	
