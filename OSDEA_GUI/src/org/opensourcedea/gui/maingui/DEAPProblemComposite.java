@@ -314,34 +314,38 @@ public class DEAPProblemComposite extends Composite {
 	 */
 	public void setProblemStatus(boolean[] statuses) {
 		
-		boolean dataOK = statuses[0];
-		boolean varOK = statuses[1];
-		boolean modelOK = statuses[2];
+		boolean areDataOK = statuses[0];
+		boolean areVarOK = statuses[1];
+		boolean areModelDetailsOK = statuses[2];
 		boolean isSolved = statuses[3];
 		
-		if(dataOK){
+		if(areDataOK){
 			setDataOK();
 		}
 		else {
 			setDataNOK();
 		}
 		
-		if(varOK){
+		if(areVarOK){
 			setVariablesOK();
 		}
 		else {
 			setVariablesNOK();
 		}
 		
-		if(modelOK){
+		if(areModelDetailsOK){
 			setModelDetailsOK();
 		}
 		else {
 			setModelDetailsNOK();
 		}
 		
+		probStatus.setDataToolTips(areDataOK);
+		probStatus.setVarToolTips(areVarOK);
+		probStatus.setModelDetailsToolTips(areModelDetailsOK);
 		
-		if(varOK && dataOK && modelOK) {
+		
+		if(areVarOK && areDataOK && areModelDetailsOK) {
 			setAllOK();
 			if(isSolved) {
 				stl.setStatusLabel("Problem Solved");

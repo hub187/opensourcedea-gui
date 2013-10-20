@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ToolTip;
 import org.opensourcedea.gui.utils.Images;
 
 public class ProblemStatus {
@@ -30,6 +31,8 @@ public class ProblemStatus {
 	private final String modelHelp = "In order to select a model type, select the Model Details tree item on the right.\n" +
 			"You can then select a model type from the main Combo Box .\n" +
 			"If you want, you can use the filters to help you in selecting a model type.";
+	
+	private ToolTip dataToolTip;
 	
 	private Composite comp;
 	private StyledText deaPNameText;
@@ -84,8 +87,6 @@ public class ProblemStatus {
 		remActionsGroup.setLayoutData(fdata);
 
 
-
-
 		dataCanvas = new Canvas(remActionsGroup, SWT.NONE);
 		GridData gdata = new GridData();
 		gdata.widthHint = 16;
@@ -93,13 +94,10 @@ public class ProblemStatus {
 		gdata.grabExcessVerticalSpace = true;
 		dataCanvas.setLayoutData(gdata);
 		Images.paintCanvas(dataCanvas, "error");
-		dataCanvas.setToolTipText(dataHelp);
-
 		dataLabel = new Label(remActionsGroup, SWT.NONE);
 		dataLabel.setText("Import some data!");
-		dataLabel.setToolTipText(dataHelp);
-
-
+		setDataToolTips(false);
+		
 
 		variablesCanvas = new Canvas(remActionsGroup, SWT.NONE);
 		gdata = new GridData();
@@ -108,11 +106,9 @@ public class ProblemStatus {
 		gdata.grabExcessVerticalSpace = true;
 		variablesCanvas.setLayoutData(gdata);
 		Images.paintCanvas(variablesCanvas, "error");
-		variablesCanvas.setToolTipText(varHelp);
-
 		variablesLabel = new Label(remActionsGroup, SWT.NONE);
 		variablesLabel.setText("Configure the problem variables!");
-		variablesLabel.setToolTipText(varHelp);
+		setVarToolTips(false);
 
 
 		modelDetailsCanvas = new Canvas(remActionsGroup, SWT.NONE);
@@ -122,14 +118,60 @@ public class ProblemStatus {
 		gdata.grabExcessVerticalSpace = true;
 		modelDetailsCanvas.setLayoutData(gdata);
 		Images.paintCanvas(modelDetailsCanvas, "error");
-		modelDetailsCanvas.setToolTipText(modelHelp);
-
 		modelDetailsLabel = new Label(remActionsGroup, SWT.NONE);
 		modelDetailsLabel.setText("Configure the DEA model type!");
-		modelDetailsLabel.setToolTipText(modelHelp);
-
+		setModelDetailsToolTips(false);
 
 	}
+	
+
+	public void setDataToolTips(boolean areDataOK) {
+		if(!areDataOK) {
+			dataLabel.setToolTipText(dataHelp);
+			dataCanvas.setToolTipText(dataHelp);
+		}
+		else {
+			dataLabel.setToolTipText(null);
+			dataCanvas.setToolTipText(null);
+		}
+	}
+	
+	
+	public void setVarToolTips(boolean areVarOK) {
+		if(!areVarOK) {
+			variablesLabel.setToolTipText(varHelp);
+			variablesCanvas.setToolTipText(varHelp);
+		}
+		else {
+			variablesLabel.setToolTipText(null);
+			variablesCanvas.setToolTipText(null);
+		}
+	}
+	
+	
+	public void setModelDetailsToolTips(boolean areModelDetailsOK) {
+		if(!areModelDetailsOK) {
+			modelDetailsLabel.setToolTipText(modelHelp);
+			modelDetailsCanvas.setToolTipText(modelHelp);
+		}
+		else {
+			modelDetailsLabel.setToolTipText(null);
+			modelDetailsCanvas.setToolTipText(null);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
