@@ -251,13 +251,13 @@ public class Navigation extends Composite {
 		
 		AddDEAProblemThread addProbThread = new AddDEAProblemThread(ldeap, deaProblemName, this, osdeaMainComp.getDataPanel(),
 				stl, deaProblemTreeItem, treeArr, stlStr);
+		
 		addProbThread.start();
 
 		/* This *should* work as this is the ref of deaProblemTreeItem that is passed in the method 
 		 * and the thread doesn't instantiate a new ref (i.e. no TreeItem deaProblemTreeItem = new TreeItem etc..).
 		 * However, I will need to check the behaviour when opening massive problems (problems that will take several seconds to open).
 		 * */
-		
 		
 		return deaProblemTreeItem;
 		
@@ -271,7 +271,7 @@ public class Navigation extends Composite {
 		LDEAProblem ldeap = new LDEAProblem();
 		ldeap.setModelName(deaProblemName);
 		
-		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.");
+		addDEAProblem(deaProblemName, ldeap, "Created new DEA Problem.");		
 		
 	}
 	

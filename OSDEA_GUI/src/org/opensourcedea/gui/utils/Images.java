@@ -73,8 +73,8 @@ public class Images {
 		imgReg.put("close", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/box_closed.png"));
 		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot2422-48x48x32.png"));
 		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/potSmall.png"));
-
-		
+		imgReg.put("potIconLarge", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot_256.png"));
+		imgReg.put("potIcon64", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot_64.png"));
 		return imgReg;
 	}
 	
@@ -82,6 +82,8 @@ public class Images {
 		ImageRegistry imgReg = new ImageRegistry(display);
 		imgReg.put("potIcon", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot2422-48x48x32.png"));
 		imgReg.put("potIconSmall", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/potSmall.png"));
+		imgReg.put("potIconLarge", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot_256.png"));
+		imgReg.put("potIcon64", ImageDescriptor.createFromFile(Images.class, "/org/opensourcedea/gui/images/pot_64.png"));
 		return imgReg;
 	}
 	

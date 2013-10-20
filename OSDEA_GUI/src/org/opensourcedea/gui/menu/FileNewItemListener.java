@@ -8,11 +8,9 @@ import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
 public class FileNewItemListener implements SelectionListener {
 	
 	private Navigation navigation;
-	private OSDEA_StatusLine stl;
 	
 	public FileNewItemListener(Navigation parentNavigation, OSDEA_StatusLine stl) {
 		navigation = parentNavigation;
-		this.stl = stl;
 	}
 	
 	@Override
@@ -33,7 +31,6 @@ public class FileNewItemListener implements SelectionListener {
 			@Override
 			public void run() {
 				nav.addDEAProblem("New DEA Problem");
-//				stl.setNotificalLabelDelayStandard("Created new DEA Problem.");
 			}
 		});
 		
