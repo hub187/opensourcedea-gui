@@ -13,6 +13,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.opensourcedea.dea.VariableOrientation;
 import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.gui.utils.MathUtils;
@@ -90,10 +91,15 @@ public class ProjectionsComposite extends Composite {
 	
 	public void displaySolution(LDEAProblem ldeap) {
 		
+		int nbSelectedVars = ldeap.getLdeapSolution().getProjections()[0].length;
+		
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
-		headers.addAll(ldeap.getVariableNames());
-		int nbVar = ldeap.getVariableNames().size();
+		for(int j = 0; j < ldeap.getVariableOrientation().size();j++){
+			if(ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT | ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
+				headers.add(ldeap.getVariableNames().get(j).toString());
+			}
+		}
 		
 		int width = Dimensions.getTotalStringLength(tableComp, headers);
 		FormData fdata = (FormData) tableComp.getLayoutData();
@@ -109,7 +115,7 @@ public class ProjectionsComposite extends Composite {
 		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
 			ArrayList<String> tempArr = new ArrayList<String>();
 			tempArr.add(ldeap.getDMUNames().get(i));
-			for(int j = 0; j < nbVar; j++) {
+			for(int j = 0; j < nbSelectedVars; j++) {
 				tempArr.add(Double.toString(MathUtils.round(ldeap.getLdeapSolution().getProjections()[i][j],OSDEAGUIParameters.getRoundingDecimals())));
 			}
 			data.add(tempArr);

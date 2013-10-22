@@ -36,9 +36,18 @@ public class DEAPConverter {
 			DEAProblem deap = new DEAProblem(nbDMUs, nbSelectedVariables);
 
 			
-
+			//Variables for LDEAP conversion into DEAP
 			double[][] sourceDataMatrix = ldeap.getDataMatrix().toArray(new double[nbDMUs][nbSelectedVariables]);
 			double[][] destDataMatrix = new double[nbDMUs][nbSelectedVariables];
+			
+			String[] sourceVariableNames = ldeap.getVariableNames().toArray(new String[nbSelectedVariables]);
+			String[] destVariableNames = new String[nbSelectedVariables];
+			
+			VariableOrientation[] sourceVariableOrientations = ldeap.getVariableOrientation().toArray(new VariableOrientation[nbSelectedVariables]);
+			VariableOrientation[] destVariableOrientations = new VariableOrientation[nbSelectedVariables];
+			VariableType[] sourceVariableTypes = ldeap.getVariableType().toArray(new VariableType[nbSelectedVariables]);
+			VariableType[] destVariableTypes = new VariableType[nbSelectedVariables];
+			
 			//Copy the interesting values of the ldeap Data Matrix into the deap data matrix 
 			int destColIndex = 0;
 			for(int j = 0; j < varOr.size();j++){
@@ -48,25 +57,23 @@ public class DEAPConverter {
 					for(int i = 0; i < nbDMUs;i++) {
 						System.arraycopy(sourceDataMatrix[i], j, destDataMatrix[i], destColIndex, 1);
 					}
+					
+					destVariableNames[destColIndex] = sourceVariableNames[j];
+					destVariableOrientations[destColIndex] = sourceVariableOrientations[j];
+					destVariableTypes[destColIndex] = sourceVariableTypes[j];
 					destColIndex = destColIndex + 1;
 				}
 			}
 			//Now copy the matrix corresponding to the variables that were selected in on the GUI
 			deap.setDataMatrix(destDataMatrix);
-			
-			
-			
-			//PICK UP HERE
-			
-			
+			deap.setVariableNames(destVariableNames);
 			deap.setDMUNames(ldeap.getDMUNames().toArray(new String[nbDMUs]));
 			deap.setModelName(ldeap.getModelName());
 			deap.setModelType(ldeap.getModelType());
 			deap.setRTSLowerBound(ldeap.getRtsLowerBound());
 			deap.setRTSUpperBound(ldeap.getRtsUpperBound());
-			deap.setVariableNames(ldeap.getVariableNames().toArray(new String[nbSelectedVariables]));
-			deap.setVariableOrientations(ldeap.getVariableOrientation().toArray(new VariableOrientation[nbSelectedVariables]));
-			deap.setVariableTypes(ldeap.getVariableType().toArray(new VariableType[nbSelectedVariables]));
+			deap.setVariableOrientations(destVariableOrientations);
+			deap.setVariableTypes(destVariableTypes);
 			
 			
 			
