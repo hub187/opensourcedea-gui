@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.opensourcedea.dea.VariableOrientation;
+import org.opensourcedea.dea.VariableType;
 import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
 import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.gui.utils.MathUtils;
@@ -96,8 +97,31 @@ public class ProjectionsComposite extends Composite {
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
 		for(int j = 0; j < ldeap.getVariableOrientation().size();j++){
-			if(ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT | ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
-				headers.add(ldeap.getVariableNames().get(j).toString());
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT) {
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (I)");
+					break;
+				case NON_CONTROLLABLE:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (NC-I)");
+					break;
+				case NON_DISCRETIONARY:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (ND-I)");
+					break;
+				}
+			}
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (O)");
+					break;
+				case NON_CONTROLLABLE:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (NC-O)");
+					break;
+				case NON_DISCRETIONARY:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (ND-O)");
+					break;
+				}
 			}
 		}
 		

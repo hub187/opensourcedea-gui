@@ -92,8 +92,31 @@ public class SlacksComposite extends Composite {
 		ArrayList<String> headers = new ArrayList<String>();
 		headers.add("DMU Names");
 		for(int j = 0; j < ldeap.getVariableOrientation().size();j++){
-			if(ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT | ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
-				headers.add(ldeap.getVariableNames().get(j).toString());
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT) {
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (I)");
+					break;
+				case NON_CONTROLLABLE:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (NC-I)");
+					break;
+				case NON_DISCRETIONARY:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (ND-I)");
+					break;
+				}
+			}
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (O)");
+					break;
+				case NON_CONTROLLABLE:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (NC-O)");
+					break;
+				case NON_DISCRETIONARY:
+					headers.add(ldeap.getVariableNames().get(j).toString() + " (ND-O)");
+					break;
+				}
 			}
 		}
 		
