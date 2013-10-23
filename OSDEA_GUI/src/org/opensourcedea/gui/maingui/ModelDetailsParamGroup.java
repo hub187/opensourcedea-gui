@@ -110,6 +110,7 @@ public class ModelDetailsParamGroup {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.right = new FormAttachment(100, -20);
 		paramGroup.setLayoutData(fdata);
+		//paramGroup.setLayout(new FormLayout());
 
 		resetButton = new Button(paramGroup, SWT.PUSH);
 		resetButton.setText("Reset Filters");
@@ -153,18 +154,26 @@ public class ModelDetailsParamGroup {
 		efficiencyCombo.getCombo().select(0);
 
 
-		rtsCombo = new ComboViewer(paramGroup, SWT.READ_ONLY);
-		rtsCombo.setContentProvider(ArrayContentProvider.getInstance());
-		rtsCombo.setInput(rtsList);
-		int rtsComboX = 10 + (20 + width) * 2;
-		rtsCombo.getCombo().setBounds(rtsComboX, 60, 160, 20);
-		rtsCombo.getCombo().select(0);
+
 
 		rtsLBLabel = new Label(paramGroup, SWT.NONE);
 		rtsLBLabel.setLocation(10, 105);
 		rtsLBLabel.setText("RTS Lower Bound Value:");
 		rtsLBLabel.pack();
-
+		
+		rtsCombo = new ComboViewer(paramGroup, SWT.READ_ONLY);
+		rtsCombo.setContentProvider(ArrayContentProvider.getInstance());
+		rtsCombo.setInput(rtsList);
+		//int rtsComboX = 10 + (20 + width) * 2;
+		//rtsCombo.getCombo().setBounds(rtsComboX, 60, 160, 20);
+		FormData formData = new FormData();
+		formData.left = new FormAttachment(rtsLBLabel, 10);
+		formData.right = new FormAttachment(100);
+		formData.top = new FormAttachment(efficiencyCombo.getControl(), 25);
+		formData.bottom = new FormAttachment(100);
+		rtsCombo.getCombo().setLayoutData(formData);
+		rtsCombo.getCombo().select(0);
+		
 		rtsLBSpinner = new Spinner (paramGroup, SWT.BORDER);
 		rtsLBSpinner.setMinimum(0);
 		rtsLBSpinner.setMaximum(10000);
