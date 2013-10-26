@@ -110,7 +110,6 @@ public class ModelDetailsParamGroup {
 		fdata.left = new FormAttachment(0, 20);
 		fdata.right = new FormAttachment(100, -20);
 		paramGroup.setLayoutData(fdata);
-		//paramGroup.setLayout(new FormLayout());
 
 		resetButton = new Button(paramGroup, SWT.PUSH);
 		resetButton.setText("Reset Filters");
@@ -164,14 +163,8 @@ public class ModelDetailsParamGroup {
 		rtsCombo = new ComboViewer(paramGroup, SWT.READ_ONLY);
 		rtsCombo.setContentProvider(ArrayContentProvider.getInstance());
 		rtsCombo.setInput(rtsList);
-		//int rtsComboX = 10 + (20 + width) * 2;
-		//rtsCombo.getCombo().setBounds(rtsComboX, 60, 160, 20);
-		FormData formData = new FormData();
-		formData.left = new FormAttachment(rtsLBLabel, 10);
-		formData.right = new FormAttachment(100);
-		formData.top = new FormAttachment(efficiencyCombo.getControl(), 25);
-		formData.bottom = new FormAttachment(100);
-		rtsCombo.getCombo().setLayoutData(formData);
+		int rtsComboX = 10 + (20 + width) * 2;
+		rtsCombo.getCombo().setBounds(rtsComboX, 60, 160, 20);
 		rtsCombo.getCombo().select(0);
 		
 		rtsLBSpinner = new Spinner (paramGroup, SWT.BORDER);
@@ -181,11 +174,13 @@ public class ModelDetailsParamGroup {
 		rtsLBSpinner.setSelection(0);
 		rtsLBSpinner.setIncrement(1);
 		rtsLBSpinner.setPageIncrement(100);
-		rtsLBSpinner.setLocation(150, 100);
+		int rtsLBSpinnerX = rtsLBLabel.getBounds().x + rtsLBLabel.getBounds().width + 10;
+		rtsLBSpinner.setLocation(rtsLBSpinnerX, 100);
 		rtsLBSpinner.pack();
 
 		rtsUBLabel = new Label(paramGroup, SWT.NONE);
-		rtsUBLabel.setLocation(250, 105);
+		int rtsUBLabelX = rtsLBSpinner.getBounds().x + rtsLBSpinner.getBounds().width + 20;
+		rtsUBLabel.setLocation(rtsUBLabelX, 105);
 		rtsUBLabel.setText("RTS Upper Bound Value:");
 		rtsUBLabel.pack();
 
@@ -196,7 +191,8 @@ public class ModelDetailsParamGroup {
 		rtsUBSpinner.setSelection(100);
 		rtsUBSpinner.setIncrement(1);
 		rtsUBSpinner.setPageIncrement(100);
-		rtsUBSpinner.setLocation(390, 100);
+		int rtsUBSpinnerX = rtsUBLabel.getBounds().x + rtsUBLabel.getBounds().width + 10;
+		rtsUBSpinner.setLocation(rtsUBSpinnerX, 100);
 		rtsUBSpinner.pack();
 
 

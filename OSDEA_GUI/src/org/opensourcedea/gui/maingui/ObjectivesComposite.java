@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.opensourcedea.gui.parameters.OSDEAGUIParameters;
+import org.opensourcedea.gui.utils.Dimensions;
 import org.opensourcedea.gui.utils.MathUtils;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
@@ -95,14 +96,24 @@ public class ObjectivesComposite extends Composite {
 	public void displaySolution(LDEAProblem ldeap) {
 		
 		ArrayList<String> headers = new ArrayList<String>();
-		headers.add("DMU Names");
-		headers.add("Objective Value");
-		headers.add("Efficient");
+		String DMUNames = "DMU Names";
+		String objectiveValue = "Objective Value";
+		String efficient = "Efficient";
+		
+		headers.add(DMUNames);
+		headers.add(objectiveValue);
+		headers.add(efficient);
+		String longest = "";
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		for(int i = 0; i < ldeap.getDMUNames().size(); i++) {
 			ArrayList<String> tempArr = new ArrayList<String>();
 			tempArr.add(ldeap.getDMUNames().get(i));
+			//Selecting longest DMU Names
+			String peer = ldeap.getDMUNames().get(i);
+			if(peer.length() > longest.length()) {
+				longest = peer;
+			}
 			if(MathUtils.round(ldeap.getLdeapSolution().getObjective(i), precision) == 1) {
 				tempArr.add("1");
 			}
@@ -113,6 +124,14 @@ public class ObjectivesComposite extends Composite {
 			tempArr.add(eff);
 			data.add(tempArr);
 		}
+		
+		
+		int width = Dimensions.getTotalLength(tableComp, longest) + Dimensions.getTotalLength(tableComp, objectiveValue) 
+				+ Dimensions.getTotalLength(tableComp, efficient) + 10;
+		FormData fdata = (FormData) tableComp.getLayoutData();
+		fdata.width = Math.max(300, width);
+		tableComp.setLayoutData(fdata);
+		tableComp.layout();
 		
 		
 		GenericTable solTable = new GenericTable(tableComp, headers, data);

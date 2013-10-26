@@ -104,7 +104,7 @@ public class PeerGroupComposite extends Composite {
 		}
 		
 		
-		int width = Dimensions.getTotalLength(tableComp, longest) + Dimensions.getTotalLength(tableComp, "DMU Names");
+		int width = Dimensions.getTotalLength(tableComp, longest) + Dimensions.getTotalLength(tableComp, "DMU Names" + 10);
 		FormData fdata = (FormData) tableComp.getLayoutData();
 		fdata.width = Math.max(300, width);
 		tableComp.setLayoutData(fdata);
