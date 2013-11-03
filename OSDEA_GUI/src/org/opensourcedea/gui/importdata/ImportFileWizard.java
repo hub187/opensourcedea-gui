@@ -1,15 +1,19 @@
 package org.opensourcedea.gui.importdata;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
 import org.opensourcedea.gui.maingui.Navigation;
 import org.opensourcedea.gui.startgui.OSDEA_StatusLine;
+import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.gui.utils.Images;
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -47,6 +51,29 @@ public class ImportFileWizard extends Wizard {
 	{
 		ImportFilePage dirPage =
 				(ImportFilePage)getPage(ImportFilePage.PAGE_NAME);
+		
+		String extension = IOManagement.getExtension(dirPage.getFileName());
+		
+		if (extension.equals("xls")) {
+			System.out.println("we have a xls file!");
+			
+			try {
+				HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(dirPage.getFileName()));
+				for (int k = 0; k < wb.getNumberOfSheets(); k++) {
+					HSSFSheet sheet = wb.getSheetAt(k);
+					System.out.println("First Sheet is : " + sheet.getSheetName());
+				}
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return false;
+		}
 		
 		String str = "";
 		

@@ -24,9 +24,11 @@ public class ImportFilePage extends WizardPage
 	private String fileName = "";	
 	private Text pathText;
 	private static final String[] filterNames = {
+		"Excel 2007 file (*.xls)",
 		"csv file (*.csv)"
 	};
 	private static final String[] filterExts = {
+		"*.xls",
 		"*.csv"
 	};
 	private Composite topLevel;
