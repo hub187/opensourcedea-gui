@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.opensourcedea.dea.ReturnsToScale;
+import org.opensourcedea.dea.VariableOrientation;
 import org.opensourcedea.gui.utils.IOManagement;
 import org.opensourcedea.ldeaproblem.LDEAProblem;
 
@@ -267,9 +268,19 @@ public class LDEAPExporter {
 			cell = row.createCell(0);
 			cell.setCellValue(ldeap.getVariableNames().get(rowNum));
 			cell = row.createCell(1);
-			cell.setCellValue(ldeap.getVariableOrientation().get(rowNum).toString());
+			if (ldeap.getVariableOrientation().get(rowNum) == null) {
+				cell.setCellValue("Variable Not Configured");
+			}
+			else {
+				cell.setCellValue(ldeap.getVariableOrientation().get(rowNum).toString());
+			}
 			cell = row.createCell(2);
-			cell.setCellValue(ldeap.getVariableType().get(rowNum).toString());
+			if (ldeap.getVariableOrientation().get(rowNum) == null) {
+				cell.setCellValue("Variable Not Configured");
+			}
+			else {
+				cell.setCellValue(ldeap.getVariableType().get(rowNum).toString());
+			}
 		}
 		
 		//autoSize
@@ -317,20 +328,18 @@ public class LDEAPExporter {
 
 		Row row = null;
 		Cell cell = null; 
-
+		String[] headers = getVariablesHeaders();
 		row = projSheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue("DMU Name");
-		for(int cellNum = 0; cellNum < ldeap.getNumberOfVariables(); cellNum++) {
-			cell = row.createCell(cellNum + 1);
-			cell.setCellValue(ldeap.getVariableNames().get(cellNum));
+		for (int i = 0; i < headers.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(headers[i].toString());
 		}
 
 		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getProjections().length; rowNum++) {
 			row = projSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
 			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
-			for(int cellNum = 0; cellNum < ldeap.getNumberOfVariables(); cellNum++) {
+			for(int cellNum = 0; cellNum < ldeap.getLdeapSolution().getProjections()[0].length; cellNum++) {
 				cell = row.createCell(cellNum + 1);
 				cell.setCellValue(ldeap.getLdeapSolution().getProjections(rowNum)[cellNum]);
 			}
@@ -344,6 +353,8 @@ public class LDEAPExporter {
 	}
 
 
+	
+	
 	private void exportLambdas(Workbook wb) {
 
 		Sheet lambdaSheet = wb.createSheet();
@@ -412,25 +423,69 @@ public class LDEAPExporter {
 		}
 		
 	}
+	
+	/**
+	 * Return the headers for variables related results.
+	 * @return String[] of Selected Variable Names.
+	 */
+	private String[] getVariablesHeaders() {
+		int nbOfSelVariables = ldeap.getLdeapSolution().getSlacks()[0].length;
+		String [] selVarNames = new String[nbOfSelVariables + 1];
+		selVarNames[0] = "DMU Names";
+		int pos = 1;
+		
+		for(int j = 0; j < ldeap.getVariableOrientation().size();j++){
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.INPUT) {
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (I)";
+					break;
+				case NON_CONTROLLABLE:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (NC-I)";
+					break;
+				case NON_DISCRETIONARY:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (ND-I)";
+					break;
+				}
+				pos++;
+			}
+			if (ldeap.getVariableOrientation().get(j) == VariableOrientation.OUTPUT){
+				switch (ldeap.getVariableType().get(j)) {
+				case STANDARD:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (O)";
+					break;
+				case NON_CONTROLLABLE:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (NC-O)";
+					break;
+				case NON_DISCRETIONARY:
+					selVarNames[pos] = ldeap.getVariableNames().get(j).toString() + " (ND-O)";
+					break;
+				}
+				pos++;
+			}
+		}
+		
+		
+		return selVarNames;
+	}
 
 	private void exportSlacks(Workbook wb) {
 		Sheet slacksSheet = wb.createSheet();
 
 		Row row = null;
-		Cell cell = null; 
+		Cell cell = null;
+		String[] headers = getVariablesHeaders();
 		row = slacksSheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue("DMU Name");
-		for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
-			cell = row.createCell(i + 1);
-			cell.setCellValue(ldeap.getVariableNames().get(i));
+		for (int i = 0; i < headers.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(headers[i].toString());
 		}
 
 		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getSlacks().length; rowNum++) {
 			row = slacksSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
 			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
-			for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+			for(int i = 0; i < ldeap.getLdeapSolution().getSlacks()[0].length; i++) {
 				cell = row.createCell(i + 1);
 				cell.setCellValue(ldeap.getLdeapSolution().getSlack(rowNum, i));
 			}
@@ -448,19 +503,18 @@ public class LDEAPExporter {
 
 		Row row = null;
 		Cell cell = null; 
+		String[] headers = getVariablesHeaders();
 		row = weightsSheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue("DMU Name");
-		for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
-			cell = row.createCell(i + 1);
-			cell.setCellValue(ldeap.getVariableNames().get(i));
+		for (int i = 0; i < headers.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(headers[i].toString());
 		}
 
 		for(int rowNum = 0; rowNum < ldeap.getLdeapSolution().getWeights().length; rowNum++) {
 			row = weightsSheet.createRow(rowNum + 1);
 			cell = row.createCell(0);
 			cell.setCellValue(ldeap.getDMUNames().get(rowNum));
-			for(int i = 0; i < ldeap.getNumberOfVariables(); i++) {
+			for(int i = 0; i < ldeap.getLdeapSolution().getWeights()[0].length; i++) {
 				cell = row.createCell(i + 1);
 				cell.setCellValue(ldeap.getLdeapSolution().getWeight(rowNum, i));
 			}

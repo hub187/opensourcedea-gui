@@ -76,7 +76,7 @@ public class DEAPProblemComposite extends Composite {
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 10);
 		fdata.left = new FormAttachment(0, 20);
-		fdata.width = 200;
+		fdata.width = 350;
 		deaPNameText.setLayoutData(fdata);
 
 
