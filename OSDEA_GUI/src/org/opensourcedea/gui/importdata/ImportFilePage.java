@@ -1,5 +1,6 @@
 package org.opensourcedea.gui.importdata;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +8,9 @@ import java.util.ArrayList;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -31,10 +35,12 @@ public class ImportFilePage extends WizardPage
 	private String fileName = "";	
 	private Text pathText;
 	private static final String[] filterNames = {
+		"Excel 2010 file (*.xlsx)",
 		"Excel 2007 file (*.xls)",
 		"csv file (*.csv)"
 	};
 	private static final String[] filterExts = {
+		"*.xlsx",
 		"*.xls",
 		"*.csv"
 	};
@@ -46,7 +52,8 @@ public class ImportFilePage extends WizardPage
 	private Button button;
 	private final String instructions;
 	private String spreadSheetName;
-	private HSSFWorkbook wb;
+	private HSSFWorkbook xlsWB;
+	private XSSFWorkbook xlsxWB;
 	
 	public ImportFilePage(String instr, Display display)
 	{	
@@ -161,7 +168,7 @@ public class ImportFilePage extends WizardPage
 					if(returnInt == 0) {
 						fromFileLabel.setText("From file (selected SpreadSheet is: " + choseSS.getSelectedSpreadsheet() + "):");
 						fromFileLabel.pack();
-						setSelectedWb(wb);
+						setSelectedXLSWB(wb);
 						setSpreadSheetName(choseSS.getSelectedSpreadsheet());
 						setPageComplete(true);
 					}
@@ -169,7 +176,7 @@ public class ImportFilePage extends WizardPage
 						fromFileLabel.setText("From file:");
 						fromFileLabel.pack();
 						setSpreadSheetName(null);
-						setSelectedWb(null);
+						setSelectedXLSWB(null);
 						setPageComplete(false);
 					}
 				} catch (FileNotFoundException e) {
@@ -177,6 +184,48 @@ public class ImportFilePage extends WizardPage
 				} catch (IOException e) {
 					setPageComplete(false);
 				}
+			}
+			else if (extension.equals("xlsx")) {
+				File file = new File(this.getFileName());
+				FileInputStream fis;
+				XSSFWorkbook wb = null;
+				try {
+					fis = new FileInputStream(file);
+					wb = new XSSFWorkbook(fis);
+
+					for (int k = 0; k < wb.getNumberOfSheets(); k++) {
+						Sheet sheet = wb.getSheetAt(k);
+						spreadsheetNames.add(sheet.getSheetName());
+					}
+					ChooseSpreadSheetComposite choseSS = new ChooseSpreadSheetComposite(getShell(), spreadsheetNames);
+					returnInt = choseSS.open();
+
+					if(returnInt == 0) {
+						fromFileLabel.setText("From file (selected SpreadSheet is: " + choseSS.getSelectedSpreadsheet() + "):");
+						fromFileLabel.pack();
+						setSelectedXlsxWB(wb);
+						setSpreadSheetName(choseSS.getSelectedSpreadsheet());
+						setPageComplete(true);
+					}
+					else {
+						fromFileLabel.setText("From file:");
+						fromFileLabel.pack();
+						setSpreadSheetName(null);
+						setSelectedXlsxWB(null);
+						setPageComplete(false);
+					}
+				}
+
+				catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
 			}
 			//at the moment this means this is a csv file
 			else {
@@ -203,12 +252,20 @@ public class ImportFilePage extends WizardPage
 		this.spreadSheetName = spreadSheetName;
 	}
 
-	public HSSFWorkbook getSelectedWb() {
-		return wb;
+	public HSSFWorkbook getSelectedXLSWB() {
+		return xlsWB;
 	}
 
-	public void setSelectedWb(HSSFWorkbook wb) {
-		this.wb = wb;
+	public void setSelectedXLSWB(HSSFWorkbook wb) {
+		this.xlsWB = wb;
+	}
+
+	public XSSFWorkbook getSelectedXlsxWB() {
+		return xlsxWB;
+	}
+
+	public void setSelectedXlsxWB(XSSFWorkbook wb) {
+		this.xlsxWB = wb;
 	}
 
 	

@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.Wizard;
@@ -60,7 +63,10 @@ public class ImportFileWizard extends Wizard {
 			dataNOK = readDataCSV(fileName);
 		}
 		else if (IOManagement.getExtension(fileName).equals("xls")) {
-			dataNOK = readDataXLS(fileName, dirPage.getSpreadSheetName(), dirPage.getSelectedWb());
+			dataNOK = readDataXLS(fileName, dirPage.getSpreadSheetName(), dirPage.getSelectedXLSWB());
+		}
+		else if (IOManagement.getExtension(fileName).equals("xlsx")) {
+			dataNOK = readDataXLSX(fileName, dirPage.getSpreadSheetName(), dirPage.getSelectedXlsxWB());
 		}
 		
 		//Depending on whether data were OK or not, import the data or quit
@@ -74,7 +80,86 @@ public class ImportFileWizard extends Wizard {
 
 		
 	}
-	
+
+
+		/**
+		 * Checks data for XLS files and put it in dataMatrix if OK)
+		 * @param fileName The name of the file to read data from
+		 * @return boolean 'true' if there was a problem, 'false' if there was no problem and data could be imported without any issue.
+		 */
+		private boolean readDataXLSX(String fileName, String spreadSheetName, XSSFWorkbook wb) {
+
+			try {
+				for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+					Sheet sheet = wb.getSheetAt(i);
+					if (sheet.getSheetName().equals(spreadSheetName)) {
+
+						String str = ""; //checking for empty headers or values
+						int rows = sheet.getPhysicalNumberOfRows();
+
+						//Get Headers - get Variable Names
+						Row row = sheet.getRow(0);
+						if (row != null) {
+							for(int c = 1; c < row.getPhysicalNumberOfCells(); c++) {
+								if(str.equals(row.getCell(c).getStringCellValue())) {
+									MessageDialog.openWarning(this.getShell(), "Warning", "The variable name after variable '" + variableNames.get(variableNames.size() - 1) +
+											"' is empty.\n\n" +
+											"The data will not be imported!");
+									stl.setNotificalLabelDelayStandard("Data not imported: a Variable Name was empty!");
+									return true;
+								}
+								variableNames.add(row.getCell(c).getStringCellValue());
+							}
+						}
+						else {
+							//something wrong file empty => set return false & leave
+							return false;
+						}
+
+
+						//next rows
+						for (int r = 1; r < rows; r++) {
+							row = sheet.getRow(r);
+							if (row == null) {
+								return false;
+							}
+							if(str.equals(row.getCell(0).getStringCellValue())){
+								MessageDialog.openWarning(this.getShell(), "Warning", "A DMU Name is empty.\n\n" +
+										"The data will not be imported!");
+								stl.setNotificalLabelDelayStandard("Data not imported: a DMU Name was empty!");
+								return true;
+							}
+							dmuNames.add(row.getCell(0).getStringCellValue());
+
+
+
+							//Data
+							double[] tempArr2 = new double[row.getPhysicalNumberOfCells() - 1];
+							ArrayList<String> tempArrl = new ArrayList<String>();
+							tempArrl.add(row.getCell(0).getStringCellValue());
+							for(int c = 1; c < row.getPhysicalNumberOfCells(); c++) {
+								tempArr2[c - 1] = row.getCell(c).getNumericCellValue();
+							}
+
+							dataMatrix.add(tempArr2);
+
+						}
+
+
+					}
+				}
+
+				return false;
+			}
+			catch (Exception e) {
+				//something went wrong obviously...
+				return true;
+			}
+
+
+
+		}
+
 	
 	/**
 	 * Checks data for XLS files and put it in dataMatrix if OK)
