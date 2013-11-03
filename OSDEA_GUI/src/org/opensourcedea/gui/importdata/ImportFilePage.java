@@ -45,7 +45,8 @@ public class ImportFilePage extends WizardPage
 	private Color white;
 	private Button button;
 	private final String instructions;
-	
+	private String spreadSheetName;
+	private HSSFWorkbook wb;
 	
 	public ImportFilePage(String instr, Display display)
 	{	
@@ -160,11 +161,15 @@ public class ImportFilePage extends WizardPage
 					if(returnInt == 0) {
 						fromFileLabel.setText("From file (selected SpreadSheet is: " + choseSS.getSelectedSpreadsheet() + "):");
 						fromFileLabel.pack();
+						setSelectedWb(wb);
+						setSpreadSheetName(choseSS.getSelectedSpreadsheet());
 						setPageComplete(true);
 					}
 					else {
 						fromFileLabel.setText("From file:");
 						fromFileLabel.pack();
+						setSpreadSheetName(null);
+						setSelectedWb(null);
 						setPageComplete(false);
 					}
 				} catch (FileNotFoundException e) {
@@ -179,12 +184,31 @@ public class ImportFilePage extends WizardPage
 			}
 		}
 	}
-
+	
+	
+	
+	
 	public String getFileName() {
 		if(fileName != null){
 			return fileName;
 		}
 		return "";
+	}
+
+	public String getSpreadSheetName() {
+		return spreadSheetName;
+	}
+
+	public void setSpreadSheetName(String spreadSheetName) {
+		this.spreadSheetName = spreadSheetName;
+	}
+
+	public HSSFWorkbook getSelectedWb() {
+		return wb;
+	}
+
+	public void setSelectedWb(HSSFWorkbook wb) {
+		this.wb = wb;
 	}
 
 	
