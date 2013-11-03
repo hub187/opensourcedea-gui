@@ -1,5 +1,12 @@
 package org.opensourcedea.gui.importdata;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -94,11 +101,9 @@ public class ImportFilePage extends WizardPage
 		formData = new FormData();
 		formData.left = new FormAttachment(pathText, 10);
 		formData.right = new FormAttachment(100, -10);
-		formData.top = new FormAttachment(fromFileLabel, 22);
+		formData.top = new FormAttachment(fromFileLabel, 25);
 		button.setLayoutData(formData);
-		
-		button.setFocus();
-		
+		button.setFocus();		
 		button.addMouseListener(new MouseListener()  {
 		      public void mouseDown(MouseEvent e) {
 //		    	  	assignFileName();
@@ -110,7 +115,6 @@ public class ImportFilePage extends WizardPage
 		        	
 		        }
 		      });
-		
 		button.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -125,7 +129,7 @@ public class ImportFilePage extends WizardPage
 			}
 			
 		});
-		
+
 		
 		setControl(topLevel);
 
@@ -137,7 +141,42 @@ public class ImportFilePage extends WizardPage
 		fileName = IOManagement.getFilePath(getShell(), filterNames, filterExts);
 		if(fileName != null){
 			pathText.setText(fileName);
-			setPageComplete(true);
+			
+			Integer returnInt = 1;
+			ArrayList<String> spreadsheetNames = new ArrayList<String>();
+			String extension = IOManagement.getExtension(this.getFileName());
+			
+			if (extension.equals("xls")) {
+				try {
+					HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(this.getFileName()));
+					for (int k = 0; k < wb.getNumberOfSheets(); k++) {
+						HSSFSheet sheet = wb.getSheetAt(k);
+						spreadsheetNames.add(sheet.getSheetName());
+					}
+					
+					ChooseSpreadSheetComposite choseSS = new ChooseSpreadSheetComposite(getShell(), spreadsheetNames);
+					returnInt = choseSS.open();
+					
+					if(returnInt == 0) {
+						fromFileLabel.setText("From file (selected SpreadSheet is: " + choseSS.getSelectedSpreadsheet() + "):");
+						fromFileLabel.pack();
+						setPageComplete(true);
+					}
+					else {
+						fromFileLabel.setText("From file:");
+						fromFileLabel.pack();
+						setPageComplete(false);
+					}
+				} catch (FileNotFoundException e) {
+					setPageComplete(false);
+				} catch (IOException e) {
+					setPageComplete(false);
+				}
+			}
+			//at the moment this means this is a csv file
+			else {
+				setPageComplete(true);
+			}
 		}
 	}
 
