@@ -163,6 +163,7 @@ public class ModelDetailsComposite extends Composite {
 		
 		Color tr = new Color(comp.getDisplay(), 240, 240, 240);
 		description.setBackground(tr);
+		description.setEditable(false);
 		fdata = new FormData();
 		fdata.top = new FormAttachment(0, 10);
 		fdata.bottom = new FormAttachment(100, -10);
