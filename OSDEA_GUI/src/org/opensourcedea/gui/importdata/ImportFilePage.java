@@ -17,6 +17,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -136,7 +138,20 @@ public class ImportFilePage extends WizardPage
 			}
 			
 		});
+		
+		button.addTraverseListener(new TraverseListener() {
 
+			@Override
+			public void keyTraversed(TraverseEvent e) {
+				if(e.detail == SWT.TRAVERSE_RETURN) {
+					assignFileName();
+				}
+				
+			}
+			
+		});
+
+		
 		
 		setControl(topLevel);
 
