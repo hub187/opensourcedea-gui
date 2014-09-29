@@ -77,7 +77,7 @@ public class InstructionsComposite extends Composite {
 		fdata.top = new FormAttachment(0);
 		label0.setLayoutData(fdata);
 		String instr = "OSDEA is an Open Source Data Envelopment Analysis solver which can solve" +
-				"many different types of DEA Problems.";
+				" many different types of DEA Problems.";
 		label0.setText(instr);
 		
 		Label label1 = new Label(mainComp, SWT.NONE);

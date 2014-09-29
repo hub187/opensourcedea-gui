@@ -29,7 +29,7 @@ public class Navigation extends Composite {
 	
 	private OSDEA_StatusLine stl;
 	
-	private final String rawDataItemText = "Raw Data", variablesItemText = "Variables", modelDetailsItemText = "Model details",
+	private final String rawDataItemText = "Raw Data", variablesItemText = "Variables", modelDetailsItemText = "Model Details",
 	solutionItemText = "Solution", objectivesItemText = "Objectives", projectionsItemText = "Projections", lambdasItemText = "Lambdas",
 	peerGroupItemText = "Peer Group", slacksItemText = "Slacks", weightsItemText = "Weights";
 	
