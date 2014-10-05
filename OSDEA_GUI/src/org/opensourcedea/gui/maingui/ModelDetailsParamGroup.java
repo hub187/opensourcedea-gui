@@ -562,28 +562,30 @@ public class ModelDetailsParamGroup {
 						setSmallParamGroupSize(paramGroup, locDescGroup);
 					}
 					else if(new String(allRts).equals(selectedRTS)) {
-						IStructuredSelection selectedModType = (IStructuredSelection) locModTypesCombo.getSelection();
-						if(selectedModType.isEmpty()){
-							disableSpinners();
-							setSmallParamGroupSize(paramGroup, locDescGroup);
-						}
-						else {
-							ModelType modType = (ModelType)selectedModType.getFirstElement();
-
-							if(modType.getReturnToScale() == ReturnsToScale.GENERAL) {
-								rtsLBSpinner.setEnabled(true);
-								rtsUBSpinner.setEnabled(true);
-								setBigParamGroupSize(paramGroup, locDescGroup);
-							}
-							else if (modType.getReturnToScale() == ReturnsToScale.INCREASING) {
+						if(locModTypesCombo != null){
+							IStructuredSelection selectedModType = (IStructuredSelection) locModTypesCombo.getSelection();
+							if(selectedModType.isEmpty()){
 								disableSpinners();
-								setBigParamGroupSize(paramGroup, locDescGroup);
+								setSmallParamGroupSize(paramGroup, locDescGroup);
 							}
-							else if(modType.getReturnToScale() == ReturnsToScale.DECREASING) {
-								disableSpinners();
-								setBigParamGroupSize(paramGroup, locDescGroup);
-							}
+							else {
+								ModelType modType = (ModelType)selectedModType.getFirstElement();
 
+								if(modType.getReturnToScale() == ReturnsToScale.GENERAL) {
+									rtsLBSpinner.setEnabled(true);
+									rtsUBSpinner.setEnabled(true);
+									setBigParamGroupSize(paramGroup, locDescGroup);
+								}
+								else if (modType.getReturnToScale() == ReturnsToScale.INCREASING) {
+									disableSpinners();
+									setBigParamGroupSize(paramGroup, locDescGroup);
+								}
+								else if(modType.getReturnToScale() == ReturnsToScale.DECREASING) {
+									disableSpinners();
+									setBigParamGroupSize(paramGroup, locDescGroup);
+								}
+
+							}
 						}
 					}
 					else if(new String(decRts).equals(selectedRTS)){
