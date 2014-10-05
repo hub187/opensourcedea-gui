@@ -440,7 +440,7 @@ public class VariablesComposite extends Composite {
 			FormData flData = new FormData();
 			
 //			inputLabel = new Label(parent, SWT.NONE);
-			varLabel.setText("VARIABLES");
+			varLabel.setText("AVAILABLE VARIABLES");
 			flData.top = new FormAttachment(0, 40);
 			flData.left = new FormAttachment(0, 20);
 			varLabel.setLayoutData(flData);
@@ -553,7 +553,7 @@ public class VariablesComposite extends Composite {
 			
 			FormData flData = new FormData();
 			inputLabel = new Label(parent, SWT.NONE);
-			inputLabel.setText("INPUTS");
+			inputLabel.setText("STANDARD INPUTS");
 			flData.top = new FormAttachment(0, 40);
 			flData.left = new FormAttachment(toButton, 10);
 			inputLabel.setLayoutData(flData);
@@ -660,7 +660,7 @@ public class VariablesComposite extends Composite {
 			
 			FormData flData = new FormData();
 			outputLabel = new Label(parent, SWT.NONE);
-			outputLabel.setText("OUTUTS");
+			outputLabel.setText("STANDARD OUTPUTS");
 			flData.top = new FormAttachment(inputList, 10);
 			flData.left = new FormAttachment(toButton, 10);
 			outputLabel.setLayoutData(flData);
