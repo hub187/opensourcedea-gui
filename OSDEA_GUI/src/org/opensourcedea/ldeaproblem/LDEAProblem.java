@@ -65,7 +65,8 @@ public class LDEAProblem implements Serializable {
 	}
 
 	public void copyLDEAPSolution(DEAProblem deap) throws ProblemNotSolvedProperlyException, IncompatibleModelTypeException {
-		if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND){
+		if(deap.getOptimisationStatus() == SolverReturnStatus.OPTIMAL_SOLUTION_FOUND
+				|| deap.getOptimisationStatus() == SolverReturnStatus.SOLUTION_FOUND_LOW_ACCURACY){
 			setSolved(true);
 			initDEAPSolution(deap.getNumberOfDMUs(), deap.getNumberOfVariables());
 			getLdeapSolution().setObjectives(deap.getObjectives());
